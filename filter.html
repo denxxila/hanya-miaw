@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filters & Ratio — V-Photobooth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+<base target="_blank">
+</head>
+<body>
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+<div class="blob b3"></div>
+
+<section class="step active" id="step-3">
+    <div class="dots"><div class="dot d"></div><div class="dot d"></div><div class="dot a"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="badge"><span class="bdot"></span>STEP 2 OF 3</div>
+    <h1>Filters &amp;<em> Ratio</em></h1>
+    <p class="desc">Set your vibe. Each filter changes the whole mood of your strip.</p>
+
+    <p class="slbl">ASPECT RATIO</p>
+    <div class="pgroup" id="rgrp">
+        <button class="pill sel" onclick="selRatio('4:3',this)">3:4</button>
+        <button class="pill" onclick="selRatio('3:4',this)">4:3</button>
+        <button class="pill" onclick="selRatio('9:16',this)">9:16</button>
+        <button class="pill" onclick="selRatio('16:9',this)">16:9</button>
+    </div>
+
+    <p class="slbl" style="margin-top:4px;">FILTER</p>
+    <div class="ogrid" id="filter-grid">
+        <div class="card sel" onclick="selCard('filter','none',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <div class="fprev"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="Natural"></div>
+            <p>NATURAL</p>
+        </div>
+        <div class="card" onclick="selCard('filter','vintage',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <div class="fprev"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="filter:sepia(.6) contrast(1.2);" alt="Vintage"></div>
+            <p>VINTAGE</p>
+        </div>
+        <div class="card" onclick="selCard('filter','bnw',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <div class="fprev"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="filter:grayscale(1);" alt="B&W"></div>
+            <p>B &amp; W</p>
+        </div>
+        <div class="card" onclick="selCard('filter','sharpen',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <div class="fprev"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="filter:contrast(1.4) saturate(1.4);" alt="Vivid"></div>
+            <p>VIVID GLOW</p>
+        </div>
+    </div>
+
+    <div class="nav">
+        <button class="btnb" onclick="location.href='layout.html'"><i class="fas fa-arrow-left" style="margin-right:5px;"></i>BACK</button>
+        <button class="btn" onclick="goToCamera()"><i class="fas fa-camera" style="margin-right:7px;"></i>CAMERA</button>
+    </div>
+</section>
+
+<script src="js/common.js"></script>
+<script src="js/step3.js"></script>
+</body>
+</html>
