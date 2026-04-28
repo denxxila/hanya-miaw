@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout & Color — V-Photobooth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+<base target="_blank">
+</head>
+<body>
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+<div class="blob b3"></div>
+
+<section class="step active" id="step-2">
+    <div class="dots"><div class="dot d"></div><div class="dot a"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="badge"><span class="bdot"></span>STEP 1 OF 3</div>
+    <h1>Layout &amp;<em> Color</em></h1>
+    <p class="desc">Choose your layout and frame color. Preview updates live!</p>
+
+    <div class="ogrid" id="layout-grid">
+        <div class="card sel" onclick="selLayout('strip',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <img src="https://cdn.nekohime.site/file/Tm2-TSOP.png" alt="Strip">
+            <p>CLASSIC STRIP (1×4)</p>
+        </div>
+        <div class="card" onclick="selLayout('grid',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <img src="https://cdn.nekohime.site/file/vxijEdyv.png" alt="Grid">
+            <p>MODERN GRID (2×2)</p>
+        </div>
+        <div class="card spotify-card" onclick="selLayout('spotify',this)" style="grid-column: span 2;">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <div style="display:flex;justify-content:center;margin-bottom:9px;">
+                <div style="width:100px;border-radius:10px;overflow:hidden;background:#121212;box-shadow:0 4px 16px rgba(0,0,0,.6);">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;aspect-ratio:1/1;">
+                        <div style="background:#2a2a2a;overflow:hidden;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;" alt=""></div>
+                        <div style="background:#1a1a1a;overflow:hidden;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:sepia(.4);" alt=""></div>
+                        <div style="background:#222;overflow:hidden;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1);" alt=""></div>
+                        <div style="background:#1c1c1c;overflow:hidden;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:contrast(1.3);" alt=""></div>
+                    </div>
+                    <div style="padding:6px 7px 7px;background:#121212;">
+                        <div style="font-size:.55rem;font-weight:800;color:#fff;margin-bottom:1px;">Song Title</div>
+                        <div style="font-size:.45rem;color:rgba(255,255,255,.45);margin-bottom:5px;">Artist Name</div>
+                        <div style="height:2.5px;background:rgba(255,255,255,.15);border-radius:2px;margin-bottom:3px;">
+                            <div style="width:38%;height:100%;background:#1DB954;border-radius:2px;"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:.36rem;color:rgba(255,255,255,.3);font-family:monospace;">1:23<span>3:45</span></div>
+                    </div>
+                </div>
+            </div>
+            <p>SPOTIFY NOW PLAYING</p>
+            <div style="display:flex;justify-content:center;">
+                <span class="layout-badge">
+                    <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                    SPOTIFY
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spotify Customizer -->
+    <div class="sp-config" id="sp-config" style="display:none;">
+        <div class="sp-config-header">
+            <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+            <span>Spotify Customization</span>
+        </div>
+        <div class="sp-config-body">
+            <div class="sp-field">
+                <p class="sp-field-lbl"><i class="fas fa-border-all" style="margin-right:5px;"></i>Photo Layout</p>
+                <div class="sp-lo-wrap">
+                    <button class="sp-lo-btn sel" onclick="setSpLayout('grid',this)">Grid (2x2)</button>
+                    <button class="sp-lo-btn" onclick="setSpLayout('strip',this)">Strip (1x4)</button>
+                </div>
+            </div>
+            <div class="sp-field">
+                <p class="sp-field-lbl"><i class="fas fa-music" style="margin-right:5px;"></i>Song Title</p>
+                <input class="sp-input" id="sp-title" type="text" placeholder="e.g. Cruel Summer" value="Cruel Summer" oninput="updSpotifyPreview()">
+            </div>
+            <div class="sp-field">
+                <p class="sp-field-lbl"><i class="fas fa-user" style="margin-right:5px;"></i>Artist / Publisher</p>
+                <input class="sp-input" id="sp-artist" type="text" placeholder="e.g. Taylor Swift" value="Taylor Swift" oninput="updSpotifyPreview()">
+            </div>
+            <div class="sp-field">
+                <p class="sp-field-lbl"><i class="fas fa-clock" style="margin-right:5px;"></i>Song Duration</p>
+                <div class="sp-dur-row">
+                    <span class="sp-dur-lbl">TOTAL</span>
+                    <input type="range" class="sp-range" id="sp-dur" min="30" max="600" value="207" oninput="updSpotifyPreview()">
+                    <span class="sp-dur-val" id="sp-dur-val">3:27</span>
+                </div>
+            </div>
+            <div class="sp-field">
+                <p class="sp-field-lbl"><i class="fas fa-play" style="margin-right:5px;"></i>Playback Progress</p>
+                <div class="sp-prog-row">
+                    <span class="sp-dur-lbl">POS</span>
+                    <input type="range" class="sp-prog" id="sp-prog" min="0" max="100" value="38" oninput="updSpotifyPreview()">
+                    <span class="sp-prog-val" id="sp-prog-val">38%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="selpill" id="selpill">
+        <div class="spsw" id="spsw" style="background:#ffffff;"></div>
+        <span class="sphex" id="sphex">#FFFFFF</span>
+        <span class="sptag">SELECTED</span>
+    </div>
+
+    <div class="cpbox" id="cpbox">
+        <div class="cptabs">
+            <button class="cptab a" onclick="swTab('swatches',this)"><i class="fas fa-palette" style="margin-right:3px;"></i>PRESETS</button>
+            <button class="cptab" onclick="swTab('gradient',this)"><i class="fas fa-wand-magic-sparkles" style="margin-right:3px;"></i>GRADIENT</button>
+            <button class="cptab" onclick="swTab('hex',this)"><i class="fas fa-hashtag" style="margin-right:3px;"></i>HEX</button>
+            <button class="cptab" onclick="swTab('advanced',this)"><i class="fas fa-sliders" style="margin-right:3px;"></i>ADVANCED</button>
+        </div>
+
+        <div class="cppanel a" id="panel-swatches">
+            <p class="advlbl">CLASSIC</p><div class="sgrid" id="sg-c"></div>
+            <p class="advlbl" style="margin-top:12px;">PASTEL</p><div class="sgrid" id="sg-p"></div>
+            <p class="advlbl" style="margin-top:12px;">DARK</p><div class="sgrid" id="sg-d"></div>
+        </div>
+
+        <div class="cppanel" id="panel-gradient">
+            <p class="advlbl">GRADIENT PRESETS</p>
+            <div class="ggrid" id="ggrid"></div>
+            <div class="gcustom">
+                <p class="gcustom-label"><i class="fas fa-paintbrush" style="margin-right:5px;"></i>CUSTOM GRADIENT</p>
+                <div class="gstops" id="gstops"></div>
+                <button class="gadd" onclick="addStop()"><i class="fas fa-plus" style="margin-right:5px;"></i>ADD COLOR STOP</button>
+                <div class="gangle-row">
+                    <span class="gangle-lbl">ANGLE</span>
+                    <input type="range" class="gr" id="g-angle" min="0" max="360" value="135" oninput="onGradChange()">
+                    <span class="gangle-val" id="g-angle-val">135°</span>
+                </div>
+                <div class="gpreview-bar" id="g-prev-bar"></div>
+                <button class="gapply-btn" onclick="applyCustomGrad()"><i class="fas fa-check" style="margin-right:5px;"></i>APPLY CUSTOM GRADIENT</button>
+            </div>
+        </div>
+
+        <div class="cppanel" id="panel-hex">
+            <p class="advlbl">ENTER HEX CODE</p>
+            <div class="hexrow">
+                <div class="hexsw" id="hxsw" style="background:#ffffff;"></div>
+                <div class="hexwrap">
+                    <span class="hexhash">#</span>
+                    <input class="hexinput" id="hxinput" type="text" maxlength="6" placeholder="FFFFFF" value="FFFFFF"
+                           oninput="onHexIn(this.value)" onkeydown="if(event.key==='Enter'){applyHex();event.preventDefault();}">
+                </div>
+                <button class="hexapply" onclick="applyHex()">APPLY</button>
+            </div>
+            <p class="advlbl" style="margin-top:12px;">QUICK CODES</p>
+            <div class="qcodes" id="qcodes"></div>
+        </div>
+
+        <div class="cppanel" id="panel-advanced">
+            <div class="advsec">
+                <p class="advlbl">RGB</p>
+                <div class="srow"><span class="sl r">R</span><input type="range" class="cpr rr" id="sl-r" min="0" max="255" value="255" oninput="onRGB()"><span class="rv" id="vr">255</span></div>
+                <div class="srow"><span class="sl g">G</span><input type="range" class="cpr rg" id="sl-g" min="0" max="255" value="255" oninput="onRGB()"><span class="rv" id="vg">255</span></div>
+                <div class="srow"><span class="sl b">B</span><input type="range" class="cpr rb" id="sl-b" min="0" max="255" value="255" oninput="onRGB()"><span class="rv" id="vb">255</span></div>
+            </div>
+            <div class="advsec">
+                <p class="advlbl">HSL</p>
+                <div class="srow"><span class="sl h">H</span><input type="range" class="cpr rh" id="sl-h" min="0" max="360" value="0" oninput="onHSL()"><span class="rv" id="vh">0°</span></div>
+                <div class="srow"><span class="sl s">S</span><input type="range" class="cpr rs" id="sl-s" min="0" max="100" value="0" oninput="onHSL()"><span class="rv" id="vs">0%</span></div>
+                <div class="srow"><span class="sl l">L</span><input type="range" class="cpr rl" id="sl-l" min="0" max="100" value="100" oninput="onHSL()"><span class="rv" id="vl">100%</span></div>
+            </div>
+            <div class="advbar">
+                <div class="advsw" id="advsw" style="background:#ffffff;"></div>
+                <span class="advhex" id="advhex">#FFFFFF</span>
+                <button class="advapply" onclick="applyAdv()">APPLY</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIVE PREVIEW -->
+    <div class="lpbox">
+        <p class="lplbl">LIVE PREVIEW</p>
+        <div class="lpouter">
+            <div id="lps" class="lpstrip" style="background:#ffffff;">
+                <div class="spp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div>
+                <div class="spp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div>
+                <div class="spp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div>
+                <div class="spp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div>
+                <div class="spb" id="lpbs" style="color:#000;">V-Photobooth</div>
+            </div>
+            <div id="lpg" class="lpgrid" style="background:#ffffff;display:none;">
+                <div class="gpp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div>
+                <div class="gpp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div>
+                <div class="gpp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div>
+                <div class="gpp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div>
+                <div class="gpb" id="lpbg" style="color:#000;">V-Photobooth</div>
+            </div>
+            <!-- Spotify Preview -->
+            <div id="lp-spotify" class="lp-spotify" style="display:none;">
+                <div class="sp-cover">
+                    <div class="sp-photo-grid" id="sp-prev-grid">
+                        <div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div>
+                        <div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div>
+                        <div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div>
+                        <div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3);"></div>
+                    </div>
+                </div>
+                <div class="sp-info">
+                    <div class="sp-song" id="sp-prev-song">Cruel Summer</div>
+                    <div class="sp-artist" id="sp-prev-artist">Taylor Swift</div>
+                    <div class="sp-bar-wrap">
+                        <div class="sp-bar" id="sp-prev-bar" style="width:38%;"></div>
+                    </div>
+                    <div class="sp-time">
+                        <span id="sp-prev-cur">1:18</span>
+                        <span id="sp-prev-tot">3:27</span>
+                    </div>
+                    <div class="sp-controls">
+                        <span class="sp-ctrl"><i class="fas fa-shuffle"></i></span>
+                        <span class="sp-ctrl"><i class="fas fa-backward-step"></i></span>
+                        <span class="sp-ctrl play"><i class="fas fa-circle-pause"></i></span>
+                        <span class="sp-ctrl"><i class="fas fa-forward-step"></i></span>
+                        <span class="sp-ctrl"><i class="fas fa-repeat"></i></span>
+                    </div>
+                    <div class="sp-logo">
+                        <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                        <span class="sp-logo-txt">SPOTIFY</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav">
+        <button class="btnb" onclick="location.href='index.html'"><i class="fas fa-arrow-left" style="margin-right:5px;"></i>BACK</button>
+        <button class="btn" onclick="goToFilter()">NEXT<i class="fas fa-arrow-right" style="margin-left:7px;"></i></button>
+    </div>
+</section>
+
+<canvas id="ct"></canvas>
+<canvas id="cf"></canvas>
+
+<script src="js/common.js"></script>
+<script src="js/step2.js"></script>
+</body>
+</html>
