@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>V-Photobooth</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Space+Mono&family=Circular+Std:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
     <style>
-        :root { --p:#ff477e; --p2:#ff1f61; }
+        :root { --p:#ff477e; --p2:#ff1f61; --sp:#1DB954; --sp2:#1ed760; }
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;-webkit-tap-highlight-color:transparent;}
         button{outline:none;user-select:none;}
         body{background:#080808;color:#fff;overflow-x:hidden;min-height:100dvh;}
@@ -22,7 +22,6 @@
         @keyframes bm2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-60px,-80px) scale(1.15)}}
         @keyframes bm3{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.2)}}
 
-        /* STEPS */
         .step{display:none;min-height:100dvh;width:100%;flex-direction:column;align-items:center;justify-content:center;padding:40px 16px;text-align:center;position:relative;z-index:1;}
         .step.active{display:flex;animation:su .6s cubic-bezier(.23,1,.32,1);}
         @keyframes su{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
@@ -42,7 +41,6 @@
         .div{width:44px;height:2px;background:linear-gradient(90deg,transparent,var(--p),transparent);margin:0 auto 26px;}
         .slbl{font-size:.58rem;letter-spacing:3px;font-weight:800;color:rgba(255,255,255,.26);margin-bottom:10px;text-transform:uppercase;}
 
-        /* BUTTONS */
         .btn{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border:none;padding:15px 40px;font-size:.85rem;font-weight:800;border-radius:100px;cursor:pointer;transition:all .3s;letter-spacing:2px;text-transform:uppercase;box-shadow:0 8px 26px rgba(255,71,126,.38);z-index:2;}
         .btn:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(255,71,126,.52);}
         .btn:active{transform:scale(.95);}
@@ -52,7 +50,6 @@
         .btnb:hover{border-color:rgba(255,255,255,.3);color:#fff;}
         .nav{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px;flex-wrap:wrap;}
 
-        /* CARDS */
         .ogrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:100%;max-width:520px;margin-bottom:22px;}
         .card{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.07);border-radius:16px;padding:12px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;}
         .card:hover{border-color:rgba(255,71,126,.38);transform:translateY(-3px);}
@@ -65,13 +62,11 @@
         .fprev{width:100%;aspect-ratio:4/3;border-radius:9px;overflow:hidden;margin-bottom:9px;}
         .fprev img{width:100%;height:100%;object-fit:cover;}
 
-        /* PILLS */
         .pgroup{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:22px;}
         .pill{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);color:rgba(255,255,255,.52);padding:8px 18px;border-radius:100px;cursor:pointer;font-weight:700;font-size:.75rem;transition:all .3s;letter-spacing:1px;}
         .pill:hover{border-color:rgba(255,71,126,.42);color:#fff;}
         .pill.sel{border-color:var(--p);background:rgba(255,71,126,.13);color:var(--p);}
 
-        /* ═══ COLOR PICKER ═══ */
         .cpbox{width:100%;max-width:520px;margin-bottom:20px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.07);border-radius:20px;overflow:hidden;}
         .cptabs{display:flex;border-bottom:1px solid rgba(255,255,255,.07);}
         .cptab{flex:1;padding:11px 4px;font-size:.58rem;font-weight:800;letter-spacing:1.5px;color:rgba(255,255,255,.32);cursor:pointer;border:none;background:none;transition:all .3s;text-transform:uppercase;border-bottom:2px solid transparent;margin-bottom:-1px;}
@@ -80,7 +75,6 @@
         .cppanel{display:none;padding:14px;}
         .cppanel.a{display:block;}
 
-        /* swatches */
         .sgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:6px;}
         .swi{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;}
         .swc{width:33px;height:33px;border-radius:50%;border:2.5px solid rgba(255,255,255,.1);transition:all .25s;position:relative;flex-shrink:0;}
@@ -90,7 +84,6 @@
         .swc.sel .swck{display:flex;}
         .swn{font-size:.48rem;letter-spacing:.8px;color:rgba(255,255,255,.28);font-weight:700;text-align:center;}
 
-        /* gradient presets */
         .ggrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
         .gi{border-radius:10px;height:44px;cursor:pointer;border:2.5px solid transparent;transition:all .25s;position:relative;overflow:hidden;}
         .gi:hover{transform:scale(1.05);border-color:rgba(255,255,255,.28);}
@@ -98,7 +91,6 @@
         .gick{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:14px;color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.6);}
         .gi.sel .gick{display:flex;}
 
-        /* gradient custom builder */
         .gcustom{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.07);border-radius:14px;padding:12px;margin-top:10px;}
         .gcustom-label{font-size:.58rem;letter-spacing:2px;font-weight:800;color:rgba(255,255,255,.26);margin-bottom:10px;text-transform:uppercase;}
         .gstops{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
@@ -122,7 +114,6 @@
         .gapply-btn{width:100%;margin-top:8px;padding:9px;background:rgba(255,71,126,.14);border:1.5px solid rgba(255,71,126,.3);color:var(--p);border-radius:9px;font-weight:800;font-size:.75rem;letter-spacing:1px;cursor:pointer;transition:all .3s;}
         .gapply-btn:hover{background:rgba(255,71,126,.26);}
 
-        /* hex tab */
         .hexrow{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
         .hexsw{width:40px;height:40px;border-radius:11px;border:2px solid rgba(255,255,255,.1);flex-shrink:0;transition:background .2s;}
         .hexwrap{flex:1;position:relative;}
@@ -135,7 +126,6 @@
         .qcbtn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.48);padding:6px 11px;border-radius:7px;cursor:pointer;font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:1px;transition:all .25s;}
         .qcbtn:hover{border-color:var(--p);color:var(--p);}
 
-        /* advanced */
         .advsec{margin-bottom:14px;}
         .advlbl{font-size:.58rem;letter-spacing:2.5px;color:rgba(255,255,255,.26);font-weight:800;margin-bottom:8px;text-transform:uppercase;}
         .srow{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
@@ -156,16 +146,14 @@
         .advapply{padding:8px 16px;background:rgba(255,71,126,.14);border:1.5px solid rgba(255,71,126,.3);color:var(--p);border-radius:9px;font-weight:800;font-size:.7rem;cursor:pointer;transition:all .3s;white-space:nowrap;}
         .advapply:hover{background:rgba(255,71,126,.28);}
 
-        /* selected pill */
         .selpill{display:inline-flex;align-items:center;gap:9px;padding:7px 16px 7px 7px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);border-radius:100px;margin-bottom:14px;}
         .spsw{width:24px;height:24px;border-radius:50%;border:2px solid rgba(255,255,255,.14);flex-shrink:0;transition:background .3s;}
         .sphex{font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(255,255,255,.46);letter-spacing:2px;}
         .sptag{font-size:.56rem;letter-spacing:2px;color:rgba(255,255,255,.2);font-weight:800;}
 
-        /* live preview */
         .lpbox{width:100%;max-width:520px;margin-bottom:20px;}
         .lplbl{font-size:.58rem;letter-spacing:3px;font-weight:800;color:rgba(255,255,255,.26);margin-bottom:10px;text-transform:uppercase;}
-        .lpouter{display:flex;justify-content:center;align-items:flex-start;}
+        .lpouter{display:flex;justify-content:center;align-items:flex-start;gap:12px;flex-wrap:wrap;}
         .lpstrip{display:flex;flex-direction:column;border-radius:9px;overflow:hidden;padding:8px 8px 12px;box-shadow:0 10px 36px rgba(0,0,0,.6);transition:background .35s;min-width:80px;max-width:96px;}
         .spp{width:100%;aspect-ratio:4/3;border-radius:4px;overflow:hidden;margin-bottom:6px;background:#222;}
         .spp img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -174,6 +162,47 @@
         .gpp{width:100%;aspect-ratio:4/3;border-radius:4px;overflow:hidden;background:#222;}
         .gpp img{width:100%;height:100%;object-fit:cover;display:block;}
         .gpb{grid-column:span 2;font-family:'Playfair Display',serif;font-style:italic;font-size:.48rem;text-align:center;margin-top:1px;transition:color .35s;}
+
+        /* ══ SPOTIFY PREVIEW ══ */
+        .lp-spotify{border-radius:12px;overflow:hidden;padding:0;box-shadow:0 10px 36px rgba(0,0,0,.7);transition:all .35s;max-width:140px;background:#121212;position:relative;}
+        .sp-cover{width:100%;aspect-ratio:1/1;overflow:hidden;background:#222;position:relative;}
+        .sp-cover img{width:100%;height:100%;object-fit:cover;display:block;}
+        .sp-photo-grid{display:grid;grid-template-columns:1fr 1fr;width:100%;height:100%;}
+        .sp-photo-cell{overflow:hidden;background:#222;}
+        .sp-photo-cell img{width:100%;height:100%;object-fit:cover;display:block;}
+        .sp-info{padding:8px 8px 10px;background:#121212;}
+        .sp-song{font-size:.52rem;font-weight:800;color:#fff;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;}
+        .sp-artist{font-size:.44rem;color:rgba(255,255,255,.5);letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px;}
+        .sp-bar-wrap{width:100%;height:3px;background:rgba(255,255,255,.15);border-radius:2px;margin-bottom:4px;}
+        .sp-bar{height:100%;border-radius:2px;background:var(--sp);transition:width .3s;}
+        .sp-time{display:flex;justify-content:space-between;font-size:.38rem;color:rgba(255,255,255,.35);font-family:'Space Mono',monospace;}
+        .sp-controls{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:5px;}
+        .sp-ctrl{font-size:.55rem;color:rgba(255,255,255,.4);}
+        .sp-ctrl.play{font-size:.75rem;color:#fff;}
+        .sp-logo{display:flex;align-items:center;gap:3px;margin-top:4px;justify-content:center;}
+        .sp-logo svg{width:10px;height:10px;fill:var(--sp);}
+        .sp-logo-txt{font-size:.38rem;color:rgba(255,255,255,.3);font-weight:700;letter-spacing:1px;}
+
+        /* ══ SPOTIFY CUSTOMIZER ══ */
+        .sp-config{width:100%;max-width:520px;margin-bottom:20px;background:rgba(29,185,84,.06);border:1.5px solid rgba(29,185,84,.2);border-radius:20px;overflow:hidden;}
+        .sp-config-header{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid rgba(29,185,84,.12);}
+        .sp-config-header svg{width:18px;height:18px;fill:var(--sp);}
+        .sp-config-header span{font-size:.62rem;font-weight:800;letter-spacing:2px;color:var(--sp);text-transform:uppercase;}
+        .sp-config-body{padding:14px;}
+        .sp-field{margin-bottom:12px;}
+        .sp-field-lbl{font-size:.56rem;letter-spacing:2px;font-weight:800;color:rgba(255,255,255,.3);margin-bottom:6px;text-transform:uppercase;}
+        .sp-input{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);color:#fff;padding:10px 14px;border-radius:11px;font-size:.82rem;font-weight:600;transition:border-color .3s;}
+        .sp-input:focus{outline:none;border-color:rgba(29,185,84,.6);background:rgba(29,185,84,.04);}
+        .sp-input::placeholder{color:rgba(255,255,255,.2);}
+        .sp-dur-row{display:flex;align-items:center;gap:10px;}
+        .sp-dur-lbl{font-size:.56rem;letter-spacing:2px;font-weight:800;color:rgba(255,255,255,.3);white-space:nowrap;}
+        input[type=range].sp-range{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,.12);outline:none;cursor:pointer;border:none;}
+        input[type=range].sp-range::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--sp);cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.4);}
+        .sp-dur-val{font-family:'Space Mono',monospace;font-size:.68rem;color:rgba(29,185,84,.8);width:36px;text-align:right;flex-shrink:0;}
+        .sp-prog-row{display:flex;align-items:center;gap:10px;margin-top:4px;}
+        input[type=range].sp-prog{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,.12);outline:none;cursor:pointer;border:none;}
+        input[type=range].sp-prog::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--sp);cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.4);}
+        .sp-prog-val{font-family:'Space Mono',monospace;font-size:.68rem;color:rgba(29,185,84,.8);width:36px;text-align:right;flex-shrink:0;}
 
         /* CAMERA */
         .cambar{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:.65rem;letter-spacing:2px;color:rgba(255,255,255,.26);font-weight:700;}
@@ -198,7 +227,6 @@
         .shutter:active{transform:scale(.9);}
         .shutter:disabled{opacity:.34;cursor:not-allowed;transform:none;}
 
-        /* RESULT */
         #fimg{max-width:280px;width:100%;object-fit:contain;border-radius:14px;margin-bottom:20px;box-shadow:0 26px 65px rgba(0,0,0,.74),0 0 0 1px rgba(255,71,126,.16);transition:transform .3s;display:block;}
         #fimg:hover{transform:scale(1.02) rotate(-.5deg);}
         .rbtns{display:flex;gap:9px;margin-bottom:18px;flex-wrap:wrap;justify-content:center;}
@@ -208,7 +236,6 @@
         .soc a{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.52);font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .3s;text-decoration:none;}
         .soc a:hover{background:rgba(255,71,126,.13);border-color:var(--p);color:var(--p);transform:translateY(-4px);}
 
-        /* HERO FILM */
         .hfilm{display:flex;gap:9px;margin-bottom:38px;perspective:800px;}
         .ff{width:62px;height:82px;border-radius:6px;overflow:hidden;border:2px solid rgba(255,255,255,.07);transform:rotateY(var(--ry,0deg)) rotateZ(var(--rz,0deg));transition:transform .4s;flex-shrink:0;}
         .ff:hover{transform:rotateY(0deg) rotateZ(0deg) scale(1.12)!important;}
@@ -216,12 +243,26 @@
         .shint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.16);font-size:1rem;animation:bnc 2s ease-in-out infinite;pointer-events:none;}
         @keyframes bnc{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-7px)}}
 
+        /* Layout card Spotify badge */
+        .layout-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(29,185,84,.15);border:1px solid rgba(29,185,84,.3);color:var(--sp);padding:3px 8px;border-radius:100px;font-size:.52rem;font-weight:800;letter-spacing:1.5px;margin-top:5px;}
+        .layout-badge svg{width:8px;height:8px;fill:var(--sp);}
+
+        /* Spotify card special styling */
+        .card.spotify-card.sel{border-color:var(--sp);background:rgba(29,185,84,.08);box-shadow:0 0 0 1px rgba(29,185,84,.22),0 8px 24px rgba(29,185,84,.13);}
+        .card.spotify-card.sel .ck{background:var(--sp);}
+        .card.spotify-card.sel p{color:var(--sp);}
+        .card.spotify-card:hover{border-color:rgba(29,185,84,.38);}
+
+        /* Ogrid 3 columns when spotify is visible */
+        .ogrid-3{grid-template-columns:repeat(3,1fr);}
+
         canvas{display:none;}
         @media(max-width:440px){
             .sgrid{grid-template-columns:repeat(5,1fr);}
             .ggrid{grid-template-columns:repeat(3,1fr);}
             .cptab{font-size:.52rem;padding:9px 3px;}
             h1{font-size:2rem;}
+            .ogrid{grid-template-columns:1fr 1fr;}
         }
     </style>
 </head>
@@ -253,16 +294,79 @@
     <h1>Layout &amp;<em> Color</em></h1>
     <p class="desc">Choose your layout and frame color. Preview updates live!</p>
 
-    <div class="ogrid">
+    <div class="ogrid" id="layout-grid">
         <div class="card sel" onclick="selLayout('strip',this)">
             <div class="ck"><i class="fas fa-check"></i></div>
             <img src="https://cdn.nekohime.site/file/Tm2-TSOP.png" alt="Strip">
-            <p>CLASSIC STRIP (1&times;4)</p>
+            <p>CLASSIC STRIP (1×4)</p>
         </div>
         <div class="card" onclick="selLayout('grid',this)">
             <div class="ck"><i class="fas fa-check"></i></div>
             <img src="https://cdn.nekohime.site/file/vxijEdyv.png" alt="Grid">
-            <p>MODERN GRID (2&times;2)</p>
+            <p>MODERN GRID (2×2)</p>
+        </div>
+        <div class="card spotify-card" onclick="selLayout('spotify',this)" style="grid-column: span 2;">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <!-- Spotify layout mini preview -->
+            <div style="display:flex;justify-content:center;margin-bottom:9px;">
+                <div style="width:100px;border-radius:10px;overflow:hidden;background:#121212;box-shadow:0 4px 16px rgba(0,0,0,.6);">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;aspect-ratio:1/1;">
+                        <div style="background:#2a2a2a;overflow:hidden;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;" alt=""></div>
+                        <div style="background:#1a1a1a;overflow:hidden;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:sepia(.4);" alt=""></div>
+                        <div style="background:#222;overflow:hidden;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1);" alt=""></div>
+                        <div style="background:#1c1c1c;overflow:hidden;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:contrast(1.3);" alt=""></div>
+                    </div>
+                    <div style="padding:6px 7px 7px;background:#121212;">
+                        <div style="font-size:.55rem;font-weight:800;color:#fff;margin-bottom:1px;">Song Title</div>
+                        <div style="font-size:.45rem;color:rgba(255,255,255,.45);margin-bottom:5px;">Artist Name</div>
+                        <div style="height:2.5px;background:rgba(255,255,255,.15);border-radius:2px;margin-bottom:3px;">
+                            <div style="width:38%;height:100%;background:#1DB954;border-radius:2px;"></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:.36rem;color:rgba(255,255,255,.3);font-family:monospace;">1:23<span>3:45</span></div>
+                    </div>
+                </div>
+            </div>
+            <p>SPOTIFY NOW PLAYING</p>
+            <div style="display:flex;justify-content:center;">
+                <span class="layout-badge">
+                    <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                    SPOTIFY
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spotify Customizer (shown only when spotify layout selected) -->
+    <div class="sp-config" id="sp-config" style="display:none;">
+        <div class="sp-config-header">
+            <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+            <span>Spotify Customization</span>
+        </div>
+        <div class="sp-config-body">
+            <div class="sp-field">
+                <p class="sp-field-lbl"><i class="fas fa-music" style="margin-right:5px;"></i>Song Title</p>
+                <input class="sp-input" id="sp-title" type="text" placeholder="e.g. Cruel Summer" value="Cruel Summer" oninput="updSpotifyPreview()">
+            </div>
+            <div class="sp-field">
+                <p class="sp-field-lbl"><i class="fas fa-user" style="margin-right:5px;"></i>Artist / Publisher</p>
+                <input class="sp-input" id="sp-artist" type="text" placeholder="e.g. Taylor Swift" value="Taylor Swift" oninput="updSpotifyPreview()">
+            </div>
+            <div class="sp-field">
+                <p class="sp-field-lbl"><i class="fas fa-clock" style="margin-right:5px;"></i>Song Duration</p>
+                <div class="sp-dur-row">
+                    <span class="sp-dur-lbl">TOTAL</span>
+                    <input type="range" class="sp-range" id="sp-dur" min="30" max="600" value="207" oninput="updSpotifyPreview()">
+                    <span class="sp-dur-val" id="sp-dur-val">3:27</span>
+                </div>
+            </div>
+            <div class="sp-field">
+                <p class="sp-field-lbl"><i class="fas fa-play" style="margin-right:5px;"></i>Playback Progress</p>
+                <div class="sp-prog-row">
+                    <span class="sp-dur-lbl">POS</span>
+                    <input type="range" class="sp-prog" id="sp-prog" min="0" max="100" value="38" oninput="updSpotifyPreview()">
+                    <span class="sp-prog-val" id="sp-prog-val">38%</span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -272,7 +376,7 @@
         <span class="sptag">SELECTED</span>
     </div>
 
-    <div class="cpbox">
+    <div class="cpbox" id="cpbox">
         <div class="cptabs">
             <button class="cptab a" onclick="swTab('swatches',this)"><i class="fas fa-palette" style="margin-right:3px;"></i>PRESETS</button>
             <button class="cptab" onclick="swTab('gradient',this)"><i class="fas fa-wand-magic-sparkles" style="margin-right:3px;"></i>GRADIENT</button>
@@ -280,19 +384,15 @@
             <button class="cptab" onclick="swTab('advanced',this)"><i class="fas fa-sliders" style="margin-right:3px;"></i>ADVANCED</button>
         </div>
 
-        <!-- PRESETS -->
         <div class="cppanel a" id="panel-swatches">
             <p class="advlbl">CLASSIC</p><div class="sgrid" id="sg-c"></div>
             <p class="advlbl" style="margin-top:12px;">PASTEL</p><div class="sgrid" id="sg-p"></div>
             <p class="advlbl" style="margin-top:12px;">DARK</p><div class="sgrid" id="sg-d"></div>
         </div>
 
-        <!-- GRADIENT -->
         <div class="cppanel" id="panel-gradient">
             <p class="advlbl">GRADIENT PRESETS</p>
             <div class="ggrid" id="ggrid"></div>
-
-            <!-- Custom Gradient Builder -->
             <div class="gcustom">
                 <p class="gcustom-label"><i class="fas fa-paintbrush" style="margin-right:5px;"></i>CUSTOM GRADIENT</p>
                 <div class="gstops" id="gstops"></div>
@@ -307,7 +407,6 @@
             </div>
         </div>
 
-        <!-- HEX -->
         <div class="cppanel" id="panel-hex">
             <p class="advlbl">ENTER HEX CODE</p>
             <div class="hexrow">
@@ -323,7 +422,6 @@
             <div class="qcodes" id="qcodes"></div>
         </div>
 
-        <!-- ADVANCED -->
         <div class="cppanel" id="panel-advanced">
             <div class="advsec">
                 <p class="advlbl">RGB</p>
@@ -362,6 +460,39 @@
                 <div class="gpp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div>
                 <div class="gpp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div>
                 <div class="gpb" id="lpbg" style="color:#000;">V-Photobooth</div>
+            </div>
+            <!-- Spotify Preview -->
+            <div id="lp-spotify" class="lp-spotify" style="display:none;">
+                <div class="sp-cover">
+                    <div class="sp-photo-grid" id="sp-prev-grid">
+                        <div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div>
+                        <div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div>
+                        <div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div>
+                        <div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3);"></div>
+                    </div>
+                </div>
+                <div class="sp-info">
+                    <div class="sp-song" id="sp-prev-song">Cruel Summer</div>
+                    <div class="sp-artist" id="sp-prev-artist">Taylor Swift</div>
+                    <div class="sp-bar-wrap">
+                        <div class="sp-bar" id="sp-prev-bar" style="width:38%;"></div>
+                    </div>
+                    <div class="sp-time">
+                        <span id="sp-prev-cur">1:18</span>
+                        <span id="sp-prev-tot">3:27</span>
+                    </div>
+                    <div class="sp-controls">
+                        <span class="sp-ctrl"><i class="fas fa-shuffle"></i></span>
+                        <span class="sp-ctrl"><i class="fas fa-backward-step"></i></span>
+                        <span class="sp-ctrl play"><i class="fas fa-circle-pause"></i></span>
+                        <span class="sp-ctrl"><i class="fas fa-forward-step"></i></span>
+                        <span class="sp-ctrl"><i class="fas fa-repeat"></i></span>
+                    </div>
+                    <div class="sp-logo">
+                        <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                        <span class="sp-logo-txt">SPOTIFY</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -474,17 +605,16 @@
 
 <script>
 'use strict';
-/* ═══════ STATE ═══════ */
 const S = {
     layout:'strip', color:'#ffffff', isGrad:false, gradCSS:'',
     filter:'none', ratio:'4:3', photos:[], mirrored:true, timerSec:3, shooting:false,
     advR:255, advG:255, advB:255,
-    gStops:[{hex:'ff477e'},{hex:'ff1f61'}], gAngle:135
+    gStops:[{hex:'ff477e'},{hex:'ff1f61'}], gAngle:135,
+    spTitle:'Cruel Summer', spArtist:'Taylor Swift', spDur:207, spProg:38
 };
 const $=id=>document.getElementById(id);
 const video=$('video'), shutter=$('shutter'), cdownEl=$('cdown'), flashEl=$('flash');
 
-/* ═══════ DATA ═══════ */
 const SW_C=[
     {hex:'#ffffff',n:'WHITE'},{hex:'#f5f5f5',n:'SNOW'},{hex:'#e0e0e0',n:'SILVER'},{hex:'#9e9e9e',n:'GRAY'},
     {hex:'#121212',n:'BLACK'},{hex:'#2d2d2d',n:'CHARCOAL'},{hex:'#ff477e',n:'PINK'},{hex:'#ff1f61',n:'ROSE'},
@@ -512,11 +642,31 @@ const QC=['FFFFFF','121212','FFD1DC','D4F1F4','FFF8DC','1A1A2E','FF477E','2C2C54
 const FCSS={none:'none',vintage:'sepia(.6) contrast(1.2) saturate(.8)',bnw:'grayscale(1)',sharpen:'contrast(1.3) saturate(1.4) brightness(1.1)'};
 const FNAMES={none:'NATURAL',vintage:'VINTAGE',bnw:'B & W',sharpen:'VIVID GLOW'};
 
+function secToMMSS(s){ const m=Math.floor(s/60); return m+':'+(s%60<10?'0':'')+(s%60); }
+
+/* ═══════ SPOTIFY PREVIEW ═══════ */
+function updSpotifyPreview(){
+    S.spTitle=$('sp-title').value||'Song Title';
+    S.spArtist=$('sp-artist').value||'Artist Name';
+    S.spDur=+$('sp-dur').value;
+    S.spProg=+$('sp-prog').value;
+
+    $('sp-dur-val').textContent=secToMMSS(S.spDur);
+    $('sp-prog-val').textContent=S.spProg+'%';
+
+    const curSec=Math.round(S.spDur*S.spProg/100);
+    $('sp-prev-song').textContent=S.spTitle;
+    $('sp-prev-artist').textContent=S.spArtist;
+    $('sp-prev-bar').style.width=S.spProg+'%';
+    $('sp-prev-cur').textContent=secToMMSS(curSec);
+    $('sp-prev-tot').textContent=secToMMSS(S.spDur);
+}
+
 /* ═══════ BUILD UI ═══════ */
 function buildUI(){
     buildSW('sg-c',SW_C); buildSW('sg-p',SW_P); buildSW('sg-d',SW_D);
     buildGrads(); buildQC(); buildGStops(); onGradChange();
-    updPreview();
+    updPreview(); updSpotifyPreview();
 }
 function buildSW(id,list){
     const g=$(id);
@@ -561,10 +711,8 @@ function buildGStops(){
         c.appendChild(row);
     });
 }
-
 function onStopHex(i,val){
     const clean=val.replace(/[^0-9a-fA-F]/g,'').slice(0,6);
-    // update input display
     const inputs=$('gstops').querySelectorAll('.gstop-hex');
     if(inputs[i]) inputs[i].value=clean.toUpperCase();
     if(clean.length===6){
@@ -574,34 +722,18 @@ function onStopHex(i,val){
         onGradChange();
     }
 }
-
 function pickStopColor(i){
-    // create hidden color input
     const inp=document.createElement('input'); inp.type='color';
     inp.value='#'+S.gStops[i].hex;
     inp.style.display='none'; document.body.appendChild(inp);
-    inp.addEventListener('input',()=>{
-        const hex=inp.value.replace('#','');
-        S.gStops[i].hex=hex;
-        buildGStops(); onGradChange();
-    });
+    inp.addEventListener('input',()=>{ const hex=inp.value.replace('#',''); S.gStops[i].hex=hex; buildGStops(); onGradChange(); });
     inp.addEventListener('change',()=>{ document.body.removeChild(inp); });
     inp.click();
 }
-
-function addStop(){
-    if(S.gStops.length>=6) return;
-    S.gStops.push({hex:'ffffff'});
-    buildGStops(); onGradChange();
-}
-function removeStop(i){
-    if(S.gStops.length<=2) return;
-    S.gStops.splice(i,1);
-    buildGStops(); onGradChange();
-}
+function addStop(){ if(S.gStops.length>=6) return; S.gStops.push({hex:'ffffff'}); buildGStops(); onGradChange(); }
+function removeStop(i){ if(S.gStops.length<=2) return; S.gStops.splice(i,1); buildGStops(); onGradChange(); }
 function onGradChange(){
-    const angle=+$('g-angle').value;
-    S.gAngle=angle;
+    const angle=+$('g-angle').value; S.gAngle=angle;
     $('g-angle-val').textContent=angle+'°';
     const stops=S.gStops.map(s=>'#'+s.hex).join(',');
     const css=`linear-gradient(${angle}deg,${stops})`;
@@ -611,7 +743,6 @@ function onGradChange(){
 function applyCustomGrad(){
     const css=S._customGradCSS||`linear-gradient(135deg,#${S.gStops.map(s=>s.hex).join(',#')})`;
     applyColor(css,true,css);
-    // clear preset selection
     document.querySelectorAll('.gi').forEach(el=>el.classList.remove('sel'));
 }
 
@@ -635,14 +766,12 @@ function applyColor(val,isGrad,gradCSS){
     updPreview();
 }
 
-/* ═══════ TABS ═══════ */
 function swTab(name,btn){
     document.querySelectorAll('.cptab').forEach(t=>t.classList.remove('a'));
     document.querySelectorAll('.cppanel').forEach(p=>p.classList.remove('a'));
     btn.classList.add('a'); $('panel-'+name).classList.add('a');
 }
 
-/* ═══════ HEX ═══════ */
 function onHexIn(v){
     const c=v.replace(/[^0-9a-fA-F]/g,'').slice(0,6);
     $('hxinput').value=c.toUpperCase();
@@ -655,7 +784,6 @@ function applyHex(){
 }
 function quickHex(code){ $('hxinput').value=code; $('hxsw').style.background='#'+code; applyColor('#'+code,false,''); }
 
-/* ═══════ ADVANCED ═══════ */
 function onRGB(){
     const r=+$('sl-r').value,g=+$('sl-g').value,b=+$('sl-b').value;
     $('vr').textContent=r; $('vg').textContent=g; $('vb').textContent=b;
@@ -692,7 +820,6 @@ function syncSliders(hex){
     $('advsw').style.background=hex; $('advhex').textContent=hex.toUpperCase();
 }
 
-/* ═══════ COLOR UTILS ═══════ */
 function h2r(hex){ const h=hex.replace('#',''); if(h.length!==6) return null; return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
 function r2h(r,g,b){ return'#'+[r,g,b].map(x=>Math.round(x).toString(16).padStart(2,'0')).join(''); }
 function isDark(hex){ const r=h2r(hex); if(!r) return false; return(0.299*r[0]+0.587*r[1]+0.114*r[2])/255<0.45; }
@@ -720,8 +847,13 @@ function updPreview(){
     const tc=contrast(S.color,S.isGrad);
     $('lps').style.display=S.layout==='strip'?'flex':'none';
     $('lpg').style.display=S.layout==='grid'?'grid':'none';
+    $('lp-spotify').style.display=S.layout==='spotify'?'block':'none';
     $('lps').style.background=bg; $('lpg').style.background=bg;
     $('lpbs').style.color=tc; $('lpbg').style.color=tc;
+    // Color picker + spotify config visibility
+    $('cpbox').style.display=S.layout==='spotify'?'none':'block';
+    $('selpill').style.display=S.layout==='spotify'?'none':'inline-flex';
+    $('sp-config').style.display=S.layout==='spotify'?'block':'none';
 }
 
 /* ═══════ NAVIGATION ═══════ */
@@ -741,8 +873,12 @@ function backCam(){ stopCam(); S.shooting=false; shutter.disabled=false; goTo(3)
 function reshoot(){ S.photos=[]; S.shooting=false; shutter.disabled=false; resetPips(); $('caminfo').textContent='PRESS THE BUTTON TO START'; goTo(4); }
 function stopCam(){ if(video.srcObject){video.srcObject.getTracks().forEach(t=>t.stop());video.srcObject=null;} }
 
-/* ═══════ LAYOUT/CARD/RATIO ═══════ */
-function selLayout(v,el){ S.layout=v; el.parentElement.querySelectorAll('.card').forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); updPreview(); }
+function selLayout(v,el){
+    S.layout=v;
+    el.parentElement.querySelectorAll('.card').forEach(c=>c.classList.remove('sel'));
+    el.classList.add('sel');
+    updPreview();
+}
 function selCard(type,v,el){ S[type]=v; el.parentElement.querySelectorAll('.card').forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); if(type==='filter') applyFilter(); }
 function selRatio(v,el){ S.ratio=v; document.querySelectorAll('#rgrp .pill').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); }
 
@@ -810,6 +946,14 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
 /* ═══════ RENDER ═══════ */
 function renderFinal(pw,ph){
+    if(S.layout==='spotify'){
+        renderSpotify(pw,ph);
+    } else {
+        renderClassic(pw,ph);
+    }
+}
+
+function renderClassic(pw,ph){
     const canvas=$('cf'),ctx=canvas.getContext('2d');
     const pad=50,bot=240;
     if(S.layout==='strip'){canvas.width=pw+pad*2;canvas.height=ph*4+pad*5+bot;}
@@ -830,6 +974,183 @@ function renderFinal(pw,ph){
         img.onerror=()=>{ done++; if(done===4) watermark(canvas,ctx); };
     });
 }
+
+/* ═══════ SPOTIFY RENDER ═══════ */
+function renderSpotify(pw,ph){
+    const canvas=$('cf'),ctx=canvas.getContext('2d');
+    // Square canvas: photos as 2x2 grid on top, spotify player panel below
+    const gridSize=pw*2; // 2 photos wide
+    const cellW=pw, cellH=ph;
+    const gridH=cellH*2;
+    const playerH=Math.round(gridSize*0.38);
+    const canvasW=gridSize;
+    const canvasH=gridH+playerH;
+    canvas.width=canvasW; canvas.height=canvasH;
+
+    // Background: dark spotify
+    ctx.fillStyle='#121212';
+    ctx.fillRect(0,0,canvasW,canvasH);
+
+    // Load 4 photos into 2x2 grid (no padding, full bleed)
+    let done=0;
+    S.photos.forEach((src,i)=>{
+        const img=new Image(); img.src=src;
+        const gx=(i%2)*cellW;
+        const gy=Math.floor(i/2)*cellH;
+        img.onload=()=>{
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(gx,gy,cellW,cellH);
+            ctx.clip();
+            ctx.drawImage(img,gx,gy,cellW,cellH);
+            ctx.restore();
+            done++;
+            if(done===4) drawSpotifyPlayer(canvas,ctx,canvasW,gridH,playerH);
+        };
+        img.onerror=()=>{ done++; if(done===4) drawSpotifyPlayer(canvas,ctx,canvasW,gridH,playerH); };
+    });
+}
+
+function drawSpotifyPlayer(canvas,ctx,cw,gridH,playerH){
+    // Subtle gradient overlay at bottom of grid
+    const grad=ctx.createLinearGradient(0,gridH-playerH*0.6,0,gridH);
+    grad.addColorStop(0,'rgba(18,18,18,0)');
+    grad.addColorStop(1,'rgba(18,18,18,0.92)');
+    ctx.fillStyle=grad;
+    ctx.fillRect(0,gridH-playerH*0.6,cw,playerH*0.6);
+
+    // Player panel background
+    ctx.fillStyle='#121212';
+    ctx.fillRect(0,gridH,cw,playerH);
+
+    const pad=Math.round(cw*0.07);
+    const fs=Math.round(cw*0.042); // base font size
+
+    // Song title
+    ctx.font=`bold ${Math.round(fs*1.1)}px 'Plus Jakarta Sans',sans-serif`;
+    ctx.fillStyle='#ffffff';
+    ctx.textAlign='left';
+    const titleY=gridH+pad+Math.round(fs*1.3);
+    ctx.fillText(clipText(ctx,S.spTitle,cw-pad*2),pad,titleY);
+
+    // Artist
+    ctx.font=`${Math.round(fs*0.85)}px 'Plus Jakarta Sans',sans-serif`;
+    ctx.fillStyle='rgba(255,255,255,0.5)';
+    ctx.fillText(clipText(ctx,S.spArtist,cw-pad*2),pad,titleY+Math.round(fs*1.35));
+
+    // Heart icon area (right side)
+    const heartX=cw-pad;
+    const heartY=gridH+pad+Math.round(fs*0.9);
+    ctx.font=`${Math.round(fs*0.95)}px sans-serif`;
+    ctx.fillStyle='rgba(255,255,255,0.3)';
+    ctx.textAlign='right';
+    // draw ♥
+    ctx.fillText('♥',heartX,heartY);
+    ctx.textAlign='left';
+
+    // Progress bar
+    const barY=titleY+Math.round(fs*2.7);
+    const barH=Math.round(cw*0.008);
+    const barW=cw-pad*2;
+    const prog=S.spProg/100;
+
+    // bar track
+    roundRect(ctx,pad,barY,barW,barH,barH/2);
+    ctx.fillStyle='rgba(255,255,255,0.18)';
+    ctx.fill();
+
+    // bar fill (green)
+    roundRect(ctx,pad,barY,barW*prog,barH,barH/2);
+    ctx.fillStyle='#1DB954';
+    ctx.fill();
+
+    // scrubber dot
+    const dotR=Math.round(cw*0.012);
+    ctx.beginPath();
+    ctx.arc(pad+barW*prog,barY+barH/2,dotR,0,Math.PI*2);
+    ctx.fillStyle='#ffffff';
+    ctx.fill();
+
+    // Time labels
+    const timeY=barY+barH+Math.round(fs*0.95);
+    ctx.font=`${Math.round(fs*0.72)}px 'Space Mono',monospace`;
+    ctx.fillStyle='rgba(255,255,255,0.35)';
+    ctx.textAlign='left';
+    ctx.fillText(secToMMSS(Math.round(S.spDur*prog)),pad,timeY);
+    ctx.textAlign='right';
+    ctx.fillText(secToMMSS(S.spDur),cw-pad,timeY);
+    ctx.textAlign='left';
+
+    // Controls row
+    const ctrlY=timeY+Math.round(fs*1.8);
+    const ctrlCX=cw/2;
+    const ctrlSpacing=Math.round(cw*0.13);
+
+    // shuffle
+    drawIcon(ctx,'⇄',ctrlCX-ctrlSpacing*2,ctrlY,Math.round(fs*0.9),'rgba(255,255,255,0.4)');
+    // prev
+    drawIcon(ctx,'⏮',ctrlCX-ctrlSpacing,ctrlY,Math.round(fs*1.05),'rgba(255,255,255,0.7)');
+    // play/pause circle
+    ctx.beginPath();
+    ctx.arc(ctrlCX,ctrlY-Math.round(fs*0.3),Math.round(fs*1.05),0,Math.PI*2);
+    ctx.fillStyle='#ffffff';
+    ctx.fill();
+    ctx.font=`bold ${Math.round(fs*1.0)}px sans-serif`;
+    ctx.fillStyle='#121212';
+    ctx.textAlign='center';
+    ctx.fillText('⏸',ctrlCX,ctrlY+Math.round(fs*0.25));
+    ctx.textAlign='left';
+    // next
+    drawIcon(ctx,'⏭',ctrlCX+ctrlSpacing,ctrlY,Math.round(fs*1.05),'rgba(255,255,255,0.7)');
+    // repeat
+    drawIcon(ctx,'↺',ctrlCX+ctrlSpacing*2,ctrlY,Math.round(fs*0.9),'rgba(255,255,255,0.4)');
+
+    // Spotify logo at bottom
+    const logoY=canvas.height-Math.round(fs*0.9);
+    ctx.font=`bold ${Math.round(fs*0.68)}px 'Plus Jakarta Sans',sans-serif`;
+    ctx.fillStyle='rgba(29,185,84,0.7)';
+    ctx.textAlign='center';
+    ctx.fillText('♫  SPOTIFY',cw/2,logoY);
+
+    // Date watermark
+    const now=new Date();
+    const day=now.getDate(),month=now.toLocaleDateString('en-US',{month:'long'}).toUpperCase(),year=now.getFullYear();
+    const time=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}).replace(':','.');
+    ctx.font=`${Math.round(fs*0.58)}px 'Space Mono',monospace`;
+    ctx.fillStyle='rgba(255,255,255,0.2)';
+    ctx.fillText(`${day} ${month} ${year}  •  ${time}  •  V-PHOTOBOOTH BY DENJI`,cw/2,logoY-Math.round(fs*1.1));
+    ctx.textAlign='left';
+
+    $('fimg').src=canvas.toDataURL('image/jpeg',.95);
+    goTo(5); confettiTime();
+}
+
+function clipText(ctx,text,maxW){
+    if(ctx.measureText(text).width<=maxW) return text;
+    let t=text;
+    while(ctx.measureText(t+'…').width>maxW && t.length>0) t=t.slice(0,-1);
+    return t+'…';
+}
+function drawIcon(ctx,icon,x,y,size,color){
+    ctx.font=`${size}px sans-serif`;
+    ctx.fillStyle=color;
+    ctx.textAlign='center';
+    ctx.fillText(icon,x,y);
+}
+function roundRect(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.lineTo(x+w-r,y);
+    ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+    ctx.lineTo(x+w,y+h-r);
+    ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    ctx.lineTo(x+r,y+h);
+    ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+    ctx.lineTo(x,y+r);
+    ctx.quadraticCurveTo(x,y,x+r,y);
+    ctx.closePath();
+}
+
 function rrect(ctx,x,y,w,h,r){
     ctx.beginPath();
     ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
