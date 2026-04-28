@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Photos — V-Photobooth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+<base target="_blank">
+</head>
+<body>
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+<div class="blob b3"></div>
+
+<section class="step active" id="step-5">
+    <div class="dots"><div class="dot d"></div><div class="dot d"></div><div class="dot d"></div><div class="dot d"></div><div class="dot a"></div></div>
+    <div class="badge"><span class="bdot"></span>YOUR PHOTOS ARE READY</div>
+    <h1>Look at<em> You!</em></h1>
+    <p class="desc">Gorgeous! Save your strip and share it with the world.</p>
+    <img id="fimg" alt="Result">
+    <div class="rbtns">
+        <button class="btn" onclick="dlImg()"><i class="fas fa-download" style="margin-right:7px;"></i>SAVE</button>
+        <button class="btn2" onclick="reshoot()"><i class="fas fa-rotate-left" style="margin-right:7px;"></i>RESHOOT</button>
+        <button class="btn2" onclick="startOver()">START OVER</button>
+    </div>
+    <div class="about">
+        <p>KEEP IN TOUCH WITH DENJI</p>
+        <div class="soc">
+            <a href="https://www.instagram.com/hii.yvnaa_" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://whatsapp.com/channel/0029Vb7adkSAojYxeMA7oU3v" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            <a href="mailto:hiiyunaaa@gmail.com"><i class="far fa-envelope"></i></a>
+            <a href="https://saweria.co/itsyunaa" target="_blank"><i class="far fa-heart"></i></a>
+        </div>
+    </div>
+</section>
+
+<canvas id="cf"></canvas>
+
+<script src="js/common.js"></script>
+<script src="js/step5.js"></script>
+</body>
+</html>
