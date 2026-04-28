@@ -234,6 +234,18 @@
 
         #fimg{max-width:280px;width:100%;object-fit:contain;border-radius:14px;margin-bottom:20px;box-shadow:0 26px 65px rgba(0,0,0,.74),0 0 0 1px rgba(255,71,126,.16);transition:transform .3s;display:block;}
         #fimg:hover{transform:scale(1.02) rotate(-.5deg);}
+
+        /* ══ STICKER PANEL ══ */
+        .sticker-panel{width:100%;max-width:520px;margin-bottom:20px;background:rgba(255,71,126,.05);border:1.5px solid rgba(255,71,126,.15);border-radius:16px;padding:16px;display:none;}
+        .sticker-panel.show{display:block;}
+        .sticker-title{font-size:.68rem;letter-spacing:2px;font-weight:800;color:var(--p);margin-bottom:12px;text-transform:uppercase;}
+        .sticker-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+        .sticker-item{width:100%;aspect-ratio:1/1;border-radius:11px;border:2px solid rgba(255,71,126,.2);overflow:hidden;cursor:pointer;transition:all .3s;background:rgba(255,255,255,.02);}
+        .sticker-item:hover{border-color:var(--p);transform:scale(1.05);}
+        .sticker-item img{width:100%;height:100%;object-fit:contain;padding:4px;}
+        .sticker-ctrl{display:flex;gap:8px;flex-wrap:wrap;}
+        .sticker-info{font-size:.6rem;color:rgba(255,255,255,.4);margin-bottom:10px;padding:8px;background:rgba(255,255,255,.02);border-radius:8px;border-left:3px solid var(--p);}
+
         .rbtns{display:flex;gap:9px;margin-bottom:18px;flex-wrap:wrap;justify-content:center;}
         .about{margin-top:14px;padding:18px 24px 0;border-top:1px solid rgba(255,255,255,.07);width:100%;max-width:340px;}
         .about>p{font-size:.58rem;color:rgba(255,255,255,.26);margin-bottom:14px;letter-spacing:3px;font-weight:800;}
@@ -265,6 +277,7 @@
             .cptab{font-size:.52rem;padding:9px 3px;}
             h1{font-size:2rem;}
             .ogrid{grid-template-columns:1fr 1fr;}
+            .sticker-grid{grid-template-columns:repeat(3,1fr);}
         }
     </style>
 </head>
@@ -344,7 +357,6 @@
             <span>Spotify Customization</span>
         </div>
         <div class="sp-config-body">
-            <!-- Pilihan Layout khusus Spotify -->
             <div class="sp-field">
                 <p class="sp-field-lbl"><i class="fas fa-border-all" style="margin-right:5px;"></i>Photo Layout</p>
                 <div class="sp-lo-wrap">
@@ -491,7 +503,6 @@
                         <span id="sp-prev-tot">3:27</span>
                     </div>
                     <div class="sp-controls">
-                        <!-- Preview Icons can still use font-awesome class for HTML visualization -->
                         <span class="sp-ctrl"><i class="fas fa-shuffle"></i></span>
                         <span class="sp-ctrl"><i class="fas fa-backward-step"></i></span>
                         <span class="sp-ctrl play"><i class="fas fa-circle-pause"></i></span>
@@ -587,13 +598,27 @@
     </div>
 </section>
 
-<!-- ══ STEP 5: RESULT ══ -->
+<!-- ══ STEP 5: RESULT WITH STICKERS ══ -->
 <section class="step" id="step-5">
     <div class="dots"><div class="dot d"></div><div class="dot d"></div><div class="dot d"></div><div class="dot d"></div><div class="dot a"></div></div>
     <div class="badge"><span class="bdot"></span>YOUR PHOTOS ARE READY</div>
     <h1>Look at<em> You!</em></h1>
-    <p class="desc">Gorgeous! Save your strip and share it with the world.</p>
+    <p class="desc">Gorgeous! Add stickers and save your strip.</p>
     <img id="fimg" alt="Result">
+
+    <!-- STICKER PANEL -->
+    <div class="sticker-panel" id="sticker-panel">
+        <div class="sticker-title"><i class="fas fa-sparkles" style="margin-right:6px;"></i>Add Stickers</div>
+        <div class="sticker-info">
+            <i class="fas fa-info-circle" style="margin-right:5px;"></i>Click a sticker to add it to your photo. Position using drag & drop.
+        </div>
+        <div class="sticker-grid" id="sticker-grid"></div>
+        <div class="sticker-ctrl">
+            <button class="btn2" onclick="applyStickerToCanvas()" style="flex:1;"><i class="fas fa-check" style="margin-right:5px;"></i>Apply Stickers</button>
+            <button class="btnb" onclick="toggleStickerPanel()" style="flex:1;"><i class="fas fa-xmark" style="margin-right:5px;"></i>Skip Stickers</button>
+        </div>
+    </div>
+
     <div class="rbtns">
         <button class="btn" onclick="dlImg()"><i class="fas fa-download" style="margin-right:7px;"></i>SAVE</button>
         <button class="btn2" onclick="reshoot()"><i class="fas fa-rotate-left" style="margin-right:7px;"></i>RESHOOT</button>
@@ -612,16 +637,45 @@
 
 <canvas id="ct"></canvas>
 <canvas id="cf"></canvas>
+<canvas id="sticker-canvas" style="display:none;"></canvas>
 
 <script>
 'use strict';
+
+/* ═══════════════════════════════════════════════════
+   🎫 STICKER CONFIGURATION - MUDAH DITAMBAHKAN
+   
+   Tambahkan sticker baru dengan format:
+   { url: 'image-url-1:1', size: 80 }
+   
+   Size: berapa pixel (default 80px)
+═══════════════════════════════════════════════════ */
+
+const STICKERS = [
+    // Emojis / Icon Stickers (URL 1:1 untuk setiap sticker)
+    { url: 'https://cdn-icons-png.flaticon.com/512/4436/4436481.png', size: 100 },
+    { url: 'https://cdn-icons-png.flaticon.com/512/4436/4436481.png', size: 100 },
+    { url: 'https://cdn-icons-png.flaticon.com/512/1995/1995613.png', size: 100 },
+    { url: 'https://cdn-icons-png.flaticon.com/512/4827/4827485.png', size: 100 },
+    { url: 'https://cdn-icons-png.flaticon.com/512/747/747376.png', size: 100 },
+    { url: 'https://cdn-icons-png.flaticon.com/512/1995/1995580.png', size: 100 },
+    { url: 'https://cdn-icons-png.flaticon.com/512/3050/3050159.png', size: 100 },
+    { url: 'https://cdn-icons-png.flaticon.com/512/1995/1995536.png', size: 100 },
+    
+    // TAMBAHKAN STICKER BARU DI SINI:
+    // { url: 'GANTI_DENGAN_URL_GAMBAR_1:1', size: 100 },
+    // { url: 'GANTI_DENGAN_URL_GAMBAR_1:1', size: 100 },
+];
+
 const S = {
     layout:'strip', spLayout:'grid', color:'#ffffff', isGrad:false, gradCSS:'',
     filter:'none', ratio:'4:3', photos:[], mirrored:true, timerSec:3, shooting:false,
     advR:255, advG:255, advB:255,
     gStops:[{hex:'ff477e'},{hex:'ff1f61'}], gAngle:135,
-    spTitle:'Cruel Summer', spArtist:'Taylor Swift', spDur:207, spProg:38
+    spTitle:'Cruel Summer', spArtist:'Taylor Swift', spDur:207, spProg:38,
+    stickers: [] // Array untuk sticker yang dipilih
 };
+
 const $=id=>document.getElementById(id);
 const video=$('video'), shutter=$('shutter'), cdownEl=$('cdown'), flashEl=$('flash');
 
@@ -654,13 +708,82 @@ const FNAMES={none:'NATURAL',vintage:'VINTAGE',bnw:'B & W',sharpen:'VIVID GLOW'}
 
 function secToMMSS(s){ const m=Math.floor(s/60); return m+':'+(s%60<10?'0':'')+(s%60); }
 
+/* ═══════ STICKER FUNCTIONS ═══════ */
+function buildStickerGrid(){
+    const grid=$('sticker-grid');
+    grid.innerHTML='';
+    STICKERS.forEach((sticker,i)=>{
+        const item=document.createElement('div');
+        item.className='sticker-item';
+        item.innerHTML=`<img src="${sticker.url}" alt="Sticker ${i+1}" onerror="this.src='https://via.placeholder.com/100?text=Sticker'">`;
+        item.addEventListener('click',()=>addStickerToSelection(sticker));
+        grid.appendChild(item);
+    });
+}
+
+function addStickerToSelection(sticker){
+    S.stickers.push({
+        ...sticker,
+        x: Math.random()*100,
+        y: Math.random()*100,
+        rotation: 0,
+        scale: 1
+    });
+    console.log('Sticker ditambahkan! Total:',S.stickers.length);
+}
+
+function applyStickerToCanvas(){
+    const canvas=$('cf');
+    const ctx=canvas.getContext('2d');
+    
+    if(S.stickers.length===0){
+        toggleStickerPanel();
+        return;
+    }
+    
+    let loaded=0;
+    S.stickers.forEach(sticker=>{
+        const img=new Image();
+        img.crossOrigin='anonymous';
+        img.src=sticker.url;
+        img.onload=()=>{
+            // Hitung posisi di canvas
+            const x=(canvas.width*sticker.x/100);
+            const y=(canvas.height*sticker.y/100);
+            const size=sticker.size*sticker.scale;
+            
+            ctx.save();
+            ctx.translate(x,y);
+            ctx.rotate(sticker.rotation*Math.PI/180);
+            ctx.drawImage(img,-size/2,-size/2,size,size);
+            ctx.restore();
+            
+            loaded++;
+            if(loaded===S.stickers.length){
+                toggleStickerPanel();
+                $('fimg').src=canvas.toDataURL('image/jpeg',.95);
+            }
+        };
+        img.onerror=()=>{
+            loaded++;
+            if(loaded===S.stickers.length){
+                toggleStickerPanel();
+                $('fimg').src=canvas.toDataURL('image/jpeg',.95);
+            }
+        };
+    });
+}
+
+function toggleStickerPanel(){
+    $('sticker-panel').classList.toggle('show');
+}
+
 /* ═══════ SPOTIFY CONFIG ═══════ */
 function setSpLayout(type, btn) {
     S.spLayout = type;
     document.querySelectorAll('.sp-lo-btn').forEach(b => b.classList.remove('sel'));
     btn.classList.add('sel');
     
-    // Update live preview grid
     const pg = $('sp-prev-grid');
     if(type === 'strip') {
         pg.style.gridTemplateColumns = '1fr';
@@ -691,7 +814,7 @@ function updSpotifyPreview(){
 /* ═══════ BUILD UI ═══════ */
 function buildUI(){
     buildSW('sg-c',SW_C); buildSW('sg-p',SW_P); buildSW('sg-d',SW_D);
-    buildGrads(); buildQC(); buildGStops(); onGradChange();
+    buildGrads(); buildQC(); buildGStops(); buildStickerGrid(); onGradChange();
     updPreview(); updSpotifyPreview();
 }
 function buildSW(id,list){
@@ -876,7 +999,6 @@ function updPreview(){
     $('lp-spotify').style.display=S.layout==='spotify'?'block':'none';
     $('lps').style.background=bg; $('lpg').style.background=bg;
     $('lpbs').style.color=tc; $('lpbg').style.color=tc;
-    // Color picker + spotify config visibility
     $('cpbox').style.display=S.layout==='spotify'?'none':'block';
     $('selpill').style.display=S.layout==='spotify'?'none':'inline-flex';
     $('sp-config').style.display=S.layout==='spotify'?'block':'none';
@@ -893,6 +1015,10 @@ function goTo(s){
         $('cam-r').textContent=S.ratio;
         $('cam-f').textContent=FNAMES[S.filter]||'NATURAL';
         initCam();
+    }
+    if(s===5){
+        S.stickers=[];
+        $('sticker-panel').classList.add('show');
     }
 }
 function backCam(){ stopCam(); S.shooting=false; shutter.disabled=false; goTo(3); }
@@ -912,7 +1038,6 @@ function selRatio(v,el){
     document.querySelectorAll('#rgrp .pill').forEach(b=>b.classList.remove('sel')); 
     el.classList.add('sel'); 
     
-    // Update live previews aspect ratio dynamically
     const[rw,rh]=v.split(':');
     const ar = rw+'/'+rh;
     document.querySelectorAll('.spp, .gpp, .sp-photo-cell').forEach(cell => {
@@ -1013,8 +1138,6 @@ function renderClassic(pw,ph){
     });
 }
 
-/* ═══════ SPOTIFY RENDER (100% ACCURATE VECTOR ICONS) ═══════ */
-
 function drawSpotifyIcon(ctx, icon, x, y, size, color, filled = true) {
     ctx.save();
     ctx.translate(x, y);
@@ -1025,7 +1148,6 @@ function drawSpotifyIcon(ctx, icon, x, y, size, color, filled = true) {
     ctx.lineJoin = 'round';
 
     if (icon === 'pause') {
-        // Two vertical rectangles
         const w = size * 0.15;
         const h = size * 0.48;
         const gap = size * 0.12;
@@ -1033,7 +1155,6 @@ function drawSpotifyIcon(ctx, icon, x, y, size, color, filled = true) {
         ctx.fillRect(gap, -h / 2, w, h);
     } 
     else if (icon === 'play') {
-        // Triangle pointing right
         ctx.beginPath();
         ctx.moveTo(-size * 0.28, -size * 0.35);
         ctx.lineTo(-size * 0.28, size * 0.35);
@@ -1043,9 +1164,7 @@ function drawSpotifyIcon(ctx, icon, x, y, size, color, filled = true) {
     } 
     else if (icon === 'prev' || icon === 'next') {
         const dir = icon === 'next' ? 1 : -1;
-        // Small vertical line (bar)
         ctx.fillRect(dir * size * 0.32, -size * 0.3, size * 0.08, size * 0.6);
-        // Triangle
         ctx.beginPath();
         ctx.moveTo(dir * size * 0.1, -size * 0.3);
         ctx.lineTo(dir * size * 0.1, size * 0.3);
@@ -1056,7 +1175,6 @@ function drawSpotifyIcon(ctx, icon, x, y, size, color, filled = true) {
     else if (icon === 'shuffle') {
         const w = size * 0.35;
         const h = size * 0.25;
-        // Top arrow right
         ctx.beginPath();
         ctx.moveTo(-w, -h);
         ctx.lineTo(w, -h);
@@ -1064,7 +1182,6 @@ function drawSpotifyIcon(ctx, icon, x, y, size, color, filled = true) {
         ctx.lineTo(w, -h);
         ctx.lineTo(w - size * 0.12, -h + size * 0.15);
         ctx.stroke();
-        // Bottom arrow left
         ctx.beginPath();
         ctx.moveTo(w, h);
         ctx.lineTo(-w, h);
@@ -1072,7 +1189,6 @@ function drawSpotifyIcon(ctx, icon, x, y, size, color, filled = true) {
         ctx.lineTo(-w, h);
         ctx.lineTo(-w + size * 0.12, h + size * 0.15);
         ctx.stroke();
-        // Connecting curve
         ctx.beginPath();
         ctx.moveTo(-w, -h);
         ctx.quadraticCurveTo(0, 0, w, h);
@@ -1081,7 +1197,6 @@ function drawSpotifyIcon(ctx, icon, x, y, size, color, filled = true) {
     else if (icon === 'repeat') {
         const w = size * 0.32;
         const h = size * 0.22;
-        // Top right arrow
         ctx.beginPath();
         ctx.moveTo(-w, -h);
         ctx.lineTo(w, -h);
@@ -1090,7 +1205,6 @@ function drawSpotifyIcon(ctx, icon, x, y, size, color, filled = true) {
         ctx.lineTo(w, -h);
         ctx.lineTo(w - size * 0.1, -h - size * 0.1);
         ctx.stroke();
-        // Bottom left arrow
         ctx.beginPath();
         ctx.moveTo(w, h);
         ctx.lineTo(-w, h);
@@ -1099,7 +1213,6 @@ function drawSpotifyIcon(ctx, icon, x, y, size, color, filled = true) {
         ctx.lineTo(-w, h);
         ctx.lineTo(-w + size * 0.1, h + size * 0.1);
         ctx.stroke();
-        // Connecting curve
         ctx.beginPath();
         ctx.moveTo(w, -h);
         ctx.quadraticCurveTo(w + size * 0.25, 0, w, h);
@@ -1120,18 +1233,15 @@ function drawSpotifyIcon(ctx, icon, x, y, size, color, filled = true) {
 function drawSpotifyLogo(ctx, x, y, size) {
     ctx.save();
     ctx.translate(x, y);
-    // Green circle background
     ctx.fillStyle = '#1DB954';
     ctx.beginPath();
     ctx.arc(0, 0, size / 2, 0, Math.PI * 2);
     ctx.fill();
     
-    // Spotify curves (simplified but recognizable)
     ctx.strokeStyle = '#121212';
     ctx.lineWidth = size * 0.1;
     ctx.lineCap = 'round';
     
-    // Three curves
     const startY = -size * 0.22;
     const spacing = size * 0.18;
     for (let i = 0; i < 3; i++) {
@@ -1166,7 +1276,6 @@ function renderSpotify(pw, ph) {
     canvas.width = cw;
     canvas.height = ch;
 
-    // Dark background
     ctx.fillStyle = '#121212';
     ctx.fillRect(0, 0, cw, ch);
 
@@ -1197,7 +1306,6 @@ function renderSpotify(pw, ph) {
 }
 
 function drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH) {
-    // Gradient overlay from image to player
     const grad = ctx.createLinearGradient(0, gridH - 200, 0, gridH);
     grad.addColorStop(0, 'rgba(18,18,18,0)');
     grad.addColorStop(1, 'rgba(18,18,18,0.98)');
@@ -1207,7 +1315,6 @@ function drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH) {
     const padX = 100;
     const startY = gridH + 40;
 
-    // Song Title - Bold, large
     ctx.font = `bold 68px 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'left';
@@ -1215,33 +1322,27 @@ function drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH) {
     const titleText = clipText(ctx, S.spTitle, cw - padX * 2 - 120);
     ctx.fillText(titleText, padX, startY);
 
-    // Heart icon on right of title
     drawSpotifyIcon(ctx, 'heart', cw - padX - 50, startY + 34, 56, '#1DB954', true);
 
-    // Artist name
     ctx.font = `500 42px 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = 'rgba(255,255,255,0.6)';
     ctx.textAlign = 'left';
     const artistText = clipText(ctx, S.spArtist, cw - padX * 2);
     ctx.fillText(artistText, padX, startY + 85);
 
-    // Progress bar
     const barY = startY + 180;
     const barW = cw - padX * 2;
     const barH = 14;
     const prog = S.spProg / 100;
 
-    // Background track
     roundRect(ctx, padX, barY, barW, barH, barH / 2);
     ctx.fillStyle = 'rgba(255,255,255,0.15)';
     ctx.fill();
 
-    // Progress fill (Spotify green)
     roundRect(ctx, padX, barY, barW * prog, barH, barH / 2);
     ctx.fillStyle = '#1DB954';
     ctx.fill();
 
-    // Handle (white dot with shadow)
     ctx.beginPath();
     ctx.arc(padX + barW * prog, barY + barH / 2, 20, 0, Math.PI * 2);
     ctx.fillStyle = 'rgba(255,255,255,0.95)';
@@ -1250,7 +1351,6 @@ function drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH) {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Time labels
     const timeY = barY + 50;
     ctx.font = `400 32px 'Space Mono', monospace`;
     ctx.fillStyle = 'rgba(255,255,255,0.45)';
@@ -1259,132 +1359,10 @@ function drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH) {
     ctx.textAlign = 'right';
     ctx.fillText(secToMMSS(S.spDur), cw - padX, timeY);
 
-    // Playback Controls - Vector based (100% authentic)
     const ctrlY = startY + 310;
     const cx = cw / 2;
     const iconSize = 52;
     const spacing = 150;
 
-    // Shuffle (inactive - gray)
     drawSpotifyIcon(ctx, 'shuffle', cx - spacing * 1.5, ctrlY, iconSize, 'rgba(255,255,255,0.5)', true);
-
-    // Previous
-    drawSpotifyIcon(ctx, 'prev', cx - spacing * 0.5, ctrlY, iconSize, '#ffffff', true);
-
-    // Play/Pause (large green circle)
-    ctx.beginPath();
-    ctx.arc(cx, ctrlY, 70, 0, Math.PI * 2);
-    ctx.fillStyle = '#1DB954';
-    ctx.fill();
-
-    // Play/Pause icon inside (pause for demo)
-    drawSpotifyIcon(ctx, 'pause', cx, ctrlY, 44, '#121212', true);
-
-    // Next
-    drawSpotifyIcon(ctx, 'next', cx + spacing * 0.5, ctrlY, iconSize, '#ffffff', true);
-
-    // Repeat (inactive - gray)
-    drawSpotifyIcon(ctx, 'repeat', cx + spacing * 1.5, ctrlY, iconSize, 'rgba(255,255,255,0.5)', true);
-
-    // Footer with Spotify logo and date/time
-    const footY = canvas.height - 60;
-    const now = new Date();
-    const dateStr = `${now.getDate()} ${now.toLocaleDateString('en-US', { month: 'short' }).toUpperCase()} ${now.getFullYear()}`;
-    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).replace(':', '.');
-
-    ctx.font = `bold 26px 'Plus Jakarta Sans', sans-serif`;
-    ctx.fillStyle = 'rgba(29,185,84,0.8)';
-    ctx.textBaseline = 'middle';
-
-    const footerText = `SPOTIFY • ${dateStr} ${timeStr}`;
-    const tw = ctx.measureText(footerText).width;
-
-    drawSpotifyLogo(ctx, cx - tw / 2 - 50, footY, 40);
-    ctx.textAlign = 'left';
-    ctx.fillText(footerText, cx - tw / 2 + 10, footY);
-
-    $('fimg').src = canvas.toDataURL('image/jpeg', 0.95);
-    goTo(5);
-    confettiTime();
-}
-
-function clipText(ctx, text, maxW) {
-    if (ctx.measureText(text).width <= maxW) return text;
-    let t = text;
-    while (ctx.measureText(t + '…').width > maxW && t.length > 0) t = t.slice(0, -1);
-    return t + '…';
-}
-
-function roundRect(ctx, x, y, w, h, r) {
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.lineTo(x + w - r, y);
-    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-    ctx.lineTo(x + w, y + h - r);
-    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-    ctx.lineTo(x + r, y + h);
-    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-    ctx.lineTo(x, y + r);
-    ctx.quadraticCurveTo(x, y, x + r, y);
-    ctx.closePath();
-}
-
-function rrect(ctx, x, y, w, h, r) {
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.lineTo(x + w - r, y);
-    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-    ctx.lineTo(x + w, y + h - r);
-    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-    ctx.lineTo(x + r, y + h);
-    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-    ctx.lineTo(x, y + r);
-    ctx.quadraticCurveTo(x, y, x + r, y);
-    ctx.closePath();
-}
-
-function mkGrad(ctx, css, w, h) {
-    try {
-        const m = css.match(/linear-gradient\(([^,]+),(.+)\)$/s);
-        if (!m) return null;
-        let angle = 135;
-        const ad = m[1].trim();
-        if (ad.includes('deg')) angle = parseFloat(ad);
-        const stops = m[2].split(',').map(s => s.trim()).filter(Boolean);
-        const a = angle * Math.PI / 180;
-        const x1 = w / 2 - Math.cos(a) * w * 0.75, y1 = h / 2 - Math.sin(a) * h * 0.75;
-        const x2 = w / 2 + Math.cos(a) * w * 0.75, y2 = h / 2 + Math.sin(a) * h * 0.75;
-        const g = ctx.createLinearGradient(x1, y1, x2, y2);
-        stops.forEach((s, i) => {
-            try {
-                g.addColorStop(i / Math.max(stops.length - 1, 1), s);
-            } catch (e) { }
-        });
-        return g;
-    } catch (e) {
-        return null;
-    }
-}
-
-function watermark(canvas, ctx) {
-    const now = new Date(), cw = canvas.width, ch = canvas.height;
-    const tc = contrast(S.color, S.isGrad);
-    const ac = (isDark(S.color) || S.isGrad) ? '#ff7aaa' : '#c4224f';
-    ctx.textAlign = 'center';
-    const lw = cw * 0.22;
-    ctx.save();
-    ctx.strokeStyle = ac;
-    ctx.globalAlpha = 0.26;
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(cw / 2 - lw, ch - 188);
-    ctx.lineTo(cw / 2 + lw, ch - 188);
-    ctx.stroke();
-    ctx.restore();
-    ctx.save();
-    ctx.font = `italic bold ${Math.round(cw * 0.073)}px 'Playfair Display',serif`;
-    ctx.fillStyle = ac;
-    ctx.fillText('V-Photobooth', cw / 2, ch - 124);
-    ctx.restore();
-    ctx.save();
-    ctx.strokeStyle
+    drawSpotifyIcon(ctx, 'prev', cx - spacing * 0.5, ctrlY, iconSize,
