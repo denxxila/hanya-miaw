@@ -8,854 +8,459 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
     <style>
-        :root {
-            --primary: #ff477e;
-        }
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        button { outline: none; user-select: none; }
+        :root { --p:#ff477e; --p2:#ff1f61; }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;-webkit-tap-highlight-color:transparent;}
+        button{outline:none;user-select:none;}
+        body{background:#080808;color:#fff;overflow-x:hidden;min-height:100dvh;}
+        body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.3;
+            background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
+        .blob{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:.22;}
+        .b1{width:600px;height:600px;background:#ff477e;top:-200px;left:-200px;animation:bm1 18s ease-in-out infinite;}
+        .b2{width:500px;height:500px;background:#8b1a4a;bottom:-150px;right:-150px;animation:bm2 22s ease-in-out infinite;}
+        .b3{width:400px;height:400px;background:#3d0a20;top:50%;left:50%;transform:translate(-50%,-50%);animation:bm3 15s ease-in-out infinite;}
+        @keyframes bm1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(80px,60px) scale(1.1)}}
+        @keyframes bm2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-60px,-80px) scale(1.15)}}
+        @keyframes bm3{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.2)}}
 
-        body {
-            background: #080808;
-            color: #fff;
-            overflow-x: hidden;
-            min-height: 100dvh;
-        }
+        /* STEPS */
+        .step{display:none;min-height:100dvh;width:100%;flex-direction:column;align-items:center;justify-content:center;padding:40px 16px;text-align:center;position:relative;z-index:1;}
+        .step.active{display:flex;animation:su .6s cubic-bezier(.23,1,.32,1);}
+        @keyframes su{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 
-        /* noise overlay — pointer-events none so it never blocks clicks */
-        body::before {
-            content: '';
-            position: fixed; inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            opacity: 0.3;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-        }
+        .dots{display:flex;gap:7px;margin-bottom:28px;}
+        .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.15);transition:all .4s;}
+        .dot.a{background:var(--p);width:26px;border-radius:8px;}
+        .dot.d{background:rgba(255,71,126,.4);}
 
-        /* blobs — behind everything, pointer-events none */
-        .blob {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(120px);
-            pointer-events: none;   /* CRITICAL: never intercept clicks */
-            z-index: 0;
-            opacity: 0.25;
-        }
-        .blob-1 { width:600px; height:600px; background:#ff477e; top:-200px; left:-200px; animation:bm1 18s ease-in-out infinite; }
-        .blob-2 { width:500px; height:500px; background:#8b1a4a; bottom:-150px; right:-150px; animation:bm2 22s ease-in-out infinite; }
-        .blob-3 { width:400px; height:400px; background:#3d0a20; top:50%; left:50%; transform:translate(-50%,-50%); animation:bm3 15s ease-in-out infinite; }
-        @keyframes bm1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(80px,60px) scale(1.1)} }
-        @keyframes bm2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-60px,-80px) scale(1.15)} }
-        @keyframes bm3 { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.2)} }
+        .badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,71,126,.1);border:1px solid rgba(255,71,126,.25);color:var(--p);padding:5px 14px;border-radius:100px;font-size:.6rem;font-weight:800;letter-spacing:3px;margin-bottom:16px;text-transform:uppercase;}
+        .bdot{width:5px;height:5px;border-radius:50%;background:var(--p);animation:ping 1.5s ease-in-out infinite;}
+        @keyframes ping{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.5)}}
 
-        /* ── STEPS ── */
-        .step-container {
-            display: none;
-            min-height: 100dvh;
-            width: 100%;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 50px 20px;
-            text-align: center;
-            position: relative;
-            z-index: 1;          /* above blobs */
-        }
-        .step-container.active {
-            display: flex;
-            animation: slideUp 0.6s cubic-bezier(0.23,1,0.32,1);
-        }
-        @keyframes slideUp {
-            from { opacity:0; transform:translateY(35px); }
-            to   { opacity:1; transform:translateY(0); }
-        }
+        h1{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,5vw,3.6rem);background:linear-gradient(135deg,#fff 30%,#ff9abc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-bottom:12px;}
+        h1 em{font-style:italic;-webkit-text-fill-color:#ff9abc;}
+        p.desc{color:rgba(255,255,255,.48);margin-bottom:28px;font-size:.9rem;max-width:380px;line-height:1.7;}
+        .div{width:44px;height:2px;background:linear-gradient(90deg,transparent,var(--p),transparent);margin:0 auto 26px;}
+        .slbl{font-size:.58rem;letter-spacing:3px;font-weight:800;color:rgba(255,255,255,.26);margin-bottom:10px;text-transform:uppercase;}
 
-        /* ── STEP DOTS ── */
-        .step-indicator { display:flex; gap:8px; margin-bottom:32px; }
-        .step-dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.15); transition:all 0.4s; }
-        .step-dot.active { background:var(--primary); width:28px; border-radius:10px; }
-        .step-dot.done   { background:rgba(255,71,126,0.45); }
+        /* BUTTONS */
+        .btn{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;border:none;padding:15px 40px;font-size:.85rem;font-weight:800;border-radius:100px;cursor:pointer;transition:all .3s;letter-spacing:2px;text-transform:uppercase;box-shadow:0 8px 26px rgba(255,71,126,.38);z-index:2;}
+        .btn:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(255,71,126,.52);}
+        .btn:active{transform:scale(.95);}
+        .btn2{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);color:#fff;padding:14px 32px;font-size:.82rem;font-weight:800;border-radius:100px;cursor:pointer;transition:all .3s;letter-spacing:1.5px;text-transform:uppercase;}
+        .btn2:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.28);}
+        .btnb{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.09);color:rgba(255,255,255,.5);padding:13px 26px;font-size:.78rem;font-weight:800;border-radius:100px;cursor:pointer;transition:all .3s;letter-spacing:1.5px;text-transform:uppercase;}
+        .btnb:hover{border-color:rgba(255,255,255,.3);color:#fff;}
+        .nav{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px;flex-wrap:wrap;}
 
-        /* ── BADGE ── */
-        .badge {
-            display: inline-flex; align-items:center; gap:6px;
-            background: rgba(255,71,126,0.12);
-            border: 1px solid rgba(255,71,126,0.28);
-            color: var(--primary);
-            padding: 6px 16px; border-radius:100px;
-            font-size:0.62rem; font-weight:800; letter-spacing:3px;
-            margin-bottom:18px; text-transform:uppercase;
-        }
-        .badge-dot {
-            width:6px; height:6px; border-radius:50%;
-            background:var(--primary);
-            animation:ping 1.5s ease-in-out infinite;
-        }
-        @keyframes ping { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.5)} }
+        /* CARDS */
+        .ogrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:100%;max-width:520px;margin-bottom:22px;}
+        .card{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.07);border-radius:16px;padding:12px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;}
+        .card:hover{border-color:rgba(255,71,126,.38);transform:translateY(-3px);}
+        .card.sel{border-color:var(--p);background:rgba(255,71,126,.08);box-shadow:0 0 0 1px rgba(255,71,126,.22),0 8px 24px rgba(255,71,126,.13);}
+        .ck{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--p);display:none;align-items:center;justify-content:center;font-size:8px;color:#fff;font-weight:900;z-index:2;}
+        .card.sel .ck{display:flex;}
+        .card img{width:100%;height:auto;object-fit:contain;border-radius:9px;margin-bottom:9px;}
+        .card p{font-weight:700;font-size:.7rem;letter-spacing:1.5px;color:rgba(255,255,255,.58);}
+        .card.sel p{color:var(--p);}
+        .fprev{width:100%;aspect-ratio:4/3;border-radius:9px;overflow:hidden;margin-bottom:9px;}
+        .fprev img{width:100%;height:100%;object-fit:cover;}
 
-        /* ── HEADING ── */
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.4rem,5.5vw,3.8rem);
-            background: linear-gradient(135deg,#fff 30%,#ff9abc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.1;
-            margin-bottom: 14px;
-        }
-        h1 em { font-style:italic; -webkit-text-fill-color:#ff9abc; }
+        /* PILLS */
+        .pgroup{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:22px;}
+        .pill{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);color:rgba(255,255,255,.52);padding:8px 18px;border-radius:100px;cursor:pointer;font-weight:700;font-size:.75rem;transition:all .3s;letter-spacing:1px;}
+        .pill:hover{border-color:rgba(255,71,126,.42);color:#fff;}
+        .pill.sel{border-color:var(--p);background:rgba(255,71,126,.13);color:var(--p);}
 
-        p.desc {
-            color: rgba(255,255,255,0.5);
-            margin-bottom: 32px;
-            font-size: 0.93rem;
-            max-width: 400px;
-            line-height: 1.75;
-        }
-        .divider {
-            width:50px; height:2px;
-            background:linear-gradient(90deg,transparent,var(--primary),transparent);
-            margin:0 auto 30px;
-        }
-        .section-label {
-            font-size:0.62rem; letter-spacing:3px; font-weight:800;
-            color:rgba(255,255,255,0.28); margin-bottom:12px; text-transform:uppercase;
-        }
+        /* ═══ COLOR PICKER ═══ */
+        .cpbox{width:100%;max-width:520px;margin-bottom:20px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.07);border-radius:20px;overflow:hidden;}
+        .cptabs{display:flex;border-bottom:1px solid rgba(255,255,255,.07);}
+        .cptab{flex:1;padding:11px 4px;font-size:.58rem;font-weight:800;letter-spacing:1.5px;color:rgba(255,255,255,.32);cursor:pointer;border:none;background:none;transition:all .3s;text-transform:uppercase;border-bottom:2px solid transparent;margin-bottom:-1px;}
+        .cptab:hover{color:rgba(255,255,255,.7);}
+        .cptab.a{color:var(--p);border-bottom-color:var(--p);background:rgba(255,71,126,.04);}
+        .cppanel{display:none;padding:14px;}
+        .cppanel.a{display:block;}
 
-        /* ── MAIN BUTTON ── */
-        .btn-main {
-            position: relative; overflow:hidden;
-            background: linear-gradient(135deg, var(--primary), #ff1f61);
-            color: white; border: none;
-            padding: 16px 44px;
-            font-size: 0.9rem; font-weight:800;
-            border-radius: 100px; cursor: pointer;
-            transition: all 0.3s;
-            letter-spacing: 2px; text-transform:uppercase;
-            box-shadow: 0 8px 28px rgba(255,71,126,0.4);
-            z-index: 2;   /* ensure always clickable */
-        }
-        .btn-main:hover  { transform:translateY(-3px); box-shadow:0 14px 36px rgba(255,71,126,0.55); }
-        .btn-main:active { transform:scale(0.95); }
-
-        .btn-secondary {
-            background:rgba(255,255,255,0.06);
-            border:1.5px solid rgba(255,255,255,0.12);
-            color:white; padding:16px 36px;
-            font-size:0.85rem; font-weight:800;
-            border-radius:100px; cursor:pointer;
-            transition:all 0.3s; letter-spacing:1.5px; text-transform:uppercase;
-        }
-        .btn-secondary:hover { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.3); }
-
-        .btn-back {
-            background:rgba(255,255,255,0.05);
-            border:1.5px solid rgba(255,255,255,0.1);
-            color:rgba(255,255,255,0.55);
-            padding:14px 28px; font-size:0.8rem; font-weight:800;
-            border-radius:100px; cursor:pointer;
-            transition:all 0.3s; letter-spacing:1.5px; text-transform:uppercase;
-        }
-        .btn-back:hover { border-color:rgba(255,255,255,0.35); color:white; }
-
-        .nav-row {
-            display:flex; gap:12px; align-items:center;
-            justify-content:center; margin-top:12px; flex-wrap:wrap;
-        }
-
-        /* ── LAYOUT CARDS ── */
-        .options-grid {
-            display:grid; grid-template-columns:repeat(2,1fr);
-            gap:14px; width:100%; max-width:540px; margin-bottom:28px;
-        }
-        .card-option {
-            background:rgba(255,255,255,0.03);
-            border:1.5px solid rgba(255,255,255,0.07);
-            border-radius:18px; padding:14px;
-            cursor:pointer; transition:all 0.32s; position:relative; overflow:hidden;
-        }
-        .card-option:hover  { border-color:rgba(255,71,126,0.4); transform:translateY(-3px); }
-        .card-option.selected {
-            border-color:var(--primary);
-            background:rgba(255,71,126,0.08);
-            box-shadow:0 0 0 1px rgba(255,71,126,0.25), 0 10px 28px rgba(255,71,126,0.15);
-        }
-        .check-mark {
-            position:absolute; top:9px; right:9px;
-            width:20px; height:20px; border-radius:50%;
-            background:var(--primary); display:none;
-            align-items:center; justify-content:center;
-            font-size:9px; color:white; font-weight:900; z-index:2;
-        }
-        .card-option.selected .check-mark { display:flex; }
-        .card-option img { width:100%; height:auto; object-fit:contain; border-radius:10px; margin-bottom:10px; }
-        .card-option p   { font-weight:700; font-size:0.72rem; letter-spacing:1.5px; color:rgba(255,255,255,0.6); }
-        .card-option.selected p { color:var(--primary); }
-
-        .filter-preview { width:100%; aspect-ratio:4/3; border-radius:10px; overflow:hidden; margin-bottom:10px; }
-        .filter-preview img { width:100%; height:100%; object-fit:cover; }
-
-        /* ── PILL BUTTONS ── */
-        .btn-group-small { display:flex; flex-wrap:wrap; justify-content:center; gap:9px; margin-bottom:28px; }
-        .pill-btn {
-            background:rgba(255,255,255,0.05);
-            border:1.5px solid rgba(255,255,255,0.09);
-            color:rgba(255,255,255,0.55);
-            padding:9px 20px; border-radius:100px;
-            cursor:pointer; font-weight:700; font-size:0.78rem;
-            transition:all 0.3s; letter-spacing:1px;
-        }
-        .pill-btn:hover   { border-color:rgba(255,71,126,0.45); color:white; }
-        .pill-btn.selected { border-color:var(--primary); background:rgba(255,71,126,0.14); color:var(--primary); }
-
-        /* ══════════════════════════════════════
-           COLOR PICKER
-        ══════════════════════════════════════ */
-        .color-picker-box {
-            width:100%; max-width:540px; margin-bottom:24px;
-            background:rgba(255,255,255,0.03);
-            border:1.5px solid rgba(255,255,255,0.07);
-            border-radius:22px; overflow:hidden;
-        }
-
-        /* tabs */
-        .cp-tabs { display:flex; border-bottom:1px solid rgba(255,255,255,0.07); }
-        .cp-tab {
-            flex:1; padding:12px 6px;
-            font-size:0.62rem; font-weight:800; letter-spacing:1.5px;
-            color:rgba(255,255,255,0.35); cursor:pointer;
-            border:none; background:none;
-            transition:all 0.3s; text-transform:uppercase;
-            border-bottom:2px solid transparent; margin-bottom:-1px;
-        }
-        .cp-tab:hover  { color:rgba(255,255,255,0.7); }
-        .cp-tab.active { color:var(--primary); border-bottom-color:var(--primary); background:rgba(255,71,126,0.05); }
-
-        .cp-panel { display:none; padding:18px; }
-        .cp-panel.active { display:block; }
-
-        /* swatch grid */
-        .swatch-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin-bottom:6px; }
-        .sw-item { display:flex; flex-direction:column; align-items:center; gap:5px; cursor:pointer; }
-        .sw-circle {
-            width:36px; height:36px; border-radius:50%;
-            border:2.5px solid rgba(255,255,255,0.1);
-            transition:all 0.25s; position:relative; flex-shrink:0;
-        }
-        .sw-circle:hover { transform:scale(1.18); border-color:rgba(255,255,255,0.4); }
-        .sw-circle.selected { border-color:var(--primary); box-shadow:0 0 0 3px rgba(255,71,126,0.3); }
-        .sw-circle .sw-check {
-            position:absolute; inset:0; display:none;
-            align-items:center; justify-content:center;
-            font-size:11px; color:white; font-weight:900;
-            text-shadow:0 1px 3px rgba(0,0,0,0.7);
-        }
-        .sw-circle.selected .sw-check { display:flex; }
-        .sw-name { font-size:0.5rem; letter-spacing:1px; color:rgba(255,255,255,0.3); font-weight:700; text-align:center; }
+        /* swatches */
+        .sgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:6px;}
+        .swi{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;}
+        .swc{width:33px;height:33px;border-radius:50%;border:2.5px solid rgba(255,255,255,.1);transition:all .25s;position:relative;flex-shrink:0;}
+        .swc:hover{transform:scale(1.18);border-color:rgba(255,255,255,.38);}
+        .swc.sel{border-color:var(--p);box-shadow:0 0 0 3px rgba(255,71,126,.28);}
+        .swc .swck{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:900;text-shadow:0 1px 3px rgba(0,0,0,.7);}
+        .swc.sel .swck{display:flex;}
+        .swn{font-size:.48rem;letter-spacing:.8px;color:rgba(255,255,255,.28);font-weight:700;text-align:center;}
 
         /* gradient presets */
-        .gradient-presets { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:10px; }
-        .grad-item {
-            border-radius:12px; height:52px; cursor:pointer;
-            border:2.5px solid transparent; transition:all 0.25s;
-            position:relative; overflow:hidden;
-        }
-        .grad-item:hover  { transform:scale(1.04); border-color:rgba(255,255,255,0.3); }
-        .grad-item.selected { border-color:var(--primary); box-shadow:0 0 0 2px rgba(255,71,126,0.35); }
-        .grad-check {
-            position:absolute; inset:0; display:none;
-            align-items:center; justify-content:center;
-            font-size:16px; color:white;
-            text-shadow:0 1px 5px rgba(0,0,0,0.6);
-        }
-        .grad-item.selected .grad-check { display:flex; }
+        .ggrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
+        .gi{border-radius:10px;height:44px;cursor:pointer;border:2.5px solid transparent;transition:all .25s;position:relative;overflow:hidden;}
+        .gi:hover{transform:scale(1.05);border-color:rgba(255,255,255,.28);}
+        .gi.sel{border-color:var(--p);box-shadow:0 0 0 2px rgba(255,71,126,.3);}
+        .gick{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:14px;color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.6);}
+        .gi.sel .gick{display:flex;}
+
+        /* gradient custom builder */
+        .gcustom{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.07);border-radius:14px;padding:12px;margin-top:10px;}
+        .gcustom-label{font-size:.58rem;letter-spacing:2px;font-weight:800;color:rgba(255,255,255,.26);margin-bottom:10px;text-transform:uppercase;}
+        .gstops{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+        .gstop-row{display:flex;align-items:center;gap:8px;}
+        .gstop-preview{width:28px;height:28px;border-radius:8px;border:2px solid rgba(255,255,255,.12);flex-shrink:0;cursor:pointer;transition:all .2s;}
+        .gstop-preview:hover{transform:scale(1.1);}
+        .gstop-hex{flex:1;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);color:#fff;padding:7px 10px 7px 22px;border-radius:9px;font-family:'Space Mono',monospace;font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;transition:border-color .3s;}
+        .gstop-hex:focus{outline:none;border-color:rgba(255,71,126,.5);}
+        .gstop-wrap{flex:1;position:relative;}
+        .gstop-hash{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.32);font-family:'Space Mono',monospace;font-size:.75rem;pointer-events:none;}
+        .gstop-rm{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);font-size:.7rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;flex-shrink:0;}
+        .gstop-rm:hover{background:rgba(255,71,126,.2);border-color:rgba(255,71,126,.4);color:var(--p);}
+        .gadd{width:100%;padding:8px;background:rgba(255,255,255,.04);border:1.5px dashed rgba(255,255,255,.12);border-radius:9px;color:rgba(255,255,255,.38);font-size:.72rem;font-weight:700;cursor:pointer;transition:all .3s;letter-spacing:1px;}
+        .gadd:hover{border-color:rgba(255,71,126,.4);color:var(--p);background:rgba(255,71,126,.05);}
+        .gangle-row{display:flex;align-items:center;gap:10px;margin-top:10px;}
+        .gangle-lbl{font-size:.6rem;letter-spacing:1.5px;font-weight:800;color:rgba(255,255,255,.3);white-space:nowrap;}
+        input[type=range].gr{flex:1;-webkit-appearance:none;height:5px;border-radius:3px;background:rgba(255,255,255,.1);outline:none;cursor:pointer;border:none;}
+        input[type=range].gr::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:#fff;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.4);}
+        .gangle-val{font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(255,255,255,.4);width:32px;text-align:right;flex-shrink:0;}
+        .gpreview-bar{height:32px;border-radius:9px;margin-top:10px;transition:background .2s;border:1.5px solid rgba(255,255,255,.08);}
+        .gapply-btn{width:100%;margin-top:8px;padding:9px;background:rgba(255,71,126,.14);border:1.5px solid rgba(255,71,126,.3);color:var(--p);border-radius:9px;font-weight:800;font-size:.75rem;letter-spacing:1px;cursor:pointer;transition:all .3s;}
+        .gapply-btn:hover{background:rgba(255,71,126,.26);}
 
         /* hex tab */
-        .hex-input-area { display:flex; flex-direction:column; gap:14px; }
-        .hex-row { display:flex; align-items:center; gap:10px; }
-        .hex-preview-swatch {
-            width:44px; height:44px; border-radius:12px;
-            border:2px solid rgba(255,255,255,0.12); flex-shrink:0; transition:background 0.2s;
-        }
-        .hex-input-wrap { flex:1; position:relative; }
-        .hex-input-wrap .hash-sym {
-            position:absolute; left:14px; top:50%; transform:translateY(-50%);
-            color:rgba(255,255,255,0.35); font-family:'Space Mono',monospace; font-size:0.85rem;
-            pointer-events:none;
-        }
-        .hex-input {
-            width:100%; background:rgba(255,255,255,0.06);
-            border:1.5px solid rgba(255,255,255,0.1);
-            color:white; padding:12px 14px 12px 28px;
-            border-radius:12px; font-family:'Space Mono',monospace;
-            font-size:0.85rem; letter-spacing:2px; text-transform:uppercase;
-            transition:border-color 0.3s;
-        }
-        .hex-input:focus { outline:none; border-color:rgba(255,71,126,0.55); }
-        .hex-apply-btn {
-            padding:12px 18px;
-            background:rgba(255,71,126,0.15);
-            border:1.5px solid rgba(255,71,126,0.35);
-            color:var(--primary); border-radius:12px;
-            font-weight:800; font-size:0.75rem; letter-spacing:1px;
-            cursor:pointer; transition:all 0.3s; white-space:nowrap;
-        }
-        .hex-apply-btn:hover { background:rgba(255,71,126,0.28); }
+        .hexrow{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
+        .hexsw{width:40px;height:40px;border-radius:11px;border:2px solid rgba(255,255,255,.1);flex-shrink:0;transition:background .2s;}
+        .hexwrap{flex:1;position:relative;}
+        .hexhash{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.32);font-family:'Space Mono',monospace;font-size:.82rem;pointer-events:none;}
+        .hexinput{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);color:#fff;padding:11px 12px 11px 26px;border-radius:11px;font-family:'Space Mono',monospace;font-size:.82rem;letter-spacing:2px;text-transform:uppercase;transition:border-color .3s;}
+        .hexinput:focus{outline:none;border-color:rgba(255,71,126,.5);}
+        .hexapply{padding:11px 16px;background:rgba(255,71,126,.14);border:1.5px solid rgba(255,71,126,.3);color:var(--p);border-radius:11px;font-weight:800;font-size:.72rem;cursor:pointer;transition:all .3s;white-space:nowrap;}
+        .hexapply:hover{background:rgba(255,71,126,.26);}
+        .qcodes{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+        .qcbtn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.48);padding:6px 11px;border-radius:7px;cursor:pointer;font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:1px;transition:all .25s;}
+        .qcbtn:hover{border-color:var(--p);color:var(--p);}
 
-        .quick-codes { display:flex; flex-wrap:wrap; gap:7px; margin-top:4px; }
-        .qc-btn {
-            background:rgba(255,255,255,0.05);
-            border:1px solid rgba(255,255,255,0.09);
-            color:rgba(255,255,255,0.5); padding:7px 13px;
-            border-radius:8px; cursor:pointer;
-            font-family:'Space Mono',monospace; font-size:0.68rem;
-            letter-spacing:1px; transition:all 0.25s;
-        }
-        .qc-btn:hover { border-color:var(--primary); color:var(--primary); }
+        /* advanced */
+        .advsec{margin-bottom:14px;}
+        .advlbl{font-size:.58rem;letter-spacing:2.5px;color:rgba(255,255,255,.26);font-weight:800;margin-bottom:8px;text-transform:uppercase;}
+        .srow{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+        .sl{font-size:.68rem;font-weight:800;width:14px;text-align:center;flex-shrink:0;}
+        .sl.r{color:#ff6b6b;}.sl.g{color:#6bff9e;}.sl.b{color:#6bb3ff;}.sl.h,.sl.s,.sl.l{color:rgba(255,255,255,.45);}
+        input[type=range].cpr{flex:1;-webkit-appearance:none;height:5px;border-radius:3px;outline:none;cursor:pointer;border:none;}
+        input[type=range].cpr::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:#fff;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,.4);}
+        .rr{background:linear-gradient(to right,#1a0000,#ff0000);}
+        .rg{background:linear-gradient(to right,#001a00,#00ff00);}
+        .rb{background:linear-gradient(to right,#00001a,#0000ff);}
+        .rh{background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);}
+        .rs{background:linear-gradient(to right,#888,#ff477e);}
+        .rl{background:linear-gradient(to right,#000,#888,#fff);}
+        .rv{font-family:'Space Mono',monospace;font-size:.68rem;color:rgba(255,255,255,.42);width:32px;text-align:right;flex-shrink:0;}
+        .advbar{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.04);border-radius:11px;margin-top:12px;}
+        .advsw{width:36px;height:36px;border-radius:9px;border:2px solid rgba(255,255,255,.1);flex-shrink:0;transition:background .15s;}
+        .advhex{font-family:'Space Mono',monospace;font-size:.76rem;color:rgba(255,255,255,.46);letter-spacing:2px;flex:1;text-align:left;}
+        .advapply{padding:8px 16px;background:rgba(255,71,126,.14);border:1.5px solid rgba(255,71,126,.3);color:var(--p);border-radius:9px;font-weight:800;font-size:.7rem;cursor:pointer;transition:all .3s;white-space:nowrap;}
+        .advapply:hover{background:rgba(255,71,126,.28);}
 
-        /* advanced tab */
-        .adv-section { margin-bottom:18px; }
-        .adv-label { font-size:0.6rem; letter-spacing:2.5px; color:rgba(255,255,255,0.28); font-weight:800; margin-bottom:10px; text-transform:uppercase; }
+        /* selected pill */
+        .selpill{display:inline-flex;align-items:center;gap:9px;padding:7px 16px 7px 7px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.08);border-radius:100px;margin-bottom:14px;}
+        .spsw{width:24px;height:24px;border-radius:50%;border:2px solid rgba(255,255,255,.14);flex-shrink:0;transition:background .3s;}
+        .sphex{font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(255,255,255,.46);letter-spacing:2px;}
+        .sptag{font-size:.56rem;letter-spacing:2px;color:rgba(255,255,255,.2);font-weight:800;}
 
-        .slider-row { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
-        .slider-letter { font-size:0.72rem; font-weight:800; width:16px; text-align:center; flex-shrink:0; }
-        .slider-letter.r { color:#ff6b6b; }
-        .slider-letter.g { color:#6bff9e; }
-        .slider-letter.b { color:#6bb3ff; }
-        .slider-letter.h,.slider-letter.s,.slider-letter.l { color:rgba(255,255,255,0.5); }
+        /* live preview */
+        .lpbox{width:100%;max-width:520px;margin-bottom:20px;}
+        .lplbl{font-size:.58rem;letter-spacing:3px;font-weight:800;color:rgba(255,255,255,.26);margin-bottom:10px;text-transform:uppercase;}
+        .lpouter{display:flex;justify-content:center;align-items:flex-start;}
+        .lpstrip{display:flex;flex-direction:column;border-radius:9px;overflow:hidden;padding:8px 8px 12px;box-shadow:0 10px 36px rgba(0,0,0,.6);transition:background .35s;min-width:80px;max-width:96px;}
+        .spp{width:100%;aspect-ratio:4/3;border-radius:4px;overflow:hidden;margin-bottom:6px;background:#222;}
+        .spp img{width:100%;height:100%;object-fit:cover;display:block;}
+        .spb{font-family:'Playfair Display',serif;font-style:italic;font-size:.5rem;text-align:center;margin-top:1px;transition:color .35s;}
+        .lpgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;border-radius:9px;padding:8px 8px 12px;box-shadow:0 10px 36px rgba(0,0,0,.6);transition:background .35s;max-width:140px;}
+        .gpp{width:100%;aspect-ratio:4/3;border-radius:4px;overflow:hidden;background:#222;}
+        .gpp img{width:100%;height:100%;object-fit:cover;display:block;}
+        .gpb{grid-column:span 2;font-family:'Playfair Display',serif;font-style:italic;font-size:.48rem;text-align:center;margin-top:1px;transition:color .35s;}
 
-        input[type=range].cp-range {
-            flex:1; -webkit-appearance:none; height:6px;
-            border-radius:3px; outline:none; cursor:pointer; border:none;
-        }
-        input[type=range].cp-range::-webkit-slider-thumb {
-            -webkit-appearance:none; width:17px; height:17px; border-radius:50%;
-            background:white; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.45);
-        }
-        .range-r { background:linear-gradient(to right,#1a0000,#ff0000); }
-        .range-g { background:linear-gradient(to right,#001a00,#00ff00); }
-        .range-b { background:linear-gradient(to right,#00001a,#0000ff); }
-        .range-h { background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00); }
-        .range-s { background:linear-gradient(to right,#888,#ff477e); }
-        .range-l { background:linear-gradient(to right,#000,#888,#fff); }
+        /* CAMERA */
+        .cambar{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:.65rem;letter-spacing:2px;color:rgba(255,255,255,.26);font-weight:700;}
+        .ldot{width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;animation:ping 1.5s infinite;}
+        .camout{position:relative;width:100%;max-width:440px;padding:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:24px;box-shadow:0 26px 65px rgba(0,0,0,.74),0 0 0 1px rgba(255,71,126,.07);margin-bottom:16px;}
+        .camwrap{position:relative;background:#000;border-radius:19px;overflow:hidden;display:flex;justify-content:center;align-items:center;width:100%;aspect-ratio:4/3;}
+        #video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block;}
+        .pips{display:flex;gap:7px;justify-content:center;margin:10px 0 14px;}
+        .pip{width:28px;height:4px;border-radius:3px;background:rgba(255,255,255,.1);transition:all .4s;}
+        .pip.d{background:var(--p);box-shadow:0 0 7px rgba(255,71,126,.6);}
+        #flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:10;border-radius:19px;}
+        .flash-a{animation:fsh .45s ease-out forwards;}
+        @keyframes fsh{0%{opacity:1}100%{opacity:0}}
+        #cdown{position:absolute;font-size:5.5rem;font-weight:900;color:#fff;z-index:15;font-style:italic;text-shadow:0 0 36px rgba(255,71,126,.8),0 4px 12px rgba(0,0,0,.5);user-select:none;pointer-events:none;}
+        @keyframes cpop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+        .camctrl{display:flex;align-items:center;justify-content:center;gap:18px;}
+        .cctrl{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.42);font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;}
+        .cctrl:hover{background:rgba(255,71,126,.13);color:var(--p);border-color:rgba(255,71,126,.28);}
+        .shutter{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#fff,#e0e0e0);border:6px solid rgba(255,255,255,.24);cursor:pointer;transition:all .2s;box-shadow:0 0 0 4px rgba(255,255,255,.07),0 7px 20px rgba(0,0,0,.4);position:relative;}
+        .shutter::after{content:'';position:absolute;inset:7px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--p2));}
+        .shutter:hover{transform:scale(1.06);box-shadow:0 0 0 6px rgba(255,71,126,.26),0 12px 30px rgba(0,0,0,.5);}
+        .shutter:active{transform:scale(.9);}
+        .shutter:disabled{opacity:.34;cursor:not-allowed;transform:none;}
 
-        .range-val { font-family:'Space Mono',monospace; font-size:0.7rem; color:rgba(255,255,255,0.45); width:34px; text-align:right; flex-shrink:0; }
+        /* RESULT */
+        #fimg{max-width:280px;width:100%;object-fit:contain;border-radius:14px;margin-bottom:20px;box-shadow:0 26px 65px rgba(0,0,0,.74),0 0 0 1px rgba(255,71,126,.16);transition:transform .3s;display:block;}
+        #fimg:hover{transform:scale(1.02) rotate(-.5deg);}
+        .rbtns{display:flex;gap:9px;margin-bottom:18px;flex-wrap:wrap;justify-content:center;}
+        .about{margin-top:14px;padding:18px 24px 0;border-top:1px solid rgba(255,255,255,.07);width:100%;max-width:340px;}
+        .about>p{font-size:.58rem;color:rgba(255,255,255,.26);margin-bottom:14px;letter-spacing:3px;font-weight:800;}
+        .soc{display:flex;justify-content:center;gap:10px;}
+        .soc a{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.52);font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .3s;text-decoration:none;}
+        .soc a:hover{background:rgba(255,71,126,.13);border-color:var(--p);color:var(--p);transform:translateY(-4px);}
 
-        .adv-preview-bar {
-            display:flex; align-items:center; gap:12px; padding:12px 14px;
-            background:rgba(255,255,255,0.04); border-radius:12px; margin-top:14px;
-        }
-        .adv-preview-swatch { width:40px; height:40px; border-radius:10px; border:2px solid rgba(255,255,255,0.1); flex-shrink:0; transition:background 0.15s; }
-        .adv-hex-out { font-family:'Space Mono',monospace; font-size:0.8rem; color:rgba(255,255,255,0.5); letter-spacing:2px; flex:1; text-align:left; }
-        .adv-apply-btn {
-            padding:9px 18px; background:rgba(255,71,126,0.15);
-            border:1.5px solid rgba(255,71,126,0.35); color:var(--primary);
-            border-radius:10px; font-weight:800; font-size:0.72rem;
-            cursor:pointer; transition:all 0.3s; white-space:nowrap;
-        }
-        .adv-apply-btn:hover { background:rgba(255,71,126,0.3); }
+        /* HERO FILM */
+        .hfilm{display:flex;gap:9px;margin-bottom:38px;perspective:800px;}
+        .ff{width:62px;height:82px;border-radius:6px;overflow:hidden;border:2px solid rgba(255,255,255,.07);transform:rotateY(var(--ry,0deg)) rotateZ(var(--rz,0deg));transition:transform .4s;flex-shrink:0;}
+        .ff:hover{transform:rotateY(0deg) rotateZ(0deg) scale(1.12)!important;}
+        .ff img{width:100%;height:100%;object-fit:cover;display:block;}
+        .shint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.16);font-size:1rem;animation:bnc 2s ease-in-out infinite;pointer-events:none;}
+        @keyframes bnc{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-7px)}}
 
-        /* selected color pill */
-        .selected-color-pill {
-            display:inline-flex; align-items:center; gap:10px;
-            padding:9px 18px 9px 9px;
-            background:rgba(255,255,255,0.05);
-            border:1.5px solid rgba(255,255,255,0.08);
-            border-radius:100px; margin-bottom:18px;
-        }
-        .scp-swatch { width:26px; height:26px; border-radius:50%; border:2px solid rgba(255,255,255,0.15); flex-shrink:0; transition:background 0.3s; }
-        .scp-hex  { font-family:'Space Mono',monospace; font-size:0.72rem; color:rgba(255,255,255,0.5); letter-spacing:2px; }
-        .scp-tag  { font-size:0.58rem; letter-spacing:2px; color:rgba(255,255,255,0.22); font-weight:800; }
-
-        /* ── LIVE PREVIEW ── */
-        .preview-section { width:100%; max-width:540px; margin-bottom:24px; }
-        .preview-label { font-size:0.62rem; letter-spacing:3px; font-weight:800; color:rgba(255,255,255,0.28); margin-bottom:12px; text-transform:uppercase; }
-        .strip-preview-outer { display:flex; justify-content:center; align-items:flex-start; }
-
-        .strip-preview {
-            display:flex; flex-direction:column;
-            border-radius:10px; overflow:hidden;
-            padding:10px 10px 14px;
-            box-shadow:0 12px 40px rgba(0,0,0,0.6);
-            transition:background 0.35s; min-width:88px; max-width:108px;
-        }
-        .sp-photo { width:100%; aspect-ratio:4/3; border-radius:5px; overflow:hidden; margin-bottom:7px; background:#222; }
-        .sp-photo img { width:100%; height:100%; object-fit:cover; display:block; }
-        .sp-brand { font-family:'Playfair Display',serif; font-style:italic; font-size:0.54rem; text-align:center; margin-top:2px; transition:color 0.35s; }
-
-        .grid-preview {
-            display:grid; grid-template-columns:1fr 1fr; gap:6px;
-            border-radius:10px; padding:10px 10px 14px;
-            box-shadow:0 12px 40px rgba(0,0,0,0.6);
-            transition:background 0.35s; max-width:158px;
-        }
-        .gp-photo { width:100%; aspect-ratio:4/3; border-radius:5px; overflow:hidden; background:#222; }
-        .gp-photo img { width:100%; height:100%; object-fit:cover; display:block; }
-        .gp-brand { grid-column:span 2; font-family:'Playfair Display',serif; font-style:italic; font-size:0.52rem; text-align:center; margin-top:2px; transition:color 0.35s; }
-
-        /* ── CAMERA ── */
-        .cam-info-bar { display:flex; align-items:center; gap:14px; margin-bottom:18px; font-size:0.68rem; letter-spacing:2px; color:rgba(255,255,255,0.28); font-weight:700; }
-        .live-dot { width:6px; height:6px; border-radius:50%; background:#22c55e; box-shadow:0 0 8px #22c55e; animation:ping 1.5s infinite; }
-
-        .camera-outer {
-            position:relative; width:100%; max-width:450px; padding:7px;
-            background:rgba(255,255,255,0.04);
-            border:1px solid rgba(255,255,255,0.07);
-            border-radius:26px;
-            box-shadow:0 28px 70px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,71,126,0.08);
-            margin-bottom:18px;
-        }
-        .camera-wrapper {
-            position:relative; background:#000; border-radius:20px; overflow:hidden;
-            display:flex; justify-content:center; align-items:center;
-            width:100%; aspect-ratio:4/3;
-        }
-        #video { width:100%; height:100%; object-fit:cover; transform:scaleX(-1); display:block; }
-
-        .shot-counter { display:flex; gap:8px; justify-content:center; margin:12px 0 16px; }
-        .shot-pip { width:30px; height:5px; border-radius:3px; background:rgba(255,255,255,0.1); transition:all 0.4s; }
-        .shot-pip.done { background:var(--primary); box-shadow:0 0 8px rgba(255,71,126,0.6); }
-
-        #flash-local { position:absolute; inset:0; background:white; opacity:0; pointer-events:none; z-index:10; border-radius:20px; }
-        .flash-active { animation:flashShot 0.45s ease-out forwards; }
-        @keyframes flashShot { 0%{opacity:1} 100%{opacity:0} }
-
-        #countdown {
-            position:absolute; font-size:6rem; font-weight:900; color:white;
-            z-index:15; font-style:italic;
-            text-shadow:0 0 40px rgba(255,71,126,0.8), 0 4px 14px rgba(0,0,0,0.5);
-            user-select:none; pointer-events:none;
-        }
-        @keyframes countPop { from{transform:scale(0.3);opacity:0} to{transform:scale(1);opacity:1} }
-
-        .cam-controls { display:flex; align-items:center; justify-content:center; gap:20px; }
-        .cam-ctrl-btn {
-            width:46px; height:46px; border-radius:50%;
-            background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.09);
-            color:rgba(255,255,255,0.45); font-size:1rem; cursor:pointer;
-            display:flex; align-items:center; justify-content:center; transition:all 0.3s;
-        }
-        .cam-ctrl-btn:hover { background:rgba(255,71,126,0.14); color:var(--primary); border-color:rgba(255,71,126,0.3); }
-
-        .shutter-btn {
-            width:76px; height:76px; border-radius:50%;
-            background:linear-gradient(135deg,#fff,#e0e0e0);
-            border:6px solid rgba(255,255,255,0.25);
-            cursor:pointer; transition:all 0.2s;
-            box-shadow:0 0 0 4px rgba(255,255,255,0.08), 0 8px 22px rgba(0,0,0,0.4);
-            position:relative;
-        }
-        .shutter-btn::after {
-            content:''; position:absolute; inset:8px; border-radius:50%;
-            background:linear-gradient(135deg,var(--primary),#ff1f61);
-        }
-        .shutter-btn:hover { transform:scale(1.06); box-shadow:0 0 0 6px rgba(255,71,126,0.28), 0 12px 32px rgba(0,0,0,0.5); }
-        .shutter-btn:active { transform:scale(0.9); }
-        .shutter-btn:disabled { opacity:0.35; cursor:not-allowed; transform:none; }
-
-        /* ── RESULT ── */
-        #final-img {
-            max-width:300px; width:100%; object-fit:contain;
-            border-radius:16px; margin-bottom:24px;
-            box-shadow:0 28px 70px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,71,126,0.18);
-            transition:transform 0.3s; display:block;
-        }
-        #final-img:hover { transform:scale(1.02) rotate(-0.5deg); }
-        .result-btns { display:flex; gap:11px; margin-bottom:22px; flex-wrap:wrap; justify-content:center; }
-
-        .about-me { margin-top:18px; padding:22px 28px 0; border-top:1px solid rgba(255,255,255,0.07); width:100%; max-width:360px; }
-        .about-me > p { font-size:0.62rem; color:rgba(255,255,255,0.28); margin-bottom:16px; letter-spacing:3px; font-weight:800; }
-        .social-icons { display:flex; justify-content:center; gap:12px; }
-        .social-icons a {
-            width:42px; height:42px; border-radius:50%;
-            background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.07);
-            color:rgba(255,255,255,0.55); font-size:0.95rem;
-            display:flex; align-items:center; justify-content:center;
-            transition:all 0.3s; text-decoration:none;
-        }
-        .social-icons a:hover { background:rgba(255,71,126,0.14); border-color:var(--primary); color:var(--primary); transform:translateY(-4px); }
-
-        /* ── HERO FILM ── */
-        .hero-film { display:flex; gap:10px; margin-bottom:44px; perspective:800px; }
-        .film-frame {
-            width:68px; height:88px; border-radius:6px; overflow:hidden;
-            border:2px solid rgba(255,255,255,0.07);
-            transform:rotateY(var(--ry,0deg)) rotateZ(var(--rz,0deg));
-            transition:transform 0.4s; flex-shrink:0;
-        }
-        .film-frame:hover { transform:rotateY(0deg) rotateZ(0deg) scale(1.12) !important; }
-        .film-frame img { width:100%; height:100%; object-fit:cover; display:block; }
-
-        .scroll-hint {
-            position:absolute; bottom:26px; left:50%; transform:translateX(-50%);
-            color:rgba(255,255,255,0.18); font-size:1.1rem;
-            animation:bounce 2s ease-in-out infinite;
-            pointer-events:none;
-        }
-        @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-8px)} }
-
-        canvas { display:none; }
-
-        @media(max-width:480px) {
-            .swatch-grid { grid-template-columns:repeat(5,1fr); }
-            .gradient-presets { grid-template-columns:repeat(2,1fr); }
-            .cp-tab { font-size:0.55rem; padding:10px 4px; }
-            h1 { font-size:2rem; }
+        canvas{display:none;}
+        @media(max-width:440px){
+            .sgrid{grid-template-columns:repeat(5,1fr);}
+            .ggrid{grid-template-columns:repeat(3,1fr);}
+            .cptab{font-size:.52rem;padding:9px 3px;}
+            h1{font-size:2rem;}
         }
     </style>
 </head>
 <body>
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+<div class="blob b3"></div>
 
-<!-- Blobs: pointer-events:none via CSS so they NEVER block clicks -->
-<div class="blob blob-1"></div>
-<div class="blob blob-2"></div>
-<div class="blob blob-3"></div>
-
-<!-- ═══════════ STEP 1 ═══════════ -->
-<section class="step-container active" id="step-1">
-    <div class="step-indicator">
-        <div class="step-dot active"></div>
-        <div class="step-dot"></div>
-        <div class="step-dot"></div>
-        <div class="step-dot"></div>
-        <div class="step-dot"></div>
-    </div>
-    <div class="badge"><span class="badge-dot"></span>EST. 2026 &middot; BY YUNA</div>
+<!-- ══ STEP 1 ══ -->
+<section class="step active" id="step-1">
+    <div class="dots"><div class="dot a"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="badge"><span class="bdot"></span>EST. 2026 &middot; BY YUNA</div>
     <h1>V&#8209;Photo<em>booth</em></h1>
-    <div class="divider"></div>
-    <div class="hero-film">
-        <div class="film-frame" style="--ry:-12deg;--rz:-4deg;">
-            <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="">
-        </div>
-        <div class="film-frame" style="--ry:0deg;--rz:2deg;width:88px;height:108px;">
-            <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(0.5) brightness(0.8);">
-        </div>
-        <div class="film-frame" style="--ry:12deg;--rz:4deg;">
-            <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1) brightness(0.7);">
-        </div>
+    <div class="div"></div>
+    <div class="hfilm">
+        <div class="ff" style="--ry:-12deg;--rz:-4deg;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div>
+        <div class="ff" style="--ry:0deg;--rz:2deg;width:82px;height:102px;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.5) brightness(.8);"></div>
+        <div class="ff" style="--ry:12deg;--rz:4deg;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1) brightness(.7);"></div>
     </div>
     <p class="desc">Capture your best moments in a vintage-styled virtual photobooth. Pick your layout, choose your filter, and let's shoot!</p>
-    <button class="btn-main" onclick="goToStep(2)">
-        <i class="fas fa-camera" style="margin-right:8px;"></i>GET STARTED
-    </button>
-    <div class="scroll-hint"><i class="fas fa-chevron-down"></i></div>
+    <button class="btn" onclick="goTo(2)"><i class="fas fa-camera" style="margin-right:7px;"></i>GET STARTED</button>
+    <div class="shint"><i class="fas fa-chevron-down"></i></div>
 </section>
 
-<!-- ═══════════ STEP 2: LAYOUT & COLOR ═══════════ -->
-<section class="step-container" id="step-2">
-    <div class="step-indicator">
-        <div class="step-dot done"></div>
-        <div class="step-dot active"></div>
-        <div class="step-dot"></div>
-        <div class="step-dot"></div>
-        <div class="step-dot"></div>
-    </div>
-    <div class="badge"><span class="badge-dot"></span>STEP 1 OF 3</div>
+<!-- ══ STEP 2: LAYOUT & COLOR ══ -->
+<section class="step" id="step-2">
+    <div class="dots"><div class="dot d"></div><div class="dot a"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="badge"><span class="bdot"></span>STEP 1 OF 3</div>
     <h1>Layout &amp;<em> Color</em></h1>
     <p class="desc">Choose your layout and frame color. Preview updates live!</p>
 
-    <div class="options-grid">
-        <div class="card-option selected" id="card-strip" onclick="selectLayout('strip',this)">
-            <div class="check-mark"><i class="fas fa-check"></i></div>
-            <img src="https://cdn.nekohime.site/file/Tm2-TSOP.png" alt="Classic Strip">
+    <div class="ogrid">
+        <div class="card sel" onclick="selLayout('strip',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <img src="https://cdn.nekohime.site/file/Tm2-TSOP.png" alt="Strip">
             <p>CLASSIC STRIP (1&times;4)</p>
         </div>
-        <div class="card-option" id="card-grid" onclick="selectLayout('grid',this)">
-            <div class="check-mark"><i class="fas fa-check"></i></div>
-            <img src="https://cdn.nekohime.site/file/vxijEdyv.png" alt="Modern Grid">
+        <div class="card" onclick="selLayout('grid',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <img src="https://cdn.nekohime.site/file/vxijEdyv.png" alt="Grid">
             <p>MODERN GRID (2&times;2)</p>
         </div>
     </div>
 
-    <!-- selected color pill -->
-    <div class="selected-color-pill" id="scp">
-        <div class="scp-swatch" id="scp-swatch" style="background:#ffffff;"></div>
-        <span class="scp-hex"  id="scp-hex">#FFFFFF</span>
-        <span class="scp-tag">SELECTED</span>
+    <div class="selpill" id="selpill">
+        <div class="spsw" id="spsw" style="background:#ffffff;"></div>
+        <span class="sphex" id="sphex">#FFFFFF</span>
+        <span class="sptag">SELECTED</span>
     </div>
 
-    <!-- color picker box -->
-    <div class="color-picker-box">
-        <div class="cp-tabs">
-            <button class="cp-tab active" onclick="switchTab('swatches',this)">
-                <i class="fas fa-palette" style="margin-right:4px;"></i>PRESETS
-            </button>
-            <button class="cp-tab" onclick="switchTab('gradient',this)">
-                <i class="fas fa-wand-magic-sparkles" style="margin-right:4px;"></i>GRADIENT
-            </button>
-            <button class="cp-tab" onclick="switchTab('hex',this)">
-                <i class="fas fa-hashtag" style="margin-right:4px;"></i>HEX
-            </button>
-            <button class="cp-tab" onclick="switchTab('advanced',this)">
-                <i class="fas fa-sliders" style="margin-right:4px;"></i>ADVANCED
-            </button>
+    <div class="cpbox">
+        <div class="cptabs">
+            <button class="cptab a" onclick="swTab('swatches',this)"><i class="fas fa-palette" style="margin-right:3px;"></i>PRESETS</button>
+            <button class="cptab" onclick="swTab('gradient',this)"><i class="fas fa-wand-magic-sparkles" style="margin-right:3px;"></i>GRADIENT</button>
+            <button class="cptab" onclick="swTab('hex',this)"><i class="fas fa-hashtag" style="margin-right:3px;"></i>HEX</button>
+            <button class="cptab" onclick="swTab('advanced',this)"><i class="fas fa-sliders" style="margin-right:3px;"></i>ADVANCED</button>
         </div>
 
         <!-- PRESETS -->
-        <div class="cp-panel active" id="panel-swatches">
-            <p class="adv-label">CLASSIC</p>
-            <div class="swatch-grid" id="sg-classic"></div>
-            <p class="adv-label" style="margin-top:14px;">PASTEL</p>
-            <div class="swatch-grid" id="sg-pastel"></div>
-            <p class="adv-label" style="margin-top:14px;">DARK</p>
-            <div class="swatch-grid" id="sg-dark"></div>
+        <div class="cppanel a" id="panel-swatches">
+            <p class="advlbl">CLASSIC</p><div class="sgrid" id="sg-c"></div>
+            <p class="advlbl" style="margin-top:12px;">PASTEL</p><div class="sgrid" id="sg-p"></div>
+            <p class="advlbl" style="margin-top:12px;">DARK</p><div class="sgrid" id="sg-d"></div>
         </div>
 
         <!-- GRADIENT -->
-        <div class="cp-panel" id="panel-gradient">
-            <p class="adv-label">GRADIENT PRESETS</p>
-            <div class="gradient-presets" id="grad-grid"></div>
-            <p style="font-size:0.6rem;color:rgba(255,255,255,0.22);letter-spacing:1px;margin-top:6px;">
-                * Gradients are rendered on the final print
-            </p>
+        <div class="cppanel" id="panel-gradient">
+            <p class="advlbl">GRADIENT PRESETS</p>
+            <div class="ggrid" id="ggrid"></div>
+
+            <!-- Custom Gradient Builder -->
+            <div class="gcustom">
+                <p class="gcustom-label"><i class="fas fa-paintbrush" style="margin-right:5px;"></i>CUSTOM GRADIENT</p>
+                <div class="gstops" id="gstops"></div>
+                <button class="gadd" onclick="addStop()"><i class="fas fa-plus" style="margin-right:5px;"></i>ADD COLOR STOP</button>
+                <div class="gangle-row">
+                    <span class="gangle-lbl">ANGLE</span>
+                    <input type="range" class="gr" id="g-angle" min="0" max="360" value="135" oninput="onGradChange()">
+                    <span class="gangle-val" id="g-angle-val">135°</span>
+                </div>
+                <div class="gpreview-bar" id="g-prev-bar"></div>
+                <button class="gapply-btn" onclick="applyCustomGrad()"><i class="fas fa-check" style="margin-right:5px;"></i>APPLY CUSTOM GRADIENT</button>
+            </div>
         </div>
 
         <!-- HEX -->
-        <div class="cp-panel" id="panel-hex">
-            <div class="hex-input-area">
-                <p class="adv-label">ENTER HEX CODE</p>
-                <div class="hex-row">
-                    <div class="hex-preview-swatch" id="hex-prev-sw" style="background:#ffffff;"></div>
-                    <div class="hex-input-wrap">
-                        <span class="hash-sym">#</span>
-                        <input class="hex-input" id="hex-input" type="text" maxlength="6"
-                               placeholder="FFFFFF" value="FFFFFF"
-                               oninput="onHexInput(this.value)"
-                               onkeydown="if(event.key==='Enter'){applyHex();event.preventDefault();}">
-                    </div>
-                    <button class="hex-apply-btn" onclick="applyHex()">APPLY</button>
+        <div class="cppanel" id="panel-hex">
+            <p class="advlbl">ENTER HEX CODE</p>
+            <div class="hexrow">
+                <div class="hexsw" id="hxsw" style="background:#ffffff;"></div>
+                <div class="hexwrap">
+                    <span class="hexhash">#</span>
+                    <input class="hexinput" id="hxinput" type="text" maxlength="6" placeholder="FFFFFF" value="FFFFFF"
+                           oninput="onHexIn(this.value)" onkeydown="if(event.key==='Enter'){applyHex();event.preventDefault();}">
                 </div>
-                <p class="adv-label" style="margin-top:14px;">QUICK CODES</p>
-                <div class="quick-codes" id="quick-codes"></div>
+                <button class="hexapply" onclick="applyHex()">APPLY</button>
             </div>
+            <p class="advlbl" style="margin-top:12px;">QUICK CODES</p>
+            <div class="qcodes" id="qcodes"></div>
         </div>
 
         <!-- ADVANCED -->
-        <div class="cp-panel" id="panel-advanced">
-            <div class="adv-section">
-                <p class="adv-label">RGB</p>
-                <div class="slider-row">
-                    <span class="slider-letter r">R</span>
-                    <input type="range" class="cp-range range-r" id="sl-r" min="0" max="255" value="255" oninput="onRGBChange()">
-                    <span class="range-val" id="vl-r">255</span>
-                </div>
-                <div class="slider-row">
-                    <span class="slider-letter g">G</span>
-                    <input type="range" class="cp-range range-g" id="sl-g" min="0" max="255" value="255" oninput="onRGBChange()">
-                    <span class="range-val" id="vl-g">255</span>
-                </div>
-                <div class="slider-row">
-                    <span class="slider-letter b">B</span>
-                    <input type="range" class="cp-range range-b" id="sl-b" min="0" max="255" value="255" oninput="onRGBChange()">
-                    <span class="range-val" id="vl-b">255</span>
-                </div>
+        <div class="cppanel" id="panel-advanced">
+            <div class="advsec">
+                <p class="advlbl">RGB</p>
+                <div class="srow"><span class="sl r">R</span><input type="range" class="cpr rr" id="sl-r" min="0" max="255" value="255" oninput="onRGB()"><span class="rv" id="vr">255</span></div>
+                <div class="srow"><span class="sl g">G</span><input type="range" class="cpr rg" id="sl-g" min="0" max="255" value="255" oninput="onRGB()"><span class="rv" id="vg">255</span></div>
+                <div class="srow"><span class="sl b">B</span><input type="range" class="cpr rb" id="sl-b" min="0" max="255" value="255" oninput="onRGB()"><span class="rv" id="vb">255</span></div>
             </div>
-            <div class="adv-section">
-                <p class="adv-label">HSL</p>
-                <div class="slider-row">
-                    <span class="slider-letter h">H</span>
-                    <input type="range" class="cp-range range-h" id="sl-h" min="0" max="360" value="0" oninput="onHSLChange()">
-                    <span class="range-val" id="vl-h">0°</span>
-                </div>
-                <div class="slider-row">
-                    <span class="slider-letter s">S</span>
-                    <input type="range" class="cp-range range-s" id="sl-s" min="0" max="100" value="0" oninput="onHSLChange()">
-                    <span class="range-val" id="vl-s">0%</span>
-                </div>
-                <div class="slider-row">
-                    <span class="slider-letter l">L</span>
-                    <input type="range" class="cp-range range-l" id="sl-l" min="0" max="100" value="100" oninput="onHSLChange()">
-                    <span class="range-val" id="vl-l">100%</span>
-                </div>
+            <div class="advsec">
+                <p class="advlbl">HSL</p>
+                <div class="srow"><span class="sl h">H</span><input type="range" class="cpr rh" id="sl-h" min="0" max="360" value="0" oninput="onHSL()"><span class="rv" id="vh">0°</span></div>
+                <div class="srow"><span class="sl s">S</span><input type="range" class="cpr rs" id="sl-s" min="0" max="100" value="0" oninput="onHSL()"><span class="rv" id="vs">0%</span></div>
+                <div class="srow"><span class="sl l">L</span><input type="range" class="cpr rl" id="sl-l" min="0" max="100" value="100" oninput="onHSL()"><span class="rv" id="vl">100%</span></div>
             </div>
-            <div class="adv-preview-bar">
-                <div class="adv-preview-swatch" id="adv-sw" style="background:#ffffff;"></div>
-                <span class="adv-hex-out" id="adv-hex-out">#FFFFFF</span>
-                <button class="adv-apply-btn" onclick="applyAdvanced()">APPLY</button>
+            <div class="advbar">
+                <div class="advsw" id="advsw" style="background:#ffffff;"></div>
+                <span class="advhex" id="advhex">#FFFFFF</span>
+                <button class="advapply" onclick="applyAdv()">APPLY</button>
             </div>
         </div>
     </div>
 
     <!-- LIVE PREVIEW -->
-    <div class="preview-section">
-        <p class="preview-label">LIVE PREVIEW</p>
-        <div class="strip-preview-outer">
-            <div id="lp-strip" class="strip-preview" style="background:#ffffff;">
-                <div class="sp-photo"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div>
-                <div class="sp-photo"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(0.4);"></div>
-                <div class="sp-photo"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div>
-                <div class="sp-photo"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div>
-                <div class="sp-brand" id="lp-brand-s" style="color:#000;">V-Photobooth</div>
+    <div class="lpbox">
+        <p class="lplbl">LIVE PREVIEW</p>
+        <div class="lpouter">
+            <div id="lps" class="lpstrip" style="background:#ffffff;">
+                <div class="spp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div>
+                <div class="spp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div>
+                <div class="spp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div>
+                <div class="spp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div>
+                <div class="spb" id="lpbs" style="color:#000;">V-Photobooth</div>
             </div>
-            <div id="lp-grid" class="grid-preview" style="background:#ffffff;display:none;">
-                <div class="gp-photo"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div>
-                <div class="gp-photo"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(0.4);"></div>
-                <div class="gp-photo"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div>
-                <div class="gp-photo"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div>
-                <div class="gp-brand" id="lp-brand-g" style="color:#000;">V-Photobooth</div>
+            <div id="lpg" class="lpgrid" style="background:#ffffff;display:none;">
+                <div class="gpp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div>
+                <div class="gpp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div>
+                <div class="gpp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div>
+                <div class="gpp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div>
+                <div class="gpb" id="lpbg" style="color:#000;">V-Photobooth</div>
             </div>
         </div>
     </div>
 
-    <div class="nav-row">
-        <button class="btn-back" onclick="goToStep(1)">
-            <i class="fas fa-arrow-left" style="margin-right:6px;"></i>BACK
-        </button>
-        <button class="btn-main" onclick="goToStep(3)">
-            NEXT<i class="fas fa-arrow-right" style="margin-left:8px;"></i>
-        </button>
+    <div class="nav">
+        <button class="btnb" onclick="goTo(1)"><i class="fas fa-arrow-left" style="margin-right:5px;"></i>BACK</button>
+        <button class="btn" onclick="goTo(3)">NEXT<i class="fas fa-arrow-right" style="margin-left:7px;"></i></button>
     </div>
 </section>
 
-<!-- ═══════════ STEP 3: FILTERS & RATIO ═══════════ -->
-<section class="step-container" id="step-3">
-    <div class="step-indicator">
-        <div class="step-dot done"></div>
-        <div class="step-dot done"></div>
-        <div class="step-dot active"></div>
-        <div class="step-dot"></div>
-        <div class="step-dot"></div>
-    </div>
-    <div class="badge"><span class="badge-dot"></span>STEP 2 OF 3</div>
+<!-- ══ STEP 3: FILTERS & RATIO ══ -->
+<section class="step" id="step-3">
+    <div class="dots"><div class="dot d"></div><div class="dot d"></div><div class="dot a"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="badge"><span class="bdot"></span>STEP 2 OF 3</div>
     <h1>Filters &amp;<em> Ratio</em></h1>
     <p class="desc">Set your vibe. Each filter changes the whole mood of your strip.</p>
-
-    <p class="section-label">ASPECT RATIO</p>
-    <div class="btn-group-small" id="ratio-group">
-        <button class="pill-btn selected" onclick="selectRatio('4:3',this)">3:4</button>
-        <button class="pill-btn" onclick="selectRatio('3:4',this)">4:3</button>
-        <button class="pill-btn" onclick="selectRatio('9:16',this)">9:16</button>
-        <button class="pill-btn" onclick="selectRatio('16:9',this)">16:9</button>
+    <p class="slbl">ASPECT RATIO</p>
+    <div class="pgroup" id="rgrp">
+        <button class="pill sel" onclick="selRatio('4:3',this)">3:4</button>
+        <button class="pill" onclick="selRatio('3:4',this)">4:3</button>
+        <button class="pill" onclick="selRatio('9:16',this)">9:16</button>
+        <button class="pill" onclick="selRatio('16:9',this)">16:9</button>
     </div>
-
-    <p class="section-label" style="margin-top:4px;">FILTER</p>
-    <div class="options-grid">
-        <div class="card-option selected" onclick="selectCard('filter','none',this)">
-            <div class="check-mark"><i class="fas fa-check"></i></div>
-            <div class="filter-preview">
-                <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="Natural">
-            </div>
+    <p class="slbl" style="margin-top:4px;">FILTER</p>
+    <div class="ogrid">
+        <div class="card sel" onclick="selCard('filter','none',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <div class="fprev"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="Natural"></div>
             <p>NATURAL</p>
         </div>
-        <div class="card-option" onclick="selectCard('filter','vintage',this)">
-            <div class="check-mark"><i class="fas fa-check"></i></div>
-            <div class="filter-preview">
-                <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="filter:sepia(0.6) contrast(1.2);" alt="Vintage">
-            </div>
+        <div class="card" onclick="selCard('filter','vintage',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <div class="fprev"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="filter:sepia(.6) contrast(1.2);" alt="Vintage"></div>
             <p>VINTAGE</p>
         </div>
-        <div class="card-option" onclick="selectCard('filter','bnw',this)">
-            <div class="check-mark"><i class="fas fa-check"></i></div>
-            <div class="filter-preview">
-                <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="filter:grayscale(1);" alt="B&W">
-            </div>
+        <div class="card" onclick="selCard('filter','bnw',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <div class="fprev"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="filter:grayscale(1);" alt="B&W"></div>
             <p>B &amp; W</p>
         </div>
-        <div class="card-option" onclick="selectCard('filter','sharpen',this)">
-            <div class="check-mark"><i class="fas fa-check"></i></div>
-            <div class="filter-preview">
-                <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="filter:contrast(1.4) saturate(1.4);" alt="Vivid">
-            </div>
+        <div class="card" onclick="selCard('filter','sharpen',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <div class="fprev"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="filter:contrast(1.4) saturate(1.4);" alt="Vivid"></div>
             <p>VIVID GLOW</p>
         </div>
     </div>
-
-    <div class="nav-row">
-        <button class="btn-back" onclick="goToStep(2)">
-            <i class="fas fa-arrow-left" style="margin-right:6px;"></i>BACK
-        </button>
-        <button class="btn-main" onclick="goToStep(4)">
-            <i class="fas fa-camera" style="margin-right:8px;"></i>CAMERA
-        </button>
+    <div class="nav">
+        <button class="btnb" onclick="goTo(2)"><i class="fas fa-arrow-left" style="margin-right:5px;"></i>BACK</button>
+        <button class="btn" onclick="goTo(4)"><i class="fas fa-camera" style="margin-right:7px;"></i>CAMERA</button>
     </div>
 </section>
 
-<!-- ═══════════ STEP 4: CAMERA ═══════════ -->
-<section class="step-container" id="step-4">
-    <div class="step-indicator">
-        <div class="step-dot done"></div>
-        <div class="step-dot done"></div>
-        <div class="step-dot done"></div>
-        <div class="step-dot active"></div>
-        <div class="step-dot"></div>
-    </div>
-    <div class="badge"><span class="badge-dot"></span>STEP 3 OF 3</div>
+<!-- ══ STEP 4: CAMERA ══ -->
+<section class="step" id="step-4">
+    <div class="dots"><div class="dot d"></div><div class="dot d"></div><div class="dot d"></div><div class="dot a"></div><div class="dot"></div></div>
+    <div class="badge"><span class="bdot"></span>STEP 3 OF 3</div>
     <h1>Strike a<em> Pose!</em></h1>
-
-    <div class="cam-info-bar">
-        <span><span class="live-dot"></span>&nbsp;LIVE</span>
-        <span id="cam-ratio-lbl">4:3</span>
-        <span id="cam-filter-lbl">NATURAL</span>
+    <div class="cambar">
+        <span><span class="ldot"></span>&nbsp;LIVE</span>
+        <span id="cam-r">4:3</span>
+        <span id="cam-f">NATURAL</span>
     </div>
-
-    <div class="camera-outer">
-        <div class="camera-wrapper" id="cam-wrapper">
+    <div class="camout">
+        <div class="camwrap" id="camwrap">
             <video id="video" autoplay playsinline muted></video>
-            <div id="flash-local"></div>
-            <div id="countdown" style="display:none;">3</div>
+            <div id="flash"></div>
+            <div id="cdown" style="display:none;">3</div>
         </div>
     </div>
-
-    <div class="shot-counter">
-        <div class="shot-pip" id="pip-0"></div>
-        <div class="shot-pip" id="pip-1"></div>
-        <div class="shot-pip" id="pip-2"></div>
-        <div class="shot-pip" id="pip-3"></div>
+    <div class="pips">
+        <div class="pip" id="pip-0"></div><div class="pip" id="pip-1"></div>
+        <div class="pip" id="pip-2"></div><div class="pip" id="pip-3"></div>
     </div>
-
-    <p id="cam-info" style="font-size:0.68rem;letter-spacing:3px;margin-bottom:18px;color:rgba(255,255,255,0.28);">
-        PRESS THE BUTTON TO START
-    </p>
-
-    <div class="cam-controls">
-        <button class="cam-ctrl-btn" title="Mirror" onclick="toggleMirror()">
-            <i class="fas fa-left-right"></i>
-        </button>
-        <button class="shutter-btn" id="shutter-btn" onclick="startShoot()"></button>
-        <button class="cam-ctrl-btn" id="timer-btn" title="Timer" onclick="toggleTimer()">
-            <i class="fas fa-stopwatch"></i>
-        </button>
+    <p id="caminfo" style="font-size:.65rem;letter-spacing:3px;margin-bottom:16px;color:rgba(255,255,255,.26);">PRESS THE BUTTON TO START</p>
+    <div class="camctrl">
+        <button class="cctrl" onclick="togMirror()" title="Mirror"><i class="fas fa-left-right"></i></button>
+        <button class="shutter" id="shutter" onclick="startShoot()"></button>
+        <button class="cctrl" id="timerbtn" onclick="togTimer()" title="Timer"><i class="fas fa-stopwatch"></i></button>
     </div>
-
-    <div class="nav-row" style="margin-top:22px;">
-        <button class="btn-back" onclick="backFromCamera()">
-            <i class="fas fa-arrow-left" style="margin-right:6px;"></i>BACK
-        </button>
+    <div class="nav" style="margin-top:18px;">
+        <button class="btnb" onclick="backCam()"><i class="fas fa-arrow-left" style="margin-right:5px;"></i>BACK</button>
     </div>
 </section>
 
-<!-- ═══════════ STEP 5: RESULT ═══════════ -->
-<section class="step-container" id="step-5">
-    <div class="step-indicator">
-        <div class="step-dot done"></div>
-        <div class="step-dot done"></div>
-        <div class="step-dot done"></div>
-        <div class="step-dot done"></div>
-        <div class="step-dot active"></div>
-    </div>
-    <div class="badge"><span class="badge-dot"></span>YOUR PHOTOS ARE READY</div>
+<!-- ══ STEP 5: RESULT ══ -->
+<section class="step" id="step-5">
+    <div class="dots"><div class="dot d"></div><div class="dot d"></div><div class="dot d"></div><div class="dot d"></div><div class="dot a"></div></div>
+    <div class="badge"><span class="bdot"></span>YOUR PHOTOS ARE READY</div>
     <h1>Look at<em> You!</em></h1>
     <p class="desc">Gorgeous! Save your strip and share it with the world.</p>
-
-    <img id="final-img" alt="Result">
-
-    <div class="result-btns">
-        <button class="btn-main" onclick="downloadImage()">
-            <i class="fas fa-download" style="margin-right:8px;"></i>SAVE
-        </button>
-        <button class="btn-secondary" onclick="reshoot()">
-            <i class="fas fa-rotate-left" style="margin-right:8px;"></i>RESHOOT
-        </button>
-        <button class="btn-secondary" onclick="location.reload()">START OVER</button>
+    <img id="fimg" alt="Result">
+    <div class="rbtns">
+        <button class="btn" onclick="dlImg()"><i class="fas fa-download" style="margin-right:7px;"></i>SAVE</button>
+        <button class="btn2" onclick="reshoot()"><i class="fas fa-rotate-left" style="margin-right:7px;"></i>RESHOOT</button>
+        <button class="btn2" onclick="location.reload()">START OVER</button>
     </div>
-
-    <div class="about-me">
+    <div class="about">
         <p>KEEP IN TOUCH WITH YUNA</p>
-        <div class="social-icons">
+        <div class="soc">
             <a href="https://www.instagram.com/hii.yvnaa_" target="_blank"><i class="fab fa-instagram"></i></a>
             <a href="https://whatsapp.com/channel/0029Vb7adkSAojYxeMA7oU3v" target="_blank"><i class="fab fa-whatsapp"></i></a>
             <a href="mailto:hiiyunaaa@gmail.com"><i class="far fa-envelope"></i></a>
@@ -864,686 +469,418 @@
     </div>
 </section>
 
-<canvas id="c-temp"></canvas>
-<canvas id="c-final"></canvas>
+<canvas id="ct"></canvas>
+<canvas id="cf"></canvas>
 
 <script>
 'use strict';
-
-/* ═══════════════════════════════════════════
-   STATE
-═══════════════════════════════════════════ */
-const state = {
-    layout:         'strip',
-    color:          '#ffffff',
-    isGradient:     false,
-    gradientCSS:    '',
-    filter:         'none',
-    ratio:          '4:3',
-    photos:         [],
-    mirrored:       true,
-    timerSec:       3,
-    shooting:       false,
-    advR: 255, advG: 255, advB: 255
+/* ═══════ STATE ═══════ */
+const S = {
+    layout:'strip', color:'#ffffff', isGrad:false, gradCSS:'',
+    filter:'none', ratio:'4:3', photos:[], mirrored:true, timerSec:3, shooting:false,
+    advR:255, advG:255, advB:255,
+    gStops:[{hex:'ff477e'},{hex:'ff1f61'}], gAngle:135
 };
+const $=id=>document.getElementById(id);
+const video=$('video'), shutter=$('shutter'), cdownEl=$('cdown'), flashEl=$('flash');
 
-const $  = id => document.getElementById(id);
-const video      = $('video');
-const shutterBtn = $('shutter-btn');
-const countdownEl= $('countdown');
-const flashEl    = $('flash-local');
+/* ═══════ DATA ═══════ */
+const SW_C=[
+    {hex:'#ffffff',n:'WHITE'},{hex:'#f5f5f5',n:'SNOW'},{hex:'#e0e0e0',n:'SILVER'},{hex:'#9e9e9e',n:'GRAY'},
+    {hex:'#121212',n:'BLACK'},{hex:'#2d2d2d',n:'CHARCOAL'},{hex:'#ff477e',n:'PINK'},{hex:'#ff1f61',n:'ROSE'},
+    {hex:'#e91e8c',n:'FUCHSIA'},{hex:'#c4224f',n:'RUBY'},{hex:'#ff9800',n:'AMBER'},{hex:'#ffc107',n:'YELLOW'}
+];
+const SW_P=[
+    {hex:'#ffd1dc',n:'BLUSH'},{hex:'#ffb3cb',n:'SAKURA'},{hex:'#ffc8dd',n:'COTTON'},{hex:'#fff0f3',n:'PETAL'},
+    {hex:'#d4f1f4',n:'MINT'},{hex:'#b5ead7',n:'SAGE'},{hex:'#c7f2a4',n:'LIME'},{hex:'#fff8dc',n:'CREAM'},
+    {hex:'#fce4ec',n:'LACE'},{hex:'#e1bee7',n:'LAVND'},{hex:'#d1c4e9',n:'LILAC'},{hex:'#bbdefb',n:'SKY'}
+];
+const SW_D=[
+    {hex:'#1a1a2e',n:'NAVY'},{hex:'#16213e',n:'OCEAN'},{hex:'#0f3460',n:'COBALT'},{hex:'#2c2c54',n:'DUSK'},
+    {hex:'#2d1b69',n:'VIOLET'},{hex:'#3d0a20',n:'MERLOT'},{hex:'#1b1b2f',n:'SPACE'},{hex:'#0d1117',n:'VOID'},
+    {hex:'#1a0a00',n:'EMBER'},{hex:'#0a1628',n:'ABYSS'},{hex:'#1c1c3a',n:'INK'},{hex:'#2a0a2e',n:'PLUM'}
+];
+const GRADS=[
+    {css:'linear-gradient(135deg,#ffd1dc,#ffb3cb)'},{css:'linear-gradient(135deg,#667eea,#764ba2)'},
+    {css:'linear-gradient(135deg,#f093fb,#f5576c)'},{css:'linear-gradient(135deg,#4facfe,#00f2fe)'},
+    {css:'linear-gradient(135deg,#43e97b,#38f9d7)'},{css:'linear-gradient(135deg,#fa709a,#fee140)'},
+    {css:'linear-gradient(135deg,#a18cd1,#fbc2eb)'},{css:'linear-gradient(135deg,#ffecd2,#fcb69f)'},
+    {css:'linear-gradient(135deg,#2c3e50,#3498db)'},{css:'linear-gradient(135deg,#1a1a2e,#e94560)'},
+    {css:'linear-gradient(135deg,#0f0c29,#302b63,#24243e)'},{css:'linear-gradient(135deg,#373b44,#4286f4)'}
+];
+const QC=['FFFFFF','121212','FFD1DC','D4F1F4','FFF8DC','1A1A2E','FF477E','2C2C54'];
+const FCSS={none:'none',vintage:'sepia(.6) contrast(1.2) saturate(.8)',bnw:'grayscale(1)',sharpen:'contrast(1.3) saturate(1.4) brightness(1.1)'};
+const FNAMES={none:'NATURAL',vintage:'VINTAGE',bnw:'B & W',sharpen:'VIVID GLOW'};
 
-/* ═══════════════════════════════════════════
-   DATA
-═══════════════════════════════════════════ */
-const SWATCHES_CLASSIC = [
-    {hex:'#ffffff',name:'WHITE'},  {hex:'#f5f5f5',name:'SNOW'},
-    {hex:'#e0e0e0',name:'SILVER'}, {hex:'#9e9e9e',name:'GRAY'},
-    {hex:'#121212',name:'BLACK'},  {hex:'#2d2d2d',name:'CHARCOAL'},
-    {hex:'#ff477e',name:'PINK'},   {hex:'#ff1f61',name:'ROSE'},
-    {hex:'#e91e8c',name:'FUCHSIA'},{hex:'#c4224f',name:'RUBY'},
-    {hex:'#ff9800',name:'AMBER'},  {hex:'#ffc107',name:'YELLOW'},
-];
-const SWATCHES_PASTEL = [
-    {hex:'#ffd1dc',name:'BLUSH'},  {hex:'#ffb3cb',name:'SAKURA'},
-    {hex:'#ffc8dd',name:'COTTON'}, {hex:'#fff0f3',name:'PETAL'},
-    {hex:'#d4f1f4',name:'MINT'},   {hex:'#b5ead7',name:'SAGE'},
-    {hex:'#c7f2a4',name:'LIME'},   {hex:'#fff8dc',name:'CREAM'},
-    {hex:'#fce4ec',name:'LACE'},   {hex:'#e1bee7',name:'LAVND'},
-    {hex:'#d1c4e9',name:'LILAC'},  {hex:'#bbdefb',name:'SKY'},
-];
-const SWATCHES_DARK = [
-    {hex:'#1a1a2e',name:'NAVY'},   {hex:'#16213e',name:'OCEAN'},
-    {hex:'#0f3460',name:'COBALT'}, {hex:'#2c2c54',name:'DUSK'},
-    {hex:'#2d1b69',name:'VIOLET'}, {hex:'#3d0a20',name:'MERLOT'},
-    {hex:'#1b1b2f',name:'SPACE'},  {hex:'#0d1117',name:'VOID'},
-    {hex:'#1a0a00',name:'EMBER'},  {hex:'#0a1628',name:'ABYSS'},
-    {hex:'#1c1c3a',name:'INK'},    {hex:'#2a0a2e',name:'PLUM'},
-];
-const GRADIENTS = [
-    {css:'linear-gradient(135deg,#ffd1dc,#ffb3cb)',       name:'BLUSH'},
-    {css:'linear-gradient(135deg,#667eea,#764ba2)',        name:'AURORA'},
-    {css:'linear-gradient(135deg,#f093fb,#f5576c)',        name:'SUNSET'},
-    {css:'linear-gradient(135deg,#4facfe,#00f2fe)',        name:'OCEAN'},
-    {css:'linear-gradient(135deg,#43e97b,#38f9d7)',        name:'MINT'},
-    {css:'linear-gradient(135deg,#fa709a,#fee140)',        name:'CANDY'},
-    {css:'linear-gradient(135deg,#a18cd1,#fbc2eb)',        name:'DREAMY'},
-    {css:'linear-gradient(135deg,#ffecd2,#fcb69f)',        name:'PEACH'},
-    {css:'linear-gradient(135deg,#2c3e50,#3498db)',        name:'NIGHT'},
-    {css:'linear-gradient(135deg,#1a1a2e,#e94560)',        name:'NEON'},
-    {css:'linear-gradient(135deg,#0f0c29,#302b63,#24243e)',name:'GALAXY'},
-    {css:'linear-gradient(135deg,#373b44,#4286f4)',        name:'STEEL'},
-];
-const QUICK_CODES = [
-    'FFFFFF','121212','FFD1DC','D4F1F4',
-    'FFF8DC','1A1A2E','FF477E','2C2C54',
-];
-const FILTER_NAMES = {
-    none:'NATURAL', vintage:'VINTAGE', bnw:'B & W', sharpen:'VIVID GLOW'
-};
-const FILTER_CSS = {
-    none:    'none',
-    vintage: 'sepia(0.6) contrast(1.2) saturate(0.8)',
-    bnw:     'grayscale(1)',
-    sharpen: 'contrast(1.3) saturate(1.4) brightness(1.1)',
-};
-
-/* ═══════════════════════════════════════════
-   BUILD UI ON LOAD
-═══════════════════════════════════════════ */
-function buildUI() {
-    buildSwatchGroup('sg-classic', SWATCHES_CLASSIC);
-    buildSwatchGroup('sg-pastel',  SWATCHES_PASTEL);
-    buildSwatchGroup('sg-dark',    SWATCHES_DARK);
-    buildGradients();
-    buildQuickCodes();
-    updatePreview();
+/* ═══════ BUILD UI ═══════ */
+function buildUI(){
+    buildSW('sg-c',SW_C); buildSW('sg-p',SW_P); buildSW('sg-d',SW_D);
+    buildGrads(); buildQC(); buildGStops(); onGradChange();
+    updPreview();
 }
-
-function buildSwatchGroup(containerId, list) {
-    const g = $(containerId);
-    list.forEach(sw => {
-        const wrap = document.createElement('div');
-        wrap.className = 'sw-item';
-        const dark = isDark(sw.hex);
-        wrap.innerHTML = `
-            <div class="sw-circle${sw.hex === '#ffffff' ? ' selected' : ''}"
-                 style="background:${sw.hex};${dark ? 'border-color:#555;' : ''}"
-                 data-hex="${sw.hex}">
-                <span class="sw-check"><i class="fas fa-check"></i></span>
-            </div>
-            <span class="sw-name">${sw.name}</span>`;
-        wrap.querySelector('.sw-circle').addEventListener('click', function() {
-            applyColor(sw.hex, false, '');
-        });
-        g.appendChild(wrap);
+function buildSW(id,list){
+    const g=$(id);
+    list.forEach(sw=>{
+        const w=document.createElement('div'); w.className='swi';
+        w.innerHTML=`<div class="swc${sw.hex==='#ffffff'?' sel':''}" style="background:${sw.hex};${isDark(sw.hex)?'border-color:#555;':''}" data-hex="${sw.hex}"><span class="swck"><i class="fas fa-check"></i></span></div><span class="swn">${sw.n}</span>`;
+        w.querySelector('.swc').addEventListener('click',()=>applyColor(sw.hex,false,''));
+        g.appendChild(w);
     });
 }
-
-function buildGradients() {
-    const g = $('grad-grid');
-    GRADIENTS.forEach(gr => {
-        const d = document.createElement('div');
-        d.className = 'grad-item';
-        d.style.background = gr.css;
-        d.dataset.css = gr.css;
-        d.innerHTML = `<div class="grad-check"><i class="fas fa-check"></i></div>`;
-        d.addEventListener('click', function() {
-            applyColor(gr.css, true, gr.css);
-        });
+function buildGrads(){
+    const g=$('ggrid');
+    GRADS.forEach(gr=>{
+        const d=document.createElement('div'); d.className='gi';
+        d.style.background=gr.css; d.dataset.css=gr.css;
+        d.innerHTML=`<div class="gick"><i class="fas fa-check"></i></div>`;
+        d.addEventListener('click',()=>applyColor(gr.css,true,gr.css));
         g.appendChild(d);
     });
 }
-
-function buildQuickCodes() {
-    const c = $('quick-codes');
-    QUICK_CODES.forEach(code => {
-        const btn = document.createElement('button');
-        btn.className = 'qc-btn';
-        btn.textContent = code;
-        btn.addEventListener('click', () => quickHex(code));
-        c.appendChild(btn);
+function buildQC(){
+    const c=$('qcodes');
+    QC.forEach(code=>{
+        const b=document.createElement('button'); b.className='qcbtn'; b.textContent=code;
+        b.addEventListener('click',()=>quickHex(code)); c.appendChild(b);
     });
 }
 
-/* ═══════════════════════════════════════════
-   APPLY COLOR — single source of truth
-═══════════════════════════════════════════ */
-function applyColor(val, isGradient, gradCSS) {
-    state.color      = val;
-    state.isGradient = isGradient;
-    state.gradientCSS= gradCSS;
+/* ═══════ CUSTOM GRADIENT ═══════ */
+function buildGStops(){
+    const c=$('gstops'); c.innerHTML='';
+    S.gStops.forEach((stop,i)=>{
+        const row=document.createElement('div'); row.className='gstop-row';
+        row.innerHTML=`
+            <div class="gstop-preview" style="background:#${stop.hex};" onclick="pickStopColor(${i})" title="Click to pick color"></div>
+            <div class="gstop-wrap">
+                <span class="gstop-hash">#</span>
+                <input class="gstop-hex" type="text" maxlength="6" value="${stop.hex.toUpperCase()}"
+                    oninput="onStopHex(${i},this.value)" onkeydown="if(event.key==='Enter')onStopHex(${i},this.value)">
+            </div>
+            ${S.gStops.length>2?`<button class="gstop-rm" onclick="removeStop(${i})"><i class="fas fa-xmark"></i></button>`:''}`;
+        c.appendChild(row);
+    });
+}
 
-    // clear all selections
-    document.querySelectorAll('.sw-circle').forEach(el => el.classList.remove('selected'));
-    document.querySelectorAll('.grad-item').forEach(el => el.classList.remove('selected'));
+function onStopHex(i,val){
+    const clean=val.replace(/[^0-9a-fA-F]/g,'').slice(0,6);
+    // update input display
+    const inputs=$('gstops').querySelectorAll('.gstop-hex');
+    if(inputs[i]) inputs[i].value=clean.toUpperCase();
+    if(clean.length===6){
+        S.gStops[i].hex=clean;
+        const prevs=$('gstops').querySelectorAll('.gstop-preview');
+        if(prevs[i]) prevs[i].style.background='#'+clean;
+        onGradChange();
+    }
+}
 
-    if (isGradient) {
-        // find matching gradient item
-        document.querySelectorAll('.grad-item').forEach(el => {
-            if (el.dataset.css === gradCSS) el.classList.add('selected');
-        });
+function pickStopColor(i){
+    // create hidden color input
+    const inp=document.createElement('input'); inp.type='color';
+    inp.value='#'+S.gStops[i].hex;
+    inp.style.display='none'; document.body.appendChild(inp);
+    inp.addEventListener('input',()=>{
+        const hex=inp.value.replace('#','');
+        S.gStops[i].hex=hex;
+        buildGStops(); onGradChange();
+    });
+    inp.addEventListener('change',()=>{ document.body.removeChild(inp); });
+    inp.click();
+}
+
+function addStop(){
+    if(S.gStops.length>=6) return;
+    S.gStops.push({hex:'ffffff'});
+    buildGStops(); onGradChange();
+}
+function removeStop(i){
+    if(S.gStops.length<=2) return;
+    S.gStops.splice(i,1);
+    buildGStops(); onGradChange();
+}
+function onGradChange(){
+    const angle=+$('g-angle').value;
+    S.gAngle=angle;
+    $('g-angle-val').textContent=angle+'°';
+    const stops=S.gStops.map(s=>'#'+s.hex).join(',');
+    const css=`linear-gradient(${angle}deg,${stops})`;
+    $('g-prev-bar').style.background=css;
+    S._customGradCSS=css;
+}
+function applyCustomGrad(){
+    const css=S._customGradCSS||`linear-gradient(135deg,#${S.gStops.map(s=>s.hex).join(',#')})`;
+    applyColor(css,true,css);
+    // clear preset selection
+    document.querySelectorAll('.gi').forEach(el=>el.classList.remove('sel'));
+}
+
+/* ═══════ APPLY COLOR ═══════ */
+function applyColor(val,isGrad,gradCSS){
+    S.color=val; S.isGrad=isGrad; S.gradCSS=gradCSS;
+    document.querySelectorAll('.swc').forEach(e=>e.classList.remove('sel'));
+    document.querySelectorAll('.gi').forEach(e=>e.classList.remove('sel'));
+    if(isGrad){
+        document.querySelectorAll('.gi').forEach(e=>{ if(e.dataset.css===gradCSS) e.classList.add('sel'); });
     } else {
-        // find matching swatch
-        document.querySelectorAll('.sw-circle').forEach(el => {
-            if (el.dataset.hex === val) el.classList.add('selected');
-        });
-        // sync hex input
-        const clean = val.replace('#', '');
-        $('hex-input').value = clean.toUpperCase();
-        $('hex-prev-sw').style.background = val;
-        syncSlidersFromHex(val);
+        document.querySelectorAll('.swc').forEach(e=>{ if(e.dataset.hex===val) e.classList.add('sel'); });
+        const clean=val.replace('#','');
+        $('hxinput').value=clean.toUpperCase();
+        $('hxsw').style.background=val;
+        syncSliders(val);
     }
-
-    // update selected pill
-    const displayBg = isGradient ? gradCSS : val;
-    $('scp-swatch').style.background = displayBg;
-    $('scp-hex').textContent = isGradient ? 'GRADIENT' : val.toUpperCase();
-
-    updatePreview();
+    const bg=isGrad?gradCSS:val;
+    $('spsw').style.background=bg;
+    $('sphex').textContent=isGrad?'GRADIENT':val.toUpperCase();
+    updPreview();
 }
 
-/* ═══════════════════════════════════════════
-   TABS
-═══════════════════════════════════════════ */
-function switchTab(name, btn) {
-    document.querySelectorAll('.cp-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.cp-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    $('panel-' + name).classList.add('active');
+/* ═══════ TABS ═══════ */
+function swTab(name,btn){
+    document.querySelectorAll('.cptab').forEach(t=>t.classList.remove('a'));
+    document.querySelectorAll('.cppanel').forEach(p=>p.classList.remove('a'));
+    btn.classList.add('a'); $('panel-'+name).classList.add('a');
 }
 
-/* ═══════════════════════════════════════════
-   HEX TAB
-═══════════════════════════════════════════ */
-function onHexInput(val) {
-    const clean = val.replace(/[^0-9a-fA-F]/g, '').slice(0, 6);
-    $('hex-input').value = clean.toUpperCase();
-    if (clean.length === 6) {
-        $('hex-prev-sw').style.background = '#' + clean;
-    }
+/* ═══════ HEX ═══════ */
+function onHexIn(v){
+    const c=v.replace(/[^0-9a-fA-F]/g,'').slice(0,6);
+    $('hxinput').value=c.toUpperCase();
+    if(c.length===6) $('hxsw').style.background='#'+c;
+}
+function applyHex(){
+    const v=$('hxinput').value.replace(/[^0-9a-fA-F]/g,'');
+    if(v.length!==6){ $('hxinput').style.borderColor='rgba(255,71,126,.8)'; setTimeout(()=>$('hxinput').style.borderColor='',800); return; }
+    applyColor('#'+v,false,'');
+}
+function quickHex(code){ $('hxinput').value=code; $('hxsw').style.background='#'+code; applyColor('#'+code,false,''); }
+
+/* ═══════ ADVANCED ═══════ */
+function onRGB(){
+    const r=+$('sl-r').value,g=+$('sl-g').value,b=+$('sl-b').value;
+    $('vr').textContent=r; $('vg').textContent=g; $('vb').textContent=b;
+    S.advR=r; S.advG=g; S.advB=b;
+    const hex=r2h(r,g,b);
+    $('advsw').style.background=hex; $('advhex').textContent=hex.toUpperCase();
+    const hsl=r2hsl(r,g,b);
+    $('sl-h').value=Math.round(hsl[0]); $('vh').textContent=Math.round(hsl[0])+'°';
+    $('sl-s').value=Math.round(hsl[1]); $('vs').textContent=Math.round(hsl[1])+'%';
+    $('sl-l').value=Math.round(hsl[2]); $('vl').textContent=Math.round(hsl[2])+'%';
+}
+function onHSL(){
+    const h=+$('sl-h').value,s=+$('sl-s').value,l=+$('sl-l').value;
+    $('vh').textContent=h+'°'; $('vs').textContent=s+'%'; $('vl').textContent=l+'%';
+    const rgb=hsl2r(h,s,l);
+    S.advR=rgb[0]; S.advG=rgb[1]; S.advB=rgb[2];
+    $('sl-r').value=rgb[0]; $('vr').textContent=rgb[0];
+    $('sl-g').value=rgb[1]; $('vg').textContent=rgb[1];
+    $('sl-b').value=rgb[2]; $('vb').textContent=rgb[2];
+    const hex=r2h(rgb[0],rgb[1],rgb[2]);
+    $('advsw').style.background=hex; $('advhex').textContent=hex.toUpperCase();
+}
+function applyAdv(){ applyColor(r2h(S.advR,S.advG,S.advB),false,''); }
+function syncSliders(hex){
+    const rgb=h2r(hex); if(!rgb) return;
+    S.advR=rgb[0]; S.advG=rgb[1]; S.advB=rgb[2];
+    $('sl-r').value=rgb[0]; $('vr').textContent=rgb[0];
+    $('sl-g').value=rgb[1]; $('vg').textContent=rgb[1];
+    $('sl-b').value=rgb[2]; $('vb').textContent=rgb[2];
+    const hsl=r2hsl(rgb[0],rgb[1],rgb[2]);
+    $('sl-h').value=Math.round(hsl[0]); $('vh').textContent=Math.round(hsl[0])+'°';
+    $('sl-s').value=Math.round(hsl[1]); $('vs').textContent=Math.round(hsl[1])+'%';
+    $('sl-l').value=Math.round(hsl[2]); $('vl').textContent=Math.round(hsl[2])+'%';
+    $('advsw').style.background=hex; $('advhex').textContent=hex.toUpperCase();
 }
 
-function applyHex() {
-    const val = $('hex-input').value.replace(/[^0-9a-fA-F]/g, '');
-    if (val.length !== 6) {
-        $('hex-input').style.borderColor = 'rgba(255,71,126,0.8)';
-        setTimeout(() => $('hex-input').style.borderColor = '', 800);
-        return;
-    }
-    applyColor('#' + val, false, '');
+/* ═══════ COLOR UTILS ═══════ */
+function h2r(hex){ const h=hex.replace('#',''); if(h.length!==6) return null; return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+function r2h(r,g,b){ return'#'+[r,g,b].map(x=>Math.round(x).toString(16).padStart(2,'0')).join(''); }
+function isDark(hex){ const r=h2r(hex); if(!r) return false; return(0.299*r[0]+0.587*r[1]+0.114*r[2])/255<0.45; }
+function contrast(hex,isGrad){ if(isGrad) return'rgba(255,255,255,.88)'; return isDark(hex)?'rgba(255,255,255,.88)':'rgba(0,0,0,.72)'; }
+function r2hsl(r,g,b){
+    r/=255;g/=255;b/=255;
+    const mx=Math.max(r,g,b),mn=Math.min(r,g,b);
+    let h,s,l=(mx+mn)/2;
+    if(mx===mn){h=s=0;}
+    else{const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);
+        switch(mx){case r:h=((g-b)/d+(g<b?6:0))/6;break;case g:h=((b-r)/d+2)/6;break;default:h=((r-g)/d+4)/6;}}
+    return[h*360,s*100,l*100];
+}
+function hsl2r(h,s,l){
+    h/=360;s/=100;l/=100;
+    if(s===0){const v=Math.round(l*255);return[v,v,v];}
+    const q=l<.5?l*(1+s):l+s-l*s,p=2*l-q;
+    const hue=(p,q,t)=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<.5)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p;};
+    return[Math.round(hue(p,q,h+1/3)*255),Math.round(hue(p,q,h)*255),Math.round(hue(p,q,h-1/3)*255)];
 }
 
-function quickHex(code) {
-    $('hex-input').value = code;
-    $('hex-prev-sw').style.background = '#' + code;
-    applyColor('#' + code, false, '');
+/* ═══════ PREVIEW ═══════ */
+function updPreview(){
+    const bg=S.isGrad?S.gradCSS:S.color;
+    const tc=contrast(S.color,S.isGrad);
+    $('lps').style.display=S.layout==='strip'?'flex':'none';
+    $('lpg').style.display=S.layout==='grid'?'grid':'none';
+    $('lps').style.background=bg; $('lpg').style.background=bg;
+    $('lpbs').style.color=tc; $('lpbg').style.color=tc;
 }
 
-/* ═══════════════════════════════════════════
-   ADVANCED — RGB
-═══════════════════════════════════════════ */
-function onRGBChange() {
-    const r = +$('sl-r').value;
-    const g = +$('sl-g').value;
-    const b = +$('sl-b').value;
-    $('vl-r').textContent = r;
-    $('vl-g').textContent = g;
-    $('vl-b').textContent = b;
-    state.advR = r; state.advG = g; state.advB = b;
-
-    const hex = rgbToHex(r, g, b);
-    $('adv-sw').style.background  = hex;
-    $('adv-hex-out').textContent  = hex.toUpperCase();
-
-    // sync HSL sliders
-    const hsl = rgbToHsl(r, g, b);
-    $('sl-h').value = Math.round(hsl[0]);
-    $('sl-s').value = Math.round(hsl[1]);
-    $('sl-l').value = Math.round(hsl[2]);
-    $('vl-h').textContent = Math.round(hsl[0]) + '°';
-    $('vl-s').textContent = Math.round(hsl[1]) + '%';
-    $('vl-l').textContent = Math.round(hsl[2]) + '%';
-}
-
-/* ── ADVANCED — HSL ── */
-function onHSLChange() {
-    const h = +$('sl-h').value;
-    const s = +$('sl-s').value;
-    const l = +$('sl-l').value;
-    $('vl-h').textContent = h + '°';
-    $('vl-s').textContent = s + '%';
-    $('vl-l').textContent = l + '%';
-
-    const rgb = hslToRgb(h, s, l);
-    state.advR = rgb[0]; state.advG = rgb[1]; state.advB = rgb[2];
-    $('sl-r').value = rgb[0]; $('vl-r').textContent = rgb[0];
-    $('sl-g').value = rgb[1]; $('vl-g').textContent = rgb[1];
-    $('sl-b').value = rgb[2]; $('vl-b').textContent = rgb[2];
-
-    const hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
-    $('adv-sw').style.background = hex;
-    $('adv-hex-out').textContent  = hex.toUpperCase();
-}
-
-function applyAdvanced() {
-    applyColor(rgbToHex(state.advR, state.advG, state.advB), false, '');
-}
-
-function syncSlidersFromHex(hex) {
-    const rgb = hexToRgb(hex);
-    if (!rgb) return;
-    state.advR = rgb[0]; state.advG = rgb[1]; state.advB = rgb[2];
-    $('sl-r').value = rgb[0]; $('vl-r').textContent = rgb[0];
-    $('sl-g').value = rgb[1]; $('vl-g').textContent = rgb[1];
-    $('sl-b').value = rgb[2]; $('vl-b').textContent = rgb[2];
-
-    const hsl = rgbToHsl(rgb[0], rgb[1], rgb[2]);
-    $('sl-h').value = Math.round(hsl[0]); $('vl-h').textContent = Math.round(hsl[0]) + '°';
-    $('sl-s').value = Math.round(hsl[1]); $('vl-s').textContent = Math.round(hsl[1]) + '%';
-    $('sl-l').value = Math.round(hsl[2]); $('vl-l').textContent = Math.round(hsl[2]) + '%';
-    $('adv-sw').style.background = hex;
-    $('adv-hex-out').textContent  = hex.toUpperCase();
-}
-
-/* ═══════════════════════════════════════════
-   COLOR UTILS
-═══════════════════════════════════════════ */
-function hexToRgb(hex) {
-    const h = hex.replace('#', '');
-    if (h.length !== 6) return null;
-    return [
-        parseInt(h.slice(0,2), 16),
-        parseInt(h.slice(2,4), 16),
-        parseInt(h.slice(4,6), 16)
-    ];
-}
-function rgbToHex(r, g, b) {
-    return '#' + [r, g, b].map(x => Math.round(x).toString(16).padStart(2,'0')).join('');
-}
-function isDark(hex) {
-    const rgb = hexToRgb(hex);
-    if (!rgb) return false;
-    return (0.299*rgb[0] + 0.587*rgb[1] + 0.114*rgb[2]) / 255 < 0.45;
-}
-function contrastColor(hex, isGrad) {
-    if (isGrad) return 'rgba(255,255,255,0.88)';
-    return isDark(hex) ? 'rgba(255,255,255,0.88)' : 'rgba(0,0,0,0.72)';
-}
-function rgbToHsl(r, g, b) {
-    r /= 255; g /= 255; b /= 255;
-    const max = Math.max(r,g,b), min = Math.min(r,g,b);
-    let h, s, l = (max+min)/2;
-    if (max === min) { h = s = 0; }
-    else {
-        const d = max - min;
-        s = l > 0.5 ? d/(2-max-min) : d/(max+min);
-        switch(max) {
-            case r: h = ((g-b)/d + (g<b?6:0))/6; break;
-            case g: h = ((b-r)/d + 2)/6; break;
-            default:h = ((r-g)/d + 4)/6;
-        }
-    }
-    return [h*360, s*100, l*100];
-}
-function hslToRgb(h, s, l) {
-    h /= 360; s /= 100; l /= 100;
-    let r, g, b;
-    if (s === 0) { r = g = b = l; }
-    else {
-        const hue2rgb = (p, q, t) => {
-            if (t < 0) t += 1; if (t > 1) t -= 1;
-            if (t < 1/6) return p+(q-p)*6*t;
-            if (t < 1/2) return q;
-            if (t < 2/3) return p+(q-p)*(2/3-t)*6;
-            return p;
-        };
-        const q = l < 0.5 ? l*(1+s) : l+s-l*s, p = 2*l-q;
-        r = hue2rgb(p,q,h+1/3);
-        g = hue2rgb(p,q,h);
-        b = hue2rgb(p,q,h-1/3);
-    }
-    return [Math.round(r*255), Math.round(g*255), Math.round(b*255)];
-}
-
-/* ═══════════════════════════════════════════
-   LIVE PREVIEW
-═══════════════════════════════════════════ */
-function updatePreview() {
-    const bgCSS = state.isGradient ? state.gradientCSS : state.color;
-    const tc = contrastColor(state.color, state.isGradient);
-
-    // show correct layout
-    $('lp-strip').style.display = state.layout === 'strip' ? 'flex' : 'none';
-    $('lp-grid').style.display  = state.layout === 'grid'  ? 'grid' : 'none';
-
-    $('lp-strip').style.background = bgCSS;
-    $('lp-grid').style.background  = bgCSS;
-    $('lp-brand-s').style.color = tc;
-    $('lp-brand-g').style.color = tc;
-}
-
-/* ═══════════════════════════════════════════
-   LAYOUT / CARD / RATIO
-═══════════════════════════════════════════ */
-function selectLayout(val, el) {
-    state.layout = val;
-    el.parentElement.querySelectorAll('.card-option').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    updatePreview();
-}
-
-function selectCard(type, val, el) {
-    state[type] = val;
-    el.parentElement.querySelectorAll('.card-option').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    if (type === 'filter') applyFilter();
-}
-
-function selectRatio(val, el) {
-    state.ratio = val;
-    document.querySelectorAll('#ratio-group .pill-btn').forEach(b => b.classList.remove('selected'));
-    el.classList.add('selected');
-}
-
-/* ═══════════════════════════════════════════
-   NAVIGATION
-═══════════════════════════════════════════ */
-function goToStep(s) {
-    document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
-    $('step-' + s).classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    if (s === 4) {
-        // Fix: correct aspect-ratio string — single slash, no extra spaces
-        const [rw, rh] = state.ratio.split(':');
-        $('cam-wrapper').style.aspectRatio = rw + ' / ' + rh;
-        $('cam-ratio-lbl').textContent  = state.ratio;
-        $('cam-filter-lbl').textContent = FILTER_NAMES[state.filter] || 'NATURAL';
-        initCamera();
+/* ═══════ NAVIGATION ═══════ */
+function goTo(s){
+    document.querySelectorAll('.step').forEach(e=>e.classList.remove('active'));
+    $('step-'+s).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+    if(s===4){
+        const[rw,rh]=S.ratio.split(':');
+        $('camwrap').style.aspectRatio=rw+' / '+rh;
+        $('cam-r').textContent=S.ratio;
+        $('cam-f').textContent=FNAMES[S.filter]||'NATURAL';
+        initCam();
     }
 }
+function backCam(){ stopCam(); S.shooting=false; shutter.disabled=false; goTo(3); }
+function reshoot(){ S.photos=[]; S.shooting=false; shutter.disabled=false; resetPips(); $('caminfo').textContent='PRESS THE BUTTON TO START'; goTo(4); }
+function stopCam(){ if(video.srcObject){video.srcObject.getTracks().forEach(t=>t.stop());video.srcObject=null;} }
 
-function backFromCamera() {
-    stopCamera();
-    state.shooting = false;
-    shutterBtn.disabled = false;
-    goToStep(3);
+/* ═══════ LAYOUT/CARD/RATIO ═══════ */
+function selLayout(v,el){ S.layout=v; el.parentElement.querySelectorAll('.card').forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); updPreview(); }
+function selCard(type,v,el){ S[type]=v; el.parentElement.querySelectorAll('.card').forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); if(type==='filter') applyFilter(); }
+function selRatio(v,el){ S.ratio=v; document.querySelectorAll('#rgrp .pill').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); }
+
+/* ═══════ CAMERA ═══════ */
+function applyFilter(){ video.style.filter=FCSS[S.filter]||'none'; }
+async function initCam(){
+    stopCam();
+    try{
+        const stream=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280},height:{ideal:720},facingMode:'user'}});
+        video.srcObject=stream; video.style.transform=S.mirrored?'scaleX(-1)':'scaleX(1)';
+        applyFilter(); resetPips(); shutter.disabled=false; S.shooting=false;
+        $('caminfo').textContent='PRESS THE BUTTON TO START';
+    }catch(e){alert('Camera access required. Please allow it and try again.');}
 }
-
-function reshoot() {
-    state.photos   = [];
-    state.shooting = false;
-    shutterBtn.disabled = false;
-    resetPips();
-    $('cam-info').textContent = 'PRESS THE BUTTON TO START';
-    goToStep(4);
+function togMirror(){ S.mirrored=!S.mirrored; video.style.transform=S.mirrored?'scaleX(-1)':'scaleX(1)'; }
+function togTimer(){
+    const opts=[3,5,10]; S.timerSec=opts[(opts.indexOf(S.timerSec)+1)%opts.length];
+    $('timerbtn').innerHTML=`<i class="fas fa-stopwatch"></i><span style="font-size:.55rem;margin-left:2px;">${S.timerSec}s</span>`;
 }
+function resetPips(){ for(let i=0;i<4;i++) $('pip-'+i).classList.remove('d'); }
 
-function stopCamera() {
-    if (video.srcObject) {
-        video.srcObject.getTracks().forEach(t => t.stop());
-        video.srcObject = null;
-    }
-}
+/* ═══════ SHOOT ═══════ */
+async function startShoot(){
+    if(S.shooting) return;
+    S.shooting=true; shutter.disabled=true;
+    S.photos=[]; resetPips();
+    const[rW,rH]=S.ratio.split(':').map(Number);
+    const pw=800,ph=Math.round(pw*rH/rW);
+    const tc=$('ct'),ctx=tc.getContext('2d');
+    tc.width=pw; tc.height=ph;
 
-/* ═══════════════════════════════════════════
-   CAMERA
-═══════════════════════════════════════════ */
-function applyFilter() {
-    video.style.filter = FILTER_CSS[state.filter] || 'none';
-}
-
-async function initCamera() {
-    stopCamera(); // always stop first to avoid reuse bugs
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video: { width:{ideal:1280}, height:{ideal:720}, facingMode:'user' }
-        });
-        video.srcObject = stream;
-        video.style.transform = state.mirrored ? 'scaleX(-1)' : 'scaleX(1)';
-        applyFilter();
-        resetPips();
-        shutterBtn.disabled = false;
-        state.shooting = false;
-        $('cam-info').textContent = 'PRESS THE BUTTON TO START';
-    } catch(e) {
-        alert('Camera access is required. Please allow it and try again.');
-    }
-}
-
-function toggleMirror() {
-    state.mirrored = !state.mirrored;
-    video.style.transform = state.mirrored ? 'scaleX(-1)' : 'scaleX(1)';
-}
-
-function toggleTimer() {
-    const opts = [3, 5, 10];
-    state.timerSec = opts[(opts.indexOf(state.timerSec) + 1) % opts.length];
-    $('timer-btn').innerHTML =
-        `<i class="fas fa-stopwatch"></i><span style="font-size:0.58rem;margin-left:2px;">${state.timerSec}s</span>`;
-}
-
-function resetPips() {
-    for (let i = 0; i < 4; i++) $('pip-' + i).classList.remove('done');
-}
-
-/* ═══════════════════════════════════════════
-   SHOOT
-═══════════════════════════════════════════ */
-async function startShoot() {
-    if (state.shooting) return;
-    state.shooting = true;
-    shutterBtn.disabled = true;
-    state.photos = [];
-    resetPips();
-
-    const [rW, rH] = state.ratio.split(':').map(Number);
-    const pw = 800;
-    const ph = Math.round((pw * rH) / rW);
-
-    const tempC = $('c-temp');
-    const tCtx  = tempC.getContext('2d');
-    tempC.width = pw;
-    tempC.height = ph;
-
-    for (let i = 0; i < 4; i++) {
-        $('cam-info').textContent = `PHOTO ${i+1} OF 4 — GET READY!`;
-
-        // countdown
-        countdownEl.style.display = 'block';
-        for (let c = state.timerSec; c > 0; c--) {
-            countdownEl.textContent = c;
-            countdownEl.style.animation = 'none';
-            void countdownEl.offsetWidth; // reflow
-            countdownEl.style.animation = 'countPop 0.3s cubic-bezier(0.34,1.56,0.64,1)';
+    for(let i=0;i<4;i++){
+        $('caminfo').textContent=`PHOTO ${i+1} OF 4 — GET READY!`;
+        cdownEl.style.display='block';
+        for(let c=S.timerSec;c>0;c--){
+            cdownEl.textContent=c;
+            cdownEl.style.animation='none'; void cdownEl.offsetWidth;
+            cdownEl.style.animation='cpop .3s cubic-bezier(.34,1.56,.64,1)';
             await sleep(800);
         }
-        countdownEl.style.display = 'none';
+        cdownEl.style.display='none';
+        flashEl.classList.add('flash-a');
+        setTimeout(()=>flashEl.classList.remove('flash-a'),450);
 
-        // flash
-        flashEl.classList.add('flash-active');
-        setTimeout(() => flashEl.classList.remove('flash-active'), 450);
+        const vW=video.videoWidth||pw,vH=video.videoHeight||ph;
+        const vR=vW/vH,tR=pw/ph;
+        let sW,sH,sX,sY;
+        if(vR>tR){sH=vH;sW=vH*tR;sX=(vW-sW)/2;sY=0;}
+        else{sW=vW;sH=vW/tR;sY=(vH-sH)/2;sX=0;}
 
-        // capture
-        const vW = video.videoWidth  || pw;
-        const vH = video.videoHeight || ph;
-        const vR = vW / vH;
-        const tR = pw / ph;
-        let sW, sH, sX, sY;
-        if (vR > tR) { sH = vH; sW = vH * tR; sX = (vW - sW) / 2; sY = 0; }
-        else          { sW = vW; sH = vW / tR; sY = (vH - sH) / 2; sX = 0; }
+        ctx.save();
+        ctx.filter=FCSS[S.filter]||'none';
+        if(S.mirrored){ctx.translate(pw,0);ctx.scale(-1,1);}
+        ctx.drawImage(video,sX,sY,sW,sH,0,0,pw,ph);
+        ctx.restore(); ctx.filter='none';
 
-        tCtx.save();
-        tCtx.filter = FILTER_CSS[state.filter] || 'none';
-        if (state.mirrored) { tCtx.translate(pw, 0); tCtx.scale(-1, 1); }
-        tCtx.drawImage(video, sX, sY, sW, sH, 0, 0, pw, ph);
-        tCtx.restore();
-        // reset filter so next iteration is clean
-        tCtx.filter = 'none';
-
-        state.photos.push(tempC.toDataURL('image/jpeg', 0.95));
-        $('pip-' + i).classList.add('done');
+        S.photos.push(tc.toDataURL('image/jpeg',.95));
+        $('pip-'+i).classList.add('d');
         await sleep(500);
     }
-
-    $('cam-info').textContent = 'COMPOSING YOUR STRIP...';
-    renderFinal(pw, ph);
+    $('caminfo').textContent='COMPOSING YOUR STRIP...';
+    renderFinal(pw,ph);
 }
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+/* ═══════ RENDER ═══════ */
+function renderFinal(pw,ph){
+    const canvas=$('cf'),ctx=canvas.getContext('2d');
+    const pad=50,bot=240;
+    if(S.layout==='strip'){canvas.width=pw+pad*2;canvas.height=ph*4+pad*5+bot;}
+    else{canvas.width=pw*2+pad*3;canvas.height=ph*2+pad*3+bot;}
 
-/* ═══════════════════════════════════════════
-   RENDER FINAL CANVAS
-═══════════════════════════════════════════ */
-function renderFinal(pw, ph) {
-    const canvas = $('c-final');
-    const ctx    = canvas.getContext('2d');
-    const pad = 50, bottom = 240;
+    if(S.isGrad){
+        ctx.fillStyle=mkGrad(ctx,S.gradCSS,canvas.width,canvas.height)||'#fff';
+    }else{ ctx.fillStyle=S.color; }
+    ctx.fillRect(0,0,canvas.width,canvas.height);
 
-    if (state.layout === 'strip') {
-        canvas.width  = pw + pad * 2;
-        canvas.height = ph * 4 + pad * 5 + bottom;
-    } else {
-        canvas.width  = pw * 2 + pad * 3;
-        canvas.height = ph * 2 + pad * 3 + bottom;
-    }
-
-    // fill background
-    if (state.isGradient) {
-        ctx.fillStyle = buildCanvasGradient(ctx, state.gradientCSS, canvas.width, canvas.height) || '#ffffff';
-    } else {
-        ctx.fillStyle = state.color;
-    }
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // draw photos
-    let loaded = 0;
-    state.photos.forEach((src, i) => {
-        const img = new Image();
-        img.onload = () => {
-            let x, y;
-            if (state.layout === 'strip') {
-                x = pad; y = pad + i * (ph + pad);
-            } else {
-                x = pad + (i % 2) * (pw + pad);
-                y = pad + Math.floor(i / 2) * (ph + pad);
-            }
-            // rounded clip
-            roundedRect(ctx, x, y, pw, ph, 16);
-            ctx.save(); ctx.clip();
-            ctx.drawImage(img, x, y, pw, ph);
-            ctx.restore();
-
-            loaded++;
-            if (loaded === 4) addWatermark(canvas, ctx);
-        };
-        img.onerror = () => { loaded++; if (loaded === 4) addWatermark(canvas, ctx); };
-        img.src = src;
+    let done=0;
+    S.photos.forEach((src,i)=>{
+        const img=new Image(); img.src=src;
+        let x,y;
+        if(S.layout==='strip'){x=pad;y=pad+i*(ph+pad);}
+        else{x=pad+(i%2)*(pw+pad);y=pad+Math.floor(i/2)*(ph+pad);}
+        img.onload=()=>{ rrect(ctx,x,y,pw,ph,15); ctx.save(); ctx.clip(); ctx.drawImage(img,x,y,pw,ph); ctx.restore(); done++; if(done===4) watermark(canvas,ctx); };
+        img.onerror=()=>{ done++; if(done===4) watermark(canvas,ctx); };
     });
 }
-
-function roundedRect(ctx, x, y, w, h, r) {
+function rrect(ctx,x,y,w,h,r){
     ctx.beginPath();
-    ctx.moveTo(x+r, y);
-    ctx.lineTo(x+w-r, y);   ctx.quadraticCurveTo(x+w, y,   x+w, y+r);
-    ctx.lineTo(x+w, y+h-r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
-    ctx.lineTo(x+r, y+h);   ctx.quadraticCurveTo(x,   y+h, x,   y+h-r);
-    ctx.lineTo(x,   y+r);   ctx.quadraticCurveTo(x,   y,   x+r, y);
+    ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+    ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+    ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
     ctx.closePath();
 }
-
-function buildCanvasGradient(ctx, css, w, h) {
-    try {
-        // parse "linear-gradient(135deg, c1, c2, ...)"
-        const stopMatch = css.match(/linear-gradient\([^,]+,(.+)\)$/s);
-        if (!stopMatch) return null;
-        const stops = stopMatch[1].split(',').map(s => s.trim()).filter(Boolean);
-        const angle = 135 * Math.PI / 180;
-        const x1 = w/2 - Math.cos(angle) * w * 0.7;
-        const y1 = h/2 - Math.sin(angle) * h * 0.7;
-        const x2 = w/2 + Math.cos(angle) * w * 0.7;
-        const y2 = h/2 + Math.sin(angle) * h * 0.7;
-        const grd = ctx.createLinearGradient(x1, y1, x2, y2);
-        stops.forEach((s, i) => {
-            try { grd.addColorStop(i / Math.max(stops.length - 1, 1), s); } catch(e) {}
-        });
-        return grd;
-    } catch(e) { return null; }
+function mkGrad(ctx,css,w,h){
+    try{
+        const m=css.match(/linear-gradient\(([^,]+),(.+)\)$/s);
+        if(!m) return null;
+        let angle=135;
+        const ad=m[1].trim();
+        if(ad.includes('deg')) angle=parseFloat(ad);
+        const stops=m[2].split(',').map(s=>s.trim()).filter(Boolean);
+        const a=angle*Math.PI/180;
+        const x1=w/2-Math.cos(a)*w*.75,y1=h/2-Math.sin(a)*h*.75;
+        const x2=w/2+Math.cos(a)*w*.75,y2=h/2+Math.sin(a)*h*.75;
+        const g=ctx.createLinearGradient(x1,y1,x2,y2);
+        stops.forEach((s,i)=>{ try{g.addColorStop(i/Math.max(stops.length-1,1),s);}catch(e){} });
+        return g;
+    }catch(e){return null;}
 }
-
-function addWatermark(canvas, ctx) {
-    const now    = new Date();
-    const tc     = contrastColor(state.color, state.isGradient);
-    const accent = (isDark(state.color) || state.isGradient) ? '#ff7aaa' : '#c4224f';
-    const cw     = canvas.width, ch = canvas.height;
-
-    ctx.textAlign = 'center';
-
-    // top rule
-    const lw = cw * 0.22;
-    ctx.save();
-    ctx.strokeStyle = accent; ctx.globalAlpha = 0.28; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(cw/2 - lw, ch-190); ctx.lineTo(cw/2 + lw, ch-190); ctx.stroke();
-    ctx.restore();
-
-    // brand
-    ctx.save();
-    ctx.font = `italic bold ${Math.round(cw * 0.074)}px 'Playfair Display', serif`;
-    ctx.fillStyle = accent;
-    ctx.fillText('V-Photobooth', cw/2, ch - 125);
-    ctx.restore();
-
-    // bottom rule
-    ctx.save();
-    ctx.strokeStyle = accent; ctx.globalAlpha = 0.18; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(cw/2 - lw, ch-100); ctx.lineTo(cw/2 + lw, ch-100); ctx.stroke();
-    ctx.restore();
-
-    // date/time
-    const day   = now.getDate();
-    const month = now.toLocaleDateString('en-US', {month:'long'}).toUpperCase();
-    const year  = now.getFullYear();
-    const time  = now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit', hour12:true}).replace(':', '.');
-    ctx.save();
-    ctx.font = `600 ${Math.round(cw * 0.024)}px 'Space Mono', monospace`;
-    ctx.fillStyle = tc; ctx.globalAlpha = 0.62;
-    ctx.fillText(`${day} ${month} ${year}  \u2022  ${time}  \u2022  BY YUNA`, cw/2, ch - 60);
-    ctx.restore();
-
-    // show result
-    $('final-img').src = canvas.toDataURL('image/jpeg', 0.95);
-    goToStep(5);
-    launchConfetti();
+function watermark(canvas,ctx){
+    const now=new Date(),cw=canvas.width,ch=canvas.height;
+    const tc=contrast(S.color,S.isGrad);
+    const ac=(isDark(S.color)||S.isGrad)?'#ff7aaa':'#c4224f';
+    ctx.textAlign='center';
+    const lw=cw*.22;
+    ctx.save(); ctx.strokeStyle=ac; ctx.globalAlpha=.26; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(cw/2-lw,ch-188); ctx.lineTo(cw/2+lw,ch-188); ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.font=`italic bold ${Math.round(cw*.073)}px 'Playfair Display',serif`; ctx.fillStyle=ac;
+    ctx.fillText('V-Photobooth',cw/2,ch-124); ctx.restore();
+    ctx.save(); ctx.strokeStyle=ac; ctx.globalAlpha=.16; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(cw/2-lw,ch-99); ctx.lineTo(cw/2+lw,ch-99); ctx.stroke(); ctx.restore();
+    const day=now.getDate(),month=now.toLocaleDateString('en-US',{month:'long'}).toUpperCase(),year=now.getFullYear();
+    const time=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}).replace(':','.');
+    ctx.save(); ctx.font=`600 ${Math.round(cw*.023)}px 'Space Mono',monospace`; ctx.fillStyle=tc; ctx.globalAlpha=.6;
+    ctx.fillText(`${day} ${month} ${year}  \u2022  ${time}  \u2022  BY YUNA`,cw/2,ch-59); ctx.restore();
+    $('fimg').src=canvas.toDataURL('image/jpeg',.95);
+    goTo(5); confettiTime();
 }
-
-/* ═══════════════════════════════════════════
-   CONFETTI
-═══════════════════════════════════════════ */
-function launchConfetti() {
-    const colors = ['#ff477e','#ff9abc','#ffffff','#ffd1dc','#ff1f61','#ffb3cb'];
-    const cfg    = { colors, shapes: ['circle','square'] };
-    setTimeout(() => confetti({ ...cfg, particleCount:90, spread:75, origin:{y:0.55}, scalar:1.1 }), 250);
-    setTimeout(() => {
-        confetti({ ...cfg, particleCount:45, angle:60,  spread:55, origin:{x:0, y:0.6} });
-        confetti({ ...cfg, particleCount:45, angle:120, spread:55, origin:{x:1, y:0.6} });
-    }, 500);
-    setTimeout(() => confetti({ ...cfg, particleCount:40, spread:100, origin:{y:0.35}, gravity:0.5, scalar:0.8 }), 900);
+function confettiTime(){
+    const colors=['#ff477e','#ff9abc','#ffffff','#ffd1dc','#ff1f61','#ffb3cb'],cfg={colors,shapes:['circle','square']};
+    setTimeout(()=>confetti({...cfg,particleCount:88,spread:74,origin:{y:.55},scalar:1.1}),250);
+    setTimeout(()=>{ confetti({...cfg,particleCount:44,angle:60,spread:54,origin:{x:0,y:.6}}); confetti({...cfg,particleCount:44,angle:120,spread:54,origin:{x:1,y:.6}}); },500);
+    setTimeout(()=>confetti({...cfg,particleCount:38,spread:98,origin:{y:.34},gravity:.5,scalar:.8}),900);
 }
+function dlImg(){ const a=document.createElement('a'); a.download='v-photobooth-'+Date.now()+'.jpg'; a.href=$('cf').toDataURL('image/jpeg',.95); a.click(); }
 
-/* ═══════════════════════════════════════════
-   DOWNLOAD
-═══════════════════════════════════════════ */
-function downloadImage() {
-    const link = document.createElement('a');
-    link.download = 'v-photobooth-' + Date.now() + '.jpg';
-    link.href = $('c-final').toDataURL('image/jpeg', 0.95);
-    link.click();
-}
-
-/* ═══════════════════════════════════════════
-   INIT
-═══════════════════════════════════════════ */
 buildUI();
 </script>
 </body>
