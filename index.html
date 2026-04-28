@@ -168,7 +168,7 @@
         .sp-cover{width:100%;overflow:hidden;background:#222;position:relative;}
         .sp-cover img{width:100%;height:100%;object-fit:cover;display:block;}
         .sp-photo-grid{display:grid;grid-template-columns:1fr 1fr;width:100%;height:100%;}
-        .sp-photo-cell{overflow:hidden;background:#222;aspect-ratio:4/3;}
+        .sp-photo-cell{overflow:hidden;background:#222;aspect-ratio:4/3;transition:all .3s;}
         .sp-photo-cell img{width:100%;height:100%;object-fit:cover;display:block;}
         .sp-info{padding:8px 8px 10px;background:#121212;}
         .sp-song{font-size:.52rem;font-weight:800;color:#fff;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;}
@@ -257,9 +257,6 @@
         .card.spotify-card.sel .ck{background:var(--sp);}
         .card.spotify-card.sel p{color:var(--sp);}
         .card.spotify-card:hover{border-color:rgba(29,185,84,.38);}
-
-        /* Ogrid 3 columns when spotify is visible */
-        .ogrid-3{grid-template-columns:repeat(3,1fr);}
 
         canvas{display:none;}
         @media(max-width:440px){
@@ -494,6 +491,7 @@
                         <span id="sp-prev-tot">3:27</span>
                     </div>
                     <div class="sp-controls">
+                        <!-- Preview Icons can still use font-awesome class for HTML visualization -->
                         <span class="sp-ctrl"><i class="fas fa-shuffle"></i></span>
                         <span class="sp-ctrl"><i class="fas fa-backward-step"></i></span>
                         <span class="sp-ctrl play"><i class="fas fa-circle-pause"></i></span>
@@ -908,7 +906,19 @@ function selLayout(v,el){
     updPreview();
 }
 function selCard(type,v,el){ S[type]=v; el.parentElement.querySelectorAll('.card').forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); if(type==='filter') applyFilter(); }
-function selRatio(v,el){ S.ratio=v; document.querySelectorAll('#rgrp .pill').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); }
+
+function selRatio(v,el){ 
+    S.ratio=v; 
+    document.querySelectorAll('#rgrp .pill').forEach(b=>b.classList.remove('sel')); 
+    el.classList.add('sel'); 
+    
+    // Update live previews aspect ratio dynamically
+    const[rw,rh]=v.split(':');
+    const ar = rw+'/'+rh;
+    document.querySelectorAll('.spp, .gpp, .sp-photo-cell').forEach(cell => {
+        cell.style.aspectRatio = ar;
+    });
+}
 
 /* ═══════ CAMERA ═══════ */
 function applyFilter(){ video.style.filter=FCSS[S.filter]||'none'; }
@@ -1003,7 +1013,83 @@ function renderClassic(pw,ph){
     });
 }
 
-/* ═══════ SPOTIFY RENDER (FIXED & DYNAMIC) ═══════ */
+/* ═══════ SPOTIFY RENDER (VECTOR ICONS & DYNAMIC) ═══════ */
+function drawSpIcon(ctx, icon, x, y, size, color) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.fillStyle = color;
+    ctx.strokeStyle = color;
+    
+    ctx.lineWidth = size * 0.1;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    ctx.beginPath();
+    if (icon === 'pause') {
+        const w = size * 0.14; 
+        const h = size * 0.45; 
+        const gap = size * 0.1;
+        ctx.rect(-gap - w, -h, w, h*2);
+        ctx.rect(gap, -h, w, h*2);
+        ctx.fill();
+    } else if (icon === 'prev') {
+        const tw = size * 0.35;
+        const th = size * 0.4;
+        const bw = size * 0.12;
+        ctx.rect(-tw - bw, -th, bw, th*2);
+        ctx.moveTo(-tw, 0); ctx.lineTo(tw, -th); ctx.lineTo(tw, th);
+        ctx.fill();
+    } else if (icon === 'next') {
+        const tw = size * 0.35;
+        const th = size * 0.4;
+        const bw = size * 0.12;
+        ctx.rect(tw, -th, bw, th*2);
+        ctx.moveTo(tw, 0); ctx.lineTo(-tw, -th); ctx.lineTo(-tw, th);
+        ctx.fill();
+    } else if (icon === 'shuffle') {
+        const w = size * 0.4;
+        const h = size * 0.2;
+        const aw = size * 0.15;
+        ctx.moveTo(-w, -h); ctx.bezierCurveTo(-w*0.5, -h, w*0.5, h, w, h); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(w-aw, h-aw); ctx.lineTo(w, h); ctx.lineTo(w-aw, h+aw); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(-w, h); ctx.bezierCurveTo(-w*0.5, h, w*0.5, -h, w, -h); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(w-aw, -h-aw); ctx.lineTo(w, -h); ctx.lineTo(w-aw, -h+aw); ctx.stroke();
+    } else if (icon === 'repeat') {
+        const w = size * 0.35;
+        const h = size * 0.2;
+        const aw = size * 0.12;
+        ctx.moveTo(-w, -h); ctx.lineTo(w, -h); ctx.lineTo(w, h*0.5); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(w-aw, -h-aw); ctx.lineTo(w+aw, -h); ctx.lineTo(w-aw, -h+aw); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(w, h); ctx.lineTo(-w, h); ctx.lineTo(-w, -h*0.5); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(-w+aw, h-aw); ctx.lineTo(-w-aw, h); ctx.lineTo(-w+aw, h+aw); ctx.stroke();
+    } else if (icon === 'heart') {
+        const w = size * 0.35;
+        ctx.translate(0, -size*0.05);
+        ctx.moveTo(0, w);
+        ctx.bezierCurveTo(-w*1.5, w*0.1, -w*1.5, -w, 0, -w*0.5);
+        ctx.bezierCurveTo(w*1.5, -w, w*1.5, w*0.1, 0, w);
+        ctx.fill();
+    }
+    ctx.restore();
+}
+
+function drawSpotifyLogo(ctx, x, y, size) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.fillStyle = '#1DB954';
+    ctx.beginPath();
+    ctx.arc(0, 0, size/2, 0, Math.PI*2);
+    ctx.fill();
+
+    ctx.strokeStyle = '#121212';
+    ctx.lineWidth = size * 0.12;
+    ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.arc(0, size*0.15, size*0.35, -Math.PI*0.8, -Math.PI*0.2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, size*0.05, size*0.25, -Math.PI*0.8, -Math.PI*0.2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, -size*0.05, size*0.15, -Math.PI*0.75, -Math.PI*0.25); ctx.stroke();
+    ctx.restore();
+}
+
 function renderSpotify(pw,ph){
     const canvas=$('cf'),ctx=canvas.getContext('2d');
     const cw=1200; // Lebar kanvas yang fix untuk akurasi tinggi dan mencegah teks tertimpa
@@ -1071,11 +1157,8 @@ function drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH){
     ctx.textBaseline = 'top';
     ctx.fillText(clipText(ctx, S.spTitle, cw - padX*2 - 80), padX, startY + 50);
 
-    // Heart icon di kanan judul
-    ctx.font = `44px sans-serif`;
-    ctx.fillStyle = '#1DB954';
-    ctx.textAlign = 'right';
-    ctx.fillText('♥', cw - padX, startY + 55);
+    // Heart icon Vector
+    drawSpIcon(ctx, 'heart', cw - padX - 15, startY + 75, 48, '#1DB954');
 
     // Artist
     ctx.font = `500 36px 'Plus Jakarta Sans', sans-serif`;
@@ -1113,25 +1196,24 @@ function drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH){
     ctx.textAlign = 'right';
     ctx.fillText(secToMMSS(S.spDur), cw - padX, timeY);
 
-    // Playback Controls
+    // Playback Controls (Vector based, NO Emoji)
     const ctrlY = startY + 340;
     const cx = cw / 2;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
 
-    drawIcon(ctx, '⇄', cx - 220, ctrlY, 40, 'rgba(255,255,255,0.5)');
-    drawIcon(ctx, '⏮', cx - 110, ctrlY, 55, '#ffffff');
+    drawSpIcon(ctx, 'shuffle', cx - 220, ctrlY, 40, 'rgba(255,255,255,0.5)');
+    drawSpIcon(ctx, 'prev', cx - 110, ctrlY, 40, '#ffffff');
 
     // Lingkaran play/pause hijau terang
     ctx.beginPath();
     ctx.arc(cx, ctrlY, 52, 0, Math.PI*2);
     ctx.fillStyle = '#1DB954';
     ctx.fill();
-    // Ikon pause hitam ditengah
-    drawIcon(ctx, '⏸', cx, ctrlY + 2, 45, '#121212'); 
+    
+    // Ikon pause hitam vektor
+    drawSpIcon(ctx, 'pause', cx, ctrlY, 36, '#121212'); 
 
-    drawIcon(ctx, '⏭', cx + 110, ctrlY, 55, '#ffffff');
-    drawIcon(ctx, '↺', cx + 220, ctrlY, 40, 'rgba(255,255,255,0.5)');
+    drawSpIcon(ctx, 'next', cx + 110, ctrlY, 40, '#ffffff');
+    drawSpIcon(ctx, 'repeat', cx + 220, ctrlY, 40, 'rgba(255,255,255,0.5)');
 
     // Footer Watermark/Date
     const footY = canvas.height - 45;
@@ -1141,8 +1223,15 @@ function drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH){
     
     ctx.font = `bold 22px 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = 'rgba(29,185,84,0.7)';
-    ctx.textBaseline = 'alphabetic';
-    ctx.fillText(`♫ SPOTIFY  •  ${dateStr}  ${timeStr}`, cx, footY);
+    ctx.textBaseline = 'middle';
+    
+    const footText = `SPOTIFY  •  ${dateStr}  ${timeStr}`;
+    const tw = ctx.measureText(footText).width;
+    
+    // Vector Spotify Logo + Text
+    drawSpotifyLogo(ctx, cx - tw/2 - 20, footY, 32);
+    ctx.textAlign = 'left';
+    ctx.fillText(footText, cx - tw/2 + 6, footY + 2);
 
     $('fimg').src=canvas.toDataURL('image/jpeg',.95);
     goTo(5); confettiTime();
@@ -1153,12 +1242,6 @@ function clipText(ctx,text,maxW){
     let t=text;
     while(ctx.measureText(t+'…').width>maxW && t.length>0) t=t.slice(0,-1);
     return t+'…';
-}
-function drawIcon(ctx,icon,x,y,size,color){
-    ctx.font=`${size}px sans-serif`;
-    ctx.fillStyle=color;
-    ctx.textAlign='center';
-    ctx.fillText(icon,x,y);
 }
 function roundRect(ctx,x,y,w,h,r){
     ctx.beginPath();
