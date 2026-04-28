@@ -164,11 +164,11 @@
         .gpb{grid-column:span 2;font-family:'Playfair Display',serif;font-style:italic;font-size:.48rem;text-align:center;margin-top:1px;transition:color .35s;}
 
         /* ══ SPOTIFY PREVIEW ══ */
-        .lp-spotify{border-radius:12px;overflow:hidden;padding:0;box-shadow:0 10px 36px rgba(0,0,0,.7);transition:all .35s;max-width:140px;background:#121212;position:relative;}
-        .sp-cover{width:100%;aspect-ratio:1/1;overflow:hidden;background:#222;position:relative;}
+        .lp-spotify{border-radius:12px;overflow:hidden;padding:0;box-shadow:0 10px 36px rgba(0,0,0,.7);transition:all .35s;max-width:140px;width:100%;background:#121212;position:relative;}
+        .sp-cover{width:100%;overflow:hidden;background:#222;position:relative;}
         .sp-cover img{width:100%;height:100%;object-fit:cover;display:block;}
         .sp-photo-grid{display:grid;grid-template-columns:1fr 1fr;width:100%;height:100%;}
-        .sp-photo-cell{overflow:hidden;background:#222;}
+        .sp-photo-cell{overflow:hidden;background:#222;aspect-ratio:4/3;}
         .sp-photo-cell img{width:100%;height:100%;object-fit:cover;display:block;}
         .sp-info{padding:8px 8px 10px;background:#121212;}
         .sp-song{font-size:.52rem;font-weight:800;color:#fff;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;}
@@ -178,7 +178,7 @@
         .sp-time{display:flex;justify-content:space-between;font-size:.38rem;color:rgba(255,255,255,.35);font-family:'Space Mono',monospace;}
         .sp-controls{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:5px;}
         .sp-ctrl{font-size:.55rem;color:rgba(255,255,255,.4);}
-        .sp-ctrl.play{font-size:.75rem;color:#fff;}
+        .sp-ctrl.play{font-size:.75rem;color:#1DB954;}
         .sp-logo{display:flex;align-items:center;gap:3px;margin-top:4px;justify-content:center;}
         .sp-logo svg{width:10px;height:10px;fill:var(--sp);}
         .sp-logo-txt{font-size:.38rem;color:rgba(255,255,255,.3);font-weight:700;letter-spacing:1px;}
@@ -203,6 +203,11 @@
         input[type=range].sp-prog{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,.12);outline:none;cursor:pointer;border:none;}
         input[type=range].sp-prog::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--sp);cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.4);}
         .sp-prog-val{font-family:'Space Mono',monospace;font-size:.68rem;color:rgba(29,185,84,.8);width:36px;text-align:right;flex-shrink:0;}
+        
+        .sp-lo-wrap {display:flex; gap:8px;}
+        .sp-lo-btn {flex:1; background:rgba(255,255,255,.05); border:1.5px solid rgba(255,255,255,.1); color:rgba(255,255,255,.5); padding:10px; border-radius:9px; cursor:pointer; font-size:.65rem; font-weight:700; transition:all .3s; text-transform:uppercase; letter-spacing:1px;}
+        .sp-lo-btn:hover {background:rgba(29,185,84,.08); border-color:rgba(29,185,84,.4);}
+        .sp-lo-btn.sel {background:rgba(29,185,84,.15); border-color:var(--sp); color:var(--sp);}
 
         /* CAMERA */
         .cambar{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:.65rem;letter-spacing:2px;color:rgba(255,255,255,.26);font-weight:700;}
@@ -307,7 +312,6 @@
         </div>
         <div class="card spotify-card" onclick="selLayout('spotify',this)" style="grid-column: span 2;">
             <div class="ck"><i class="fas fa-check"></i></div>
-            <!-- Spotify layout mini preview -->
             <div style="display:flex;justify-content:center;margin-bottom:9px;">
                 <div style="width:100px;border-radius:10px;overflow:hidden;background:#121212;box-shadow:0 4px 16px rgba(0,0,0,.6);">
                     <div style="display:grid;grid-template-columns:1fr 1fr;aspect-ratio:1/1;">
@@ -336,13 +340,21 @@
         </div>
     </div>
 
-    <!-- Spotify Customizer (shown only when spotify layout selected) -->
+    <!-- Spotify Customizer -->
     <div class="sp-config" id="sp-config" style="display:none;">
         <div class="sp-config-header">
             <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
             <span>Spotify Customization</span>
         </div>
         <div class="sp-config-body">
+            <!-- Pilihan Layout khusus Spotify -->
+            <div class="sp-field">
+                <p class="sp-field-lbl"><i class="fas fa-border-all" style="margin-right:5px;"></i>Photo Layout</p>
+                <div class="sp-lo-wrap">
+                    <button class="sp-lo-btn sel" onclick="setSpLayout('grid',this)">Grid (2x2)</button>
+                    <button class="sp-lo-btn" onclick="setSpLayout('strip',this)">Strip (1x4)</button>
+                </div>
+            </div>
             <div class="sp-field">
                 <p class="sp-field-lbl"><i class="fas fa-music" style="margin-right:5px;"></i>Song Title</p>
                 <input class="sp-input" id="sp-title" type="text" placeholder="e.g. Cruel Summer" value="Cruel Summer" oninput="updSpotifyPreview()">
@@ -606,7 +618,7 @@
 <script>
 'use strict';
 const S = {
-    layout:'strip', color:'#ffffff', isGrad:false, gradCSS:'',
+    layout:'strip', spLayout:'grid', color:'#ffffff', isGrad:false, gradCSS:'',
     filter:'none', ratio:'4:3', photos:[], mirrored:true, timerSec:3, shooting:false,
     advR:255, advG:255, advB:255,
     gStops:[{hex:'ff477e'},{hex:'ff1f61'}], gAngle:135,
@@ -644,7 +656,23 @@ const FNAMES={none:'NATURAL',vintage:'VINTAGE',bnw:'B & W',sharpen:'VIVID GLOW'}
 
 function secToMMSS(s){ const m=Math.floor(s/60); return m+':'+(s%60<10?'0':'')+(s%60); }
 
-/* ═══════ SPOTIFY PREVIEW ═══════ */
+/* ═══════ SPOTIFY CONFIG ═══════ */
+function setSpLayout(type, btn) {
+    S.spLayout = type;
+    document.querySelectorAll('.sp-lo-btn').forEach(b => b.classList.remove('sel'));
+    btn.classList.add('sel');
+    
+    // Update live preview grid
+    const pg = $('sp-prev-grid');
+    if(type === 'strip') {
+        pg.style.gridTemplateColumns = '1fr';
+        $('lp-spotify').style.maxWidth = '100px';
+    } else {
+        pg.style.gridTemplateColumns = '1fr 1fr';
+        $('lp-spotify').style.maxWidth = '140px';
+    }
+}
+
 function updSpotifyPreview(){
     S.spTitle=$('sp-title').value||'Song Title';
     S.spArtist=$('sp-artist').value||'Artist Name';
@@ -975,151 +1003,146 @@ function renderClassic(pw,ph){
     });
 }
 
-/* ═══════ SPOTIFY RENDER ═══════ */
+/* ═══════ SPOTIFY RENDER (FIXED & DYNAMIC) ═══════ */
 function renderSpotify(pw,ph){
     const canvas=$('cf'),ctx=canvas.getContext('2d');
-    // Square canvas: photos as 2x2 grid on top, spotify player panel below
-    const gridSize=pw*2; // 2 photos wide
-    const cellW=pw, cellH=ph;
-    const gridH=cellH*2;
-    const playerH=Math.round(gridSize*0.38);
-    const canvasW=gridSize;
-    const canvasH=gridH+playerH;
-    canvas.width=canvasW; canvas.height=canvasH;
+    const cw=1200; // Lebar kanvas yang fix untuk akurasi tinggi dan mencegah teks tertimpa
+    let cellW, cellH, gridH;
 
-    // Background: dark spotify
-    ctx.fillStyle='#121212';
-    ctx.fillRect(0,0,canvasW,canvasH);
+    // Hitung dimensi berdasarkan tipe layout spotify (strip vs grid)
+    if(S.spLayout === 'strip'){
+        cellW = cw;
+        cellH = Math.round(cw * (ph / pw));
+        gridH = cellH * 4;
+    } else {
+        cellW = cw / 2;
+        cellH = Math.round(cellW * (ph / pw));
+        gridH = cellH * 2;
+    }
 
-    // Load 4 photos into 2x2 grid (no padding, full bleed)
+    const playerH = 500; // Tinggi panel UI spotify selalu tetap
+    const ch = gridH + playerH;
+
+    canvas.width = cw;
+    canvas.height = ch;
+
+    // Background dasar spotify gelap
+    ctx.fillStyle = '#121212';
+    ctx.fillRect(0, 0, cw, ch);
+
     let done=0;
     S.photos.forEach((src,i)=>{
         const img=new Image(); img.src=src;
-        const gx=(i%2)*cellW;
-        const gy=Math.floor(i/2)*cellH;
+        let gx, gy;
+        
+        if (S.spLayout === 'strip') {
+            gx = 0;
+            gy = i * cellH;
+        } else {
+            gx = (i % 2) * cellW;
+            gy = Math.floor(i / 2) * cellH;
+        }
+
         img.onload=()=>{
-            ctx.save();
-            ctx.beginPath();
-            ctx.rect(gx,gy,cellW,cellH);
-            ctx.clip();
-            ctx.drawImage(img,gx,gy,cellW,cellH);
-            ctx.restore();
+            ctx.drawImage(img, gx, gy, cellW, cellH);
             done++;
-            if(done===4) drawSpotifyPlayer(canvas,ctx,canvasW,gridH,playerH);
+            if(done===4) drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH);
         };
-        img.onerror=()=>{ done++; if(done===4) drawSpotifyPlayer(canvas,ctx,canvasW,gridH,playerH); };
+        img.onerror=()=>{ done++; if(done===4) drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH); };
     });
 }
 
-function drawSpotifyPlayer(canvas,ctx,cw,gridH,playerH){
-    // Subtle gradient overlay at bottom of grid
-    const grad=ctx.createLinearGradient(0,gridH-playerH*0.6,0,gridH);
+function drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH){
+    // Efek Gradient tipis transisi gambar ke UI bawah
+    const grad=ctx.createLinearGradient(0, gridH - 180, 0, gridH);
     grad.addColorStop(0,'rgba(18,18,18,0)');
-    grad.addColorStop(1,'rgba(18,18,18,0.92)');
+    grad.addColorStop(1,'rgba(18,18,18,0.95)');
     ctx.fillStyle=grad;
-    ctx.fillRect(0,gridH-playerH*0.6,cw,playerH*0.6);
+    ctx.fillRect(0, gridH - 180, cw, 180);
 
-    // Player panel background
-    ctx.fillStyle='#121212';
-    ctx.fillRect(0,gridH,cw,playerH);
-
-    const pad=Math.round(cw*0.07);
-    const fs=Math.round(cw*0.042); // base font size
+    // Variabel posisi yang pasti (Hardcoded relative position)
+    const padX = 80;
+    const startY = gridH;
 
     // Song title
-    ctx.font=`bold ${Math.round(fs*1.1)}px 'Plus Jakarta Sans',sans-serif`;
-    ctx.fillStyle='#ffffff';
-    ctx.textAlign='left';
-    const titleY=gridH+pad+Math.round(fs*1.3);
-    ctx.fillText(clipText(ctx,S.spTitle,cw-pad*2),pad,titleY);
+    ctx.font = `bold 54px 'Plus Jakarta Sans', sans-serif`;
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText(clipText(ctx, S.spTitle, cw - padX*2 - 80), padX, startY + 50);
+
+    // Heart icon di kanan judul
+    ctx.font = `44px sans-serif`;
+    ctx.fillStyle = '#1DB954';
+    ctx.textAlign = 'right';
+    ctx.fillText('♥', cw - padX, startY + 55);
 
     // Artist
-    ctx.font=`${Math.round(fs*0.85)}px 'Plus Jakarta Sans',sans-serif`;
-    ctx.fillStyle='rgba(255,255,255,0.5)';
-    ctx.fillText(clipText(ctx,S.spArtist,cw-pad*2),pad,titleY+Math.round(fs*1.35));
+    ctx.font = `500 36px 'Plus Jakarta Sans', sans-serif`;
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.textAlign = 'left';
+    ctx.fillText(clipText(ctx, S.spArtist, cw - padX*2), padX, startY + 115);
 
-    // Heart icon area (right side)
-    const heartX=cw-pad;
-    const heartY=gridH+pad+Math.round(fs*0.9);
-    ctx.font=`${Math.round(fs*0.95)}px sans-serif`;
-    ctx.fillStyle='rgba(255,255,255,0.3)';
-    ctx.textAlign='right';
-    // draw ♥
-    ctx.fillText('♥',heartX,heartY);
-    ctx.textAlign='left';
+    // Progress bar math
+    const barY = startY + 210;
+    const barW = cw - padX*2;
+    const barH = 10;
+    const prog = S.spProg / 100;
 
-    // Progress bar
-    const barY=titleY+Math.round(fs*2.7);
-    const barH=Math.round(cw*0.008);
-    const barW=cw-pad*2;
-    const prog=S.spProg/100;
-
-    // bar track
-    roundRect(ctx,pad,barY,barW,barH,barH/2);
-    ctx.fillStyle='rgba(255,255,255,0.18)';
+    // Progress background
+    roundRect(ctx, padX, barY, barW, barH, barH/2);
+    ctx.fillStyle = 'rgba(255,255,255,0.15)';
     ctx.fill();
 
-    // bar fill (green)
-    roundRect(ctx,pad,barY,barW*prog,barH,barH/2);
-    ctx.fillStyle='#1DB954';
+    // Progress hijau
+    roundRect(ctx, padX, barY, barW * prog, barH, barH/2);
+    ctx.fillStyle = '#1DB954';
     ctx.fill();
 
-    // scrubber dot
-    const dotR=Math.round(cw*0.012);
+    // Dot progress bar putih
     ctx.beginPath();
-    ctx.arc(pad+barW*prog,barY+barH/2,dotR,0,Math.PI*2);
-    ctx.fillStyle='#ffffff';
+    ctx.arc(padX + barW * prog, barY + barH/2, 16, 0, Math.PI*2);
+    ctx.fillStyle = '#ffffff';
     ctx.fill();
 
     // Time labels
-    const timeY=barY+barH+Math.round(fs*0.95);
-    ctx.font=`${Math.round(fs*0.72)}px 'Space Mono',monospace`;
-    ctx.fillStyle='rgba(255,255,255,0.35)';
-    ctx.textAlign='left';
-    ctx.fillText(secToMMSS(Math.round(S.spDur*prog)),pad,timeY);
-    ctx.textAlign='right';
-    ctx.fillText(secToMMSS(S.spDur),cw-pad,timeY);
-    ctx.textAlign='left';
+    const timeY = barY + 35;
+    ctx.font = `28px 'Space Mono', monospace`;
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.fillText(secToMMSS(Math.round(S.spDur * prog)), padX, timeY);
+    ctx.textAlign = 'right';
+    ctx.fillText(secToMMSS(S.spDur), cw - padX, timeY);
 
-    // Controls row
-    const ctrlY=timeY+Math.round(fs*1.8);
-    const ctrlCX=cw/2;
-    const ctrlSpacing=Math.round(cw*0.13);
+    // Playback Controls
+    const ctrlY = startY + 340;
+    const cx = cw / 2;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
 
-    // shuffle
-    drawIcon(ctx,'⇄',ctrlCX-ctrlSpacing*2,ctrlY,Math.round(fs*0.9),'rgba(255,255,255,0.4)');
-    // prev
-    drawIcon(ctx,'⏮',ctrlCX-ctrlSpacing,ctrlY,Math.round(fs*1.05),'rgba(255,255,255,0.7)');
-    // play/pause circle
+    drawIcon(ctx, '⇄', cx - 220, ctrlY, 40, 'rgba(255,255,255,0.5)');
+    drawIcon(ctx, '⏮', cx - 110, ctrlY, 55, '#ffffff');
+
+    // Lingkaran play/pause hijau terang
     ctx.beginPath();
-    ctx.arc(ctrlCX,ctrlY-Math.round(fs*0.3),Math.round(fs*1.05),0,Math.PI*2);
-    ctx.fillStyle='#ffffff';
+    ctx.arc(cx, ctrlY, 52, 0, Math.PI*2);
+    ctx.fillStyle = '#1DB954';
     ctx.fill();
-    ctx.font=`bold ${Math.round(fs*1.0)}px sans-serif`;
-    ctx.fillStyle='#121212';
-    ctx.textAlign='center';
-    ctx.fillText('⏸',ctrlCX,ctrlY+Math.round(fs*0.25));
-    ctx.textAlign='left';
-    // next
-    drawIcon(ctx,'⏭',ctrlCX+ctrlSpacing,ctrlY,Math.round(fs*1.05),'rgba(255,255,255,0.7)');
-    // repeat
-    drawIcon(ctx,'↺',ctrlCX+ctrlSpacing*2,ctrlY,Math.round(fs*0.9),'rgba(255,255,255,0.4)');
+    // Ikon pause hitam ditengah
+    drawIcon(ctx, '⏸', cx, ctrlY + 2, 45, '#121212'); 
 
-    // Spotify logo at bottom
-    const logoY=canvas.height-Math.round(fs*0.9);
-    ctx.font=`bold ${Math.round(fs*0.68)}px 'Plus Jakarta Sans',sans-serif`;
-    ctx.fillStyle='rgba(29,185,84,0.7)';
-    ctx.textAlign='center';
-    ctx.fillText('♫  SPOTIFY',cw/2,logoY);
+    drawIcon(ctx, '⏭', cx + 110, ctrlY, 55, '#ffffff');
+    drawIcon(ctx, '↺', cx + 220, ctrlY, 40, 'rgba(255,255,255,0.5)');
 
-    // Date watermark
-    const now=new Date();
-    const day=now.getDate(),month=now.toLocaleDateString('en-US',{month:'long'}).toUpperCase(),year=now.getFullYear();
-    const time=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}).replace(':','.');
-    ctx.font=`${Math.round(fs*0.58)}px 'Space Mono',monospace`;
-    ctx.fillStyle='rgba(255,255,255,0.2)';
-    ctx.fillText(`${day} ${month} ${year}  •  ${time}  •  V-PHOTOBOOTH BY DENJI`,cw/2,logoY-Math.round(fs*1.1));
-    ctx.textAlign='left';
+    // Footer Watermark/Date
+    const footY = canvas.height - 45;
+    const now = new Date();
+    const dateStr = `${now.getDate()} ${now.toLocaleDateString('en-US',{month:'short'}).toUpperCase()} ${now.getFullYear()}`;
+    const timeStr = now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}).replace(':','.');
+    
+    ctx.font = `bold 22px 'Plus Jakarta Sans', sans-serif`;
+    ctx.fillStyle = 'rgba(29,185,84,0.7)';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText(`♫ SPOTIFY  •  ${dateStr}  ${timeStr}`, cx, footY);
 
     $('fimg').src=canvas.toDataURL('image/jpeg',.95);
     goTo(5); confettiTime();
