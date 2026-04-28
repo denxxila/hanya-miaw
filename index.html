@@ -233,7 +233,7 @@
 <!-- ══ STEP 1 ══ -->
 <section class="step active" id="step-1">
     <div class="dots"><div class="dot a"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-    <div class="badge"><span class="bdot"></span>EST. 2026 &middot; BY YUNA</div>
+    <div class="badge"><span class="bdot"></span>EST. 2026 &middot; BY DENJI</div>
     <h1>V&#8209;Photo<em>booth</em></h1>
     <div class="div"></div>
     <div class="hfilm">
@@ -459,7 +459,7 @@
         <button class="btn2" onclick="location.reload()">START OVER</button>
     </div>
     <div class="about">
-        <p>KEEP IN TOUCH WITH YUNA</p>
+        <p>KEEP IN TOUCH WITH DENJI</p>
         <div class="soc">
             <a href="https://www.instagram.com/hii.yvnaa_" target="_blank"><i class="fab fa-instagram"></i></a>
             <a href="https://whatsapp.com/channel/0029Vb7adkSAojYxeMA7oU3v" target="_blank"><i class="fab fa-whatsapp"></i></a>
@@ -869,7 +869,7 @@ function watermark(canvas,ctx){
     const day=now.getDate(),month=now.toLocaleDateString('en-US',{month:'long'}).toUpperCase(),year=now.getFullYear();
     const time=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}).replace(':','.');
     ctx.save(); ctx.font=`600 ${Math.round(cw*.023)}px 'Space Mono',monospace`; ctx.fillStyle=tc; ctx.globalAlpha=.6;
-    ctx.fillText(`${day} ${month} ${year}  \u2022  ${time}  \u2022  BY YUNA`,cw/2,ch-59); ctx.restore();
+    ctx.fillText(`${day} ${month} ${year}  \u2022  ${time}  \u2022  BY DENJI`,cw/2,ch-59); ctx.restore();
     $('fimg').src=canvas.toDataURL('image/jpeg',.95);
     goTo(5); confettiTime();
 }
