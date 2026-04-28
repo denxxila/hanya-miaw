@@ -50,8 +50,7 @@
         .btnb:hover{border-color:rgba(255,255,255,.3);color:#fff;}
         .nav{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px;flex-wrap:wrap;}
 
-        /* ══ UPDATED: 3 columns on desktop ══ */
-        .ogrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:100%;max-width:680px;margin-bottom:22px;}
+        .ogrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:100%;max-width:640px;margin-bottom:22px;}
         .card{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.07);border-radius:16px;padding:12px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;}
         .card:hover{border-color:rgba(255,71,126,.38);transform:translateY(-3px);}
         .card.sel{border-color:var(--p);background:rgba(255,71,126,.08);box-shadow:0 0 0 1px rgba(255,71,126,.22),0 8px 24px rgba(255,71,126,.13);}
@@ -65,11 +64,11 @@
 
         @media(min-width:560px){
             .ogrid{grid-template-columns:repeat(3,1fr);}
-            .card.spotify-card{grid-column:span 3;}
+            .card.wide{grid-column:span 2;}
         }
-        .card.spotify-card{grid-column:span 2;}
-        @media(min-width:560px){
-            .card.spotify-card{grid-column:span 3;}
+        @media(max-width:440px){
+            .ogrid{grid-template-columns:repeat(2,1fr);}
+            .card.wide{grid-column:span 2;}
         }
 
         .pgroup{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:22px;}
@@ -164,6 +163,8 @@
         .lpbox{width:100%;max-width:520px;margin-bottom:20px;}
         .lplbl{font-size:.58rem;letter-spacing:3px;font-weight:800;color:rgba(255,255,255,.26);margin-bottom:10px;text-transform:uppercase;}
         .lpouter{display:flex;justify-content:center;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+
+        /* Preview containers */
         .lpstrip{display:flex;flex-direction:column;border-radius:9px;overflow:hidden;padding:8px 8px 12px;box-shadow:0 10px 36px rgba(0,0,0,.6);transition:background .35s;min-width:80px;max-width:96px;}
         .spp{width:100%;aspect-ratio:4/3;border-radius:4px;overflow:hidden;margin-bottom:6px;background:#222;}
         .spp img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -173,10 +174,8 @@
         .gpp img{width:100%;height:100%;object-fit:cover;display:block;}
         .gpb{grid-column:span 2;font-family:'Playfair Display',serif;font-style:italic;font-size:.48rem;text-align:center;margin-top:1px;transition:color .35s;}
 
-        /* ══ SPOTIFY PREVIEW ══ */
         .lp-spotify{border-radius:12px;overflow:hidden;padding:0;box-shadow:0 10px 36px rgba(0,0,0,.7);transition:all .35s;max-width:140px;width:100%;background:#121212;position:relative;}
         .sp-cover{width:100%;overflow:hidden;background:#222;position:relative;}
-        .sp-cover img{width:100%;height:100%;object-fit:cover;display:block;}
         .sp-photo-grid{display:grid;grid-template-columns:1fr 1fr;width:100%;height:100%;}
         .sp-photo-cell{overflow:hidden;background:#222;aspect-ratio:4/3;transition:all .3s;}
         .sp-photo-cell img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -193,7 +192,6 @@
         .sp-logo svg{width:10px;height:10px;fill:var(--sp);}
         .sp-logo-txt{font-size:.38rem;color:rgba(255,255,255,.3);font-weight:700;letter-spacing:1px;}
 
-        /* ══ SPOTIFY CUSTOMIZER ══ */
         .sp-config{width:100%;max-width:520px;margin-bottom:20px;background:rgba(29,185,84,.06);border:1.5px solid rgba(29,185,84,.2);border-radius:20px;overflow:hidden;}
         .sp-config-header{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid rgba(29,185,84,.12);}
         .sp-config-header svg{width:18px;height:18px;fill:var(--sp);}
@@ -213,7 +211,6 @@
         input[type=range].sp-prog{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,.12);outline:none;cursor:pointer;border:none;}
         input[type=range].sp-prog::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--sp);cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.4);}
         .sp-prog-val{font-family:'Space Mono',monospace;font-size:.68rem;color:rgba(29,185,84,.8);width:36px;text-align:right;flex-shrink:0;}
-        
         .sp-lo-wrap {display:flex; gap:8px;}
         .sp-lo-btn {flex:1; background:rgba(255,255,255,.05); border:1.5px solid rgba(255,255,255,.1); color:rgba(255,255,255,.5); padding:10px; border-radius:9px; cursor:pointer; font-size:.65rem; font-weight:700; transition:all .3s; text-transform:uppercase; letter-spacing:1px;}
         .sp-lo-btn:hover {background:rgba(29,185,84,.08); border-color:rgba(29,185,84,.4);}
@@ -258,15 +255,20 @@
         .shint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.16);font-size:1rem;animation:bnc 2s ease-in-out infinite;pointer-events:none;}
         @keyframes bnc{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-7px)}}
 
-        /* Layout card Spotify badge */
         .layout-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(29,185,84,.15);border:1px solid rgba(29,185,84,.3);color:var(--sp);padding:3px 8px;border-radius:100px;font-size:.52rem;font-weight:800;letter-spacing:1.5px;margin-top:5px;}
         .layout-badge svg{width:8px;height:8px;fill:var(--sp);}
 
-        /* Spotify card special styling */
         .card.spotify-card.sel{border-color:var(--sp);background:rgba(29,185,84,.08);box-shadow:0 0 0 1px rgba(29,185,84,.22),0 8px 24px rgba(29,185,84,.13);}
         .card.spotify-card.sel .ck{background:var(--sp);}
         .card.spotify-card.sel p{color:var(--sp);}
         .card.spotify-card:hover{border-color:rgba(29,185,84,.38);}
+
+        /* Shape preview helpers */
+        .shape-preview-img{width:100%;height:100%;object-fit:cover;}
+        .shape-circle{border-radius:50%;}
+        .shape-heart{clip-path: path('M50 88 C50 88, 12 58, 12 32 A20 20 0 0 1 50 32 A20 20 0 0 1 88 32 C88 58, 50 88, 50 88Z');}
+        .shape-rounded{border-radius:24%;}
+        .shape-polaroid{padding:4px 4px 16px;background:#fff;}
 
         canvas{display:none;}
         @media(max-width:440px){
@@ -274,8 +276,6 @@
             .ggrid{grid-template-columns:repeat(3,1fr);}
             .cptab{font-size:.52rem;padding:9px 3px;}
             h1{font-size:2rem;}
-            .ogrid{grid-template-columns:repeat(2,1fr)!important;}
-            .card.spotify-card{grid-column:span 2!important;}
         }
     </style>
 </head>
@@ -307,7 +307,7 @@
     <h1>Layout &amp;<em> Color</em></h1>
     <p class="desc">Choose your layout and frame color. Preview updates live!</p>
 
-    <!-- ══ UPDATED LAYOUT GRID: 8 options ══ -->
+    <!-- LAYOUT GRID -->
     <div class="ogrid" id="layout-grid">
         <div class="card sel" onclick="selLayout('strip',this)">
             <div class="ck"><i class="fas fa-check"></i></div>
@@ -318,46 +318,6 @@
             <div class="ck"><i class="fas fa-check"></i></div>
             <img src="https://cdn.nekohime.site/file/vxijEdyv.png" alt="Grid">
             <p>MODERN GRID (2×2)</p>
-        </div>
-        <div class="card" onclick="selLayout('love',this)">
-            <div class="ck"><i class="fas fa-check"></i></div>
-            <div style="display:flex;justify-content:center;margin-bottom:9px;height:70px;align-items:center;">
-                <svg viewBox="0 0 100 100" style="width:70px;height:70px;overflow:visible;">
-                    <defs>
-                        <linearGradient id="lovgrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#ff477e"/>
-                            <stop offset="100%" style="stop-color:#ff9abc"/>
-                        </linearGradient>
-                    </defs>
-                    <path d="M50 88 C50 88, 12 58, 12 32 A20 20 0 0 1 50 32 A20 20 0 0 1 88 32 C88 58, 50 88, 50 88Z" fill="url(#lovgrad)"/>
-                    <circle cx="36" cy="42" r="10" fill="rgba(0,0,0,0.15)"/>
-                    <circle cx="64" cy="42" r="10" fill="rgba(0,0,0,0.1)"/>
-                    <circle cx="36" cy="66" r="10" fill="rgba(0,0,0,0.12)"/>
-                    <circle cx="64" cy="66" r="10" fill="rgba(0,0,0,0.18)"/>
-                </svg>
-            </div>
-            <p>LOVE HEART</p>
-        </div>
-        <div class="card" onclick="selLayout('circle',this)">
-            <div class="ck"><i class="fas fa-check"></i></div>
-            <div style="display:flex;justify-content:center;margin-bottom:9px;">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;width:70px;">
-                    <div style="aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.25);"></div>
-                    <div style="aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.25);"></div>
-                    <div style="aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.25);"></div>
-                    <div style="aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.25);"></div>
-                </div>
-            </div>
-            <p>CIRCLES</p>
-        </div>
-        <div class="card" onclick="selLayout('polaroid',this)">
-            <div class="ck"><i class="fas fa-check"></i></div>
-            <div style="display:flex;justify-content:center;margin-bottom:9px;height:70px;align-items:center;">
-                <div style="background:#fff;padding:5px 5px 18px;box-shadow:0 4px 12px rgba(0,0,0,0.4);transform:rotate(-4deg);width:45px;">
-                    <div style="aspect-ratio:1;background:#ddd;"></div>
-                </div>
-            </div>
-            <p>POLAROID</p>
         </div>
         <div class="card" onclick="selLayout('film',this)">
             <div class="ck"><i class="fas fa-check"></i></div>
@@ -376,18 +336,7 @@
             </div>
             <p>FILM STRIP</p>
         </div>
-        <div class="card" onclick="selLayout('collage',this)">
-            <div class="ck"><i class="fas fa-check"></i></div>
-            <div style="display:flex;justify-content:center;margin-bottom:9px;">
-                <div style="display:grid;grid-template-columns:1.2fr 0.8fr;grid-template-rows:1fr 1fr;gap:3px;width:70px;height:52px;">
-                    <div style="grid-row:span 2;background:rgba(255,255,255,0.08);border-radius:4px;"></div>
-                    <div style="background:rgba(255,255,255,0.06);border-radius:4px;"></div>
-                    <div style="background:rgba(255,255,255,0.1);border-radius:4px;"></div>
-                </div>
-            </div>
-            <p>COLLAGE</p>
-        </div>
-        <div class="card spotify-card" onclick="selLayout('spotify',this)">
+        <div class="card wide spotify-card" onclick="selLayout('spotify',this)">
             <div class="ck"><i class="fas fa-check"></i></div>
             <div style="display:flex;justify-content:center;margin-bottom:9px;">
                 <div style="width:100px;border-radius:10px;overflow:hidden;background:#121212;box-shadow:0 4px 16px rgba(0,0,0,.6);">
@@ -414,6 +363,50 @@
                     SPOTIFY
                 </span>
             </div>
+        </div>
+    </div>
+
+    <!-- PHOTO SHAPE SELECTOR -->
+    <p class="slbl" style="margin-top:8px;">PHOTO SHAPE</p>
+    <div class="ogrid" id="shape-grid" style="max-width:520px;">
+        <div class="card sel" onclick="selShape('square',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <div style="display:flex;justify-content:center;margin-bottom:9px;">
+                <div style="width:48px;height:48px;background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.2);border-radius:8px;"></div>
+            </div>
+            <p>SQUARE</p>
+        </div>
+        <div class="card" onclick="selShape('circle',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <div style="display:flex;justify-content:center;margin-bottom:9px;">
+                <div style="width:48px;height:48px;background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.2);border-radius:50%;"></div>
+            </div>
+            <p>CIRCLE</p>
+        </div>
+        <div class="card" onclick="selShape('heart',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <div style="display:flex;justify-content:center;margin-bottom:9px;">
+                <svg viewBox="0 0 24 24" style="width:48px;height:48px;fill:rgba(255,255,255,0.15);stroke:rgba(255,255,255,0.3);stroke-width:1.5;">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+            </div>
+            <p>HEART</p>
+        </div>
+        <div class="card" onclick="selShape('rounded',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <div style="display:flex;justify-content:center;margin-bottom:9px;">
+                <div style="width:48px;height:48px;background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.2);border-radius:35%;"></div>
+            </div>
+            <p>ROUNDED</p>
+        </div>
+        <div class="card" onclick="selShape('polaroid',this)">
+            <div class="ck"><i class="fas fa-check"></i></div>
+            <div style="display:flex;justify-content:center;margin-bottom:9px;">
+                <div style="background:#fff;padding:3px 3px 10px;box-shadow:0 2px 8px rgba(0,0,0,0.3);transform:rotate(-6deg);">
+                    <div style="width:36px;height:36px;background:#ddd;"></div>
+                </div>
+            </div>
+            <p>POLAROID</p>
         </div>
     </div>
 
@@ -535,23 +528,20 @@
     <div class="lpbox">
         <p class="lplbl">LIVE PREVIEW</p>
         <div class="lpouter">
-            <!-- Strip -->
             <div id="lps" class="lpstrip" style="background:#ffffff;">
-                <div class="spp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div>
-                <div class="spp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div>
-                <div class="spp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div>
-                <div class="spp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div>
+                <div class="spp" id="lp-s0"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div>
+                <div class="spp" id="lp-s1"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div>
+                <div class="spp" id="lp-s2"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div>
+                <div class="spp" id="lp-s3"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div>
                 <div class="spb" id="lpbs" style="color:#000;">V-Photobooth</div>
             </div>
-            <!-- Grid -->
             <div id="lpg" class="lpgrid" style="background:#ffffff;display:none;">
-                <div class="gpp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div>
-                <div class="gpp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div>
-                <div class="gpp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div>
-                <div class="gpp"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div>
+                <div class="gpp" id="lp-g0"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div>
+                <div class="gpp" id="lp-g1"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div>
+                <div class="gpp" id="lp-g2"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div>
+                <div class="gpp" id="lp-g3"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div>
                 <div class="gpb" id="lpbg" style="color:#000;">V-Photobooth</div>
             </div>
-            <!-- Spotify -->
             <div id="lp-spotify" class="lp-spotify" style="display:none;">
                 <div class="sp-cover">
                     <div class="sp-photo-grid" id="sp-prev-grid">
@@ -582,80 +572,6 @@
                         <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
                         <span class="sp-logo-txt">SPOTIFY</span>
                     </div>
-                </div>
-            </div>
-            <!-- Love Preview -->
-            <div id="lplove" style="display:none;width:160px;margin:0 auto;">
-                <svg viewBox="0 0 100 100" style="width:100%;overflow:visible;">
-                    <defs>
-                        <linearGradient id="lovgrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#ff477e"/>
-                            <stop offset="100%" style="stop-color:#ff9abc"/>
-                        </linearGradient>
-                    </defs>
-                    <path d="M50 88 C50 88, 12 58, 12 32 A20 20 0 0 1 50 32 A20 20 0 0 1 88 32 C88 58, 50 88, 50 88Z" fill="url(#lovgrad)"/>
-                    <circle cx="36" cy="42" r="10" fill="rgba(0,0,0,0.15)"/>
-                    <circle cx="64" cy="42" r="10" fill="rgba(0,0,0,0.1)"/>
-                    <circle cx="36" cy="66" r="10" fill="rgba(0,0,0,0.12)"/>
-                    <circle cx="64" cy="66" r="10" fill="rgba(0,0,0,0.18)"/>
-                </svg>
-            </div>
-            <!-- Circle Preview -->
-            <div id="lpcircle" style="display:none;width:180px;margin:0 auto;grid-template-columns:1fr 1fr;gap:10px;">
-                <div style="aspect-ratio:1;border-radius:50%;overflow:hidden;background:#222;">
-                    <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;">
-                </div>
-                <div style="aspect-ratio:1;border-radius:50%;overflow:hidden;background:#222;">
-                    <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:sepia(.4);">
-                </div>
-                <div style="aspect-ratio:1;border-radius:50%;overflow:hidden;background:#222;">
-                    <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1);">
-                </div>
-                <div style="aspect-ratio:1;border-radius:50%;overflow:hidden;background:#222;">
-                    <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:contrast(1.3);">
-                </div>
-            </div>
-            <!-- Polaroid Preview -->
-            <div id="lppolaroid" style="display:none;width:120px;margin:0 auto;">
-                <div style="background:#fff;padding:8px 8px 28px;box-shadow:0 8px 24px rgba(0,0,0,0.4);transform:rotate(-3deg);">
-                    <div style="aspect-ratio:1;background:#ddd;overflow:hidden;">
-                        <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;">
-                    </div>
-                </div>
-            </div>
-            <!-- Film Preview -->
-            <div id="lpfilm" style="display:none;width:160px;margin:0 auto;background:#0a0a0a;padding:8px 16px;border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,0.6);">
-                <div style="display:flex;gap:4px;align-items:center;">
-                    <div style="display:flex;flex-direction:column;gap:4px;">
-                        <div style="width:8px;height:5px;background:#333;border-radius:1px;"></div>
-                        <div style="width:8px;height:5px;background:#333;border-radius:1px;"></div>
-                        <div style="width:8px;height:5px;background:#333;border-radius:1px;"></div>
-                    </div>
-                    <div style="flex:1;aspect-ratio:4/3;background:#222;border-radius:2px;overflow:hidden;">
-                        <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;">
-                    </div>
-                    <div style="display:flex;flex-direction:column;gap:4px;">
-                        <div style="width:8px;height:5px;background:#333;border-radius:1px;"></div>
-                        <div style="width:8px;height:5px;background:#333;border-radius:1px;"></div>
-                        <div style="width:8px;height:5px;background:#333;border-radius:1px;"></div>
-                    </div>
-                </div>
-            </div>
-            <!-- Collage Preview -->
-            <div id="lpcollage" style="display:none;width:180px;margin:0 auto;">
-                <div style="display:grid;grid-template-columns:1.2fr 0.8fr;grid-template-rows:1fr 1fr;gap:4px;margin-bottom:4px;">
-                    <div style="grid-row:span 2;border-radius:6px;overflow:hidden;background:#222;aspect-ratio:3/4;">
-                        <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;">
-                    </div>
-                    <div style="border-radius:6px;overflow:hidden;background:#222;aspect-ratio:4/3;">
-                        <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:sepia(.4);">
-                    </div>
-                    <div style="border-radius:6px;overflow:hidden;background:#222;aspect-ratio:4/3;">
-                        <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1);">
-                    </div>
-                </div>
-                <div style="border-radius:6px;overflow:hidden;background:#222;aspect-ratio:16/7;">
-                    <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:contrast(1.3);">
                 </div>
             </div>
         </div>
@@ -774,7 +690,8 @@ const S = {
     filter:'none', ratio:'4:3', photos:[], mirrored:true, timerSec:3, shooting:false,
     advR:255, advG:255, advB:255,
     gStops:[{hex:'ff477e'},{hex:'ff1f61'}], gAngle:135,
-    spTitle:'Cruel Summer', spArtist:'Taylor Swift', spDur:207, spProg:38
+    spTitle:'Cruel Summer', spArtist:'Taylor Swift', spDur:207, spProg:38,
+    shape:'square'
 };
 const $=id=>document.getElementById(id);
 const video=$('video'), shutter=$('shutter'), cdownEl=$('cdown'), flashEl=$('flash');
@@ -1019,37 +936,51 @@ function hsl2r(h,s,l){
     return[Math.round(hue(p,q,h+1/3)*255),Math.round(hue(p,q,h)*255),Math.round(hue(p,q,h-1/3)*255)];
 }
 
-/* ═══════ PREVIEW ═══════ */
+/* ═══════ PREVIEW SHAPE UPDATER ═══════ */
+function applyPreviewShape(){
+    const ids=['lp-s0','lp-s1','lp-s2','lp-s3','lp-g0','lp-g1','lp-g2','lp-g3'];
+    ids.forEach(id=>{
+        const el=$(id);
+        if(!el) return;
+        el.style.borderRadius='';
+        el.style.clipPath='';
+        el.style.padding='';
+        el.style.background='';
+        if(S.shape==='circle'){
+            el.style.borderRadius='50%';
+            el.style.aspectRatio='1';
+        }else if(S.shape==='heart'){
+            el.style.clipPath='path("M50 88 C50 88, 12 58, 12 32 A20 20 0 0 1 50 32 A20 20 0 0 1 88 32 C88 58, 50 88, 50 88Z")';
+            el.style.aspectRatio='1';
+        }else if(S.shape==='rounded'){
+            el.style.borderRadius='24%';
+        }else if(S.shape==='polaroid'){
+            el.style.padding='4px 4px 16px';
+            el.style.background='#fff';
+            el.style.boxShadow='0 2px 8px rgba(0,0,0,0.2)';
+        }
+    });
+}
+
 function updPreview(){
     const bg=S.isGrad?S.gradCSS:S.color;
     const tc=contrast(S.color,S.isGrad);
     
-    // Hide all
-    $('lps').style.display='none';
-    $('lpg').style.display='none';
-    $('lp-spotify').style.display='none';
-    $('lplove').style.display='none';
-    $('lpcircle').style.display='none';
-    $('lppolaroid').style.display='none';
-    $('lpfilm').style.display='none';
-    $('lpcollage').style.display='none';
+    $('lps').style.display=S.layout==='strip'?'flex':'none';
+    $('lpg').style.display=S.layout==='grid'?'grid':'none';
+    $('lp-spotify').style.display=S.layout==='spotify'?'block':'none';
     
-    // Show selected
-    if(S.layout==='strip') $('lps').style.display='flex';
-    else if(S.layout==='grid') $('lpg').style.display='grid';
-    else if(S.layout==='spotify') $('lp-spotify').style.display='block';
-    else if(S.layout==='love') $('lplove').style.display='block';
-    else if(S.layout==='circle') $('lpcircle').style.display='grid';
-    else if(S.layout==='polaroid') $('lppolaroid').style.display='block';
-    else if(S.layout==='film') $('lpfilm').style.display='block';
-    else if(S.layout==='collage') $('lpcollage').style.display='block';
-    
-    // Update colors for classic previews
     $('lps').style.background=bg; $('lpg').style.background=bg;
     $('lpbs').style.color=tc; $('lpbg').style.color=tc;
     
-    // Spotify config visibility
+    $('cpbox').style.display=S.layout==='spotify'?'none':'block';
+    $('selpill').style.display=S.layout==='spotify'?'none':'inline-flex';
     $('sp-config').style.display=S.layout==='spotify'?'block':'none';
+    
+    // Show/hide shape selector
+    $('shape-grid').style.display=S.layout==='spotify'?'none':'grid';
+    
+    applyPreviewShape();
 }
 
 /* ═══════ NAVIGATION ═══════ */
@@ -1075,6 +1006,14 @@ function selLayout(v,el){
     el.classList.add('sel');
     updPreview();
 }
+
+function selShape(v,el){
+    S.shape=v;
+    el.parentElement.querySelectorAll('.card').forEach(c=>c.classList.remove('sel'));
+    el.classList.add('sel');
+    updPreview();
+}
+
 function selCard(type,v,el){ S[type]=v; el.parentElement.querySelectorAll('.card').forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); if(type==='filter') applyFilter(); }
 
 function selRatio(v,el){ 
@@ -1151,21 +1090,56 @@ async function startShoot(){
 }
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
+/* ═══════ SHAPE CLIPPER ═══════ */
+function clipShape(ctx,x,y,w,h,shape){
+    if(shape==='circle'){
+        ctx.beginPath();
+        const r=Math.min(w,h)/2;
+        ctx.arc(x+w/2,y+h/2,r,0,Math.PI*2);
+        ctx.closePath();
+        ctx.clip();
+    }else if(shape==='heart'){
+        ctx.save();
+        ctx.translate(x+w/2,y+h/2);
+        const s=Math.min(w,h);
+        ctx.scale(s/100,s/100);
+        ctx.translate(-50,-50);
+        ctx.beginPath();
+        ctx.moveTo(50,88);
+        ctx.bezierCurveTo(50,88,12,58,12,32);
+        ctx.bezierCurveTo(12,14,28,4,50,18);
+        ctx.bezierCurveTo(72,4,88,14,88,32);
+        ctx.bezierCurveTo(88,58,50,88,50,88);
+        ctx.closePath();
+        ctx.restore();
+        ctx.clip();
+    }else if(shape==='rounded'){
+        rrect(ctx,x,y,w,h,Math.min(w,h)*0.22);
+        ctx.clip();
+    }else if(shape==='polaroid'){
+        // Polaroid handled in draw loop (border)
+        rrect(ctx,x,y,w,h,4);
+        ctx.clip();
+    }else{
+        rrect(ctx,x,y,w,h,15);
+        ctx.clip();
+    }
+}
+
 /* ═══════ RENDER DISPATCHER ═══════ */
 function renderFinal(pw,ph){
     if(S.layout==='spotify') renderSpotify(pw,ph);
-    else if(S.layout==='love') renderLove(pw,ph);
-    else if(S.layout==='circle') renderCircle(pw,ph);
-    else if(S.layout==='polaroid') renderPolaroid(pw,ph);
     else if(S.layout==='film') renderFilm(pw,ph);
-    else if(S.layout==='collage') renderCollage(pw,ph);
     else renderClassic(pw,ph);
 }
 
-/* ═══════ CLASSIC RENDER (strip/grid) ═══════ */
+/* ═══════ CLASSIC RENDER (strip/grid + shapes) ═══════ */
 function renderClassic(pw,ph){
     const canvas=$('cf'),ctx=canvas.getContext('2d');
-    const pad=50,bot=240;
+    const pad=50;
+    let bot=240;
+    if(S.shape==='polaroid') bot=180;
+    
     if(S.layout==='strip'){canvas.width=pw+pad*2;canvas.height=ph*4+pad*5+bot;}
     else{canvas.width=pw*2+pad*3;canvas.height=ph*2+pad*3+bot;}
 
@@ -1177,209 +1151,58 @@ function renderClassic(pw,ph){
     let done=0;
     S.photos.forEach((src,i)=>{
         const img=new Image(); img.src=src;
-        let x,y;
-        if(S.layout==='strip'){x=pad;y=pad+i*(ph+pad);}
-        else{x=pad+(i%2)*(pw+pad);y=pad+Math.floor(i/2)*(ph+pad);}
-        img.onload=()=>{ rrect(ctx,x,y,pw,ph,15); ctx.save(); ctx.clip(); ctx.drawImage(img,x,y,pw,ph); ctx.restore(); done++; if(done===4) watermark(canvas,ctx); };
-        img.onerror=()=>{ done++; if(done===4) watermark(canvas,ctx); };
-    });
-}
-
-/* ═══════ LOVE RENDER ═══════ */
-function heartPath(ctx, cx, cy, size) {
-    const s = size / 2;
-    ctx.beginPath();
-    ctx.moveTo(cx, cy + s * 0.35);
-    ctx.bezierCurveTo(cx, cy - s * 0.35, cx - s, cy - s * 0.35, cx - s, cy + s * 0.1);
-    ctx.bezierCurveTo(cx - s, cy + s * 0.6, cx, cy + s * 0.9, cx, cy + s);
-    ctx.bezierCurveTo(cx, cy + s * 0.9, cx + s, cy + s * 0.6, cx + s, cy + s * 0.1);
-    ctx.bezierCurveTo(cx + s, cy - s * 0.35, cx, cy - s * 0.35, cx, cy + s * 0.35);
-    ctx.closePath();
-}
-
-function renderLove(pw,ph){
-    const canvas=$('cf'),ctx=canvas.getContext('2d');
-    const size=1000;
-    canvas.width=size; canvas.height=size;
-    
-    // Background gradasi pink
-    const grad=ctx.createLinearGradient(0,0,size,size);
-    grad.addColorStop(0,'#ff477e');
-    grad.addColorStop(0.5,'#ff9abc');
-    grad.addColorStop(1,'#ffd1dc');
-    ctx.fillStyle=grad;
-    ctx.fillRect(0,0,size,size);
-    
-    // Heart clip
-    ctx.save();
-    heartPath(ctx, size/2, size/2 - 20, size*0.82);
-    ctx.clip();
-    
-    // Grid 2x2 di dalam hati
-    const pad=30;
-    const cellW=(size-pad*3)/2;
-    const cellH=(size-pad*3)/2;
-    let done=0;
-    S.photos.forEach((src,i)=>{
-        const img=new Image(); img.src=src;
-        const x=pad+(i%2)*(cellW+pad);
-        const y=pad+Math.floor(i/2)*(cellH+pad);
-        img.onload=()=>{
-            ctx.save();
-            rrect(ctx,x,y,cellW,cellH,20);
-            ctx.clip(); 
-            ctx.drawImage(img,x,y,cellW,cellH); 
-            ctx.restore();
-            done++; 
-            if(done===4) {
-                ctx.restore(); 
-                // Glow border hati
-                ctx.save();
-                heartPath(ctx, size/2, size/2 - 20, size*0.82);
-                ctx.strokeStyle='rgba(255,255,255,0.4)';
-                ctx.lineWidth=8;
-                ctx.stroke();
-                ctx.restore();
-                loveWatermark(canvas,ctx);
+        let x,y,iw,ih;
+        if(S.layout==='strip'){x=pad;y=pad+i*(ph+pad); iw=pw; ih=ph;}
+        else{x=pad+(i%2)*(pw+pad);y=pad+Math.floor(i/2)*(ph+pad); iw=pw; ih=ph;}
+        
+        // Polaroid offset
+        if(S.shape==='polaroid'){
+            const pborder=28, pbot=70;
+            if(S.layout==='strip'){
+                ctx.fillStyle='#fff';
+                roundRect(ctx,x-pborder,y-pborder,pw+pborder*2,ph+pborder+pbot,6);
+                ctx.fill();
+            }else{
+                ctx.fillStyle='#fff';
+                roundRect(ctx,x-pborder,y-pborder,pw+pborder*2,ph+pborder+pbot,6);
+                ctx.fill();
             }
-        };
-        img.onerror=()=>{done++; if(done===4){ctx.restore(); loveWatermark(canvas,ctx);}};
-    });
-}
-
-function loveWatermark(canvas,ctx){
-    const w=canvas.width,h=canvas.height;
-    ctx.font=`italic bold 52px 'Playfair Display',serif`;
-    ctx.fillStyle='rgba(255,255,255,0.95)';
-    ctx.textAlign='center';
-    ctx.fillText('V-Photobooth',w/2,h-55);
-    ctx.font=`20px 'Space Mono',monospace`;
-    ctx.fillStyle='rgba(255,255,255,0.7)';
-    const now=new Date();
-    ctx.fillText(`${now.getDate()} ${now.toLocaleDateString('en-US',{month:'short'}).toUpperCase()} ${now.getFullYear()}`,w/2,h-25);
-    $('fimg').src=canvas.toDataURL('image/jpeg',.95);
-    goTo(5); confettiTime();
-}
-
-/* ═══════ CIRCLE RENDER ═══════ */
-function renderCircle(pw,ph){
-    const canvas=$('cf'),ctx=canvas.getContext('2d');
-    const size=1000;
-    canvas.width=size; canvas.height=size;
-    
-    // Background
-    ctx.fillStyle='#0a0a0a';
-    ctx.fillRect(0,0,size,size);
-    
-    const pad=70;
-    const cellW=(size-pad*3)/2;
-    const cellH=(size-pad*3)/2;
-    let done=0;
-    S.photos.forEach((src,i)=>{
-        const img=new Image(); img.src=src;
-        const cx=pad+cellW/2+(i%2)*(cellW+pad);
-        const cy=pad+cellH/2+Math.floor(i/2)*(cellH+pad);
-        const r=Math.min(cellW,cellH)/2;
-        img.onload=()=>{
-            ctx.save();
-            ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.clip();
-            const aspect=img.width/img.height;
-            let sx,sy,sw,sh;
-            if(aspect>1){sh=img.height; sw=img.height; sy=0; sx=(img.width-sw)/2;}
-            else{sw=img.width; sh=img.width; sx=0; sy=(img.height-sh)/2;}
-            ctx.drawImage(img,sx,sy,sw,sh,cx-r,cy-r,r*2,r*2);
-            ctx.restore();
-            // Border ring
-            ctx.beginPath(); ctx.arc(cx,cy,r+5,0,Math.PI*2);
-            ctx.strokeStyle='rgba(255,255,255,0.12)';
-            ctx.lineWidth=4;
-            ctx.stroke();
-            done++; if(done===4) circleWatermark(canvas,ctx);
-        };
-        img.onerror=()=>{done++; if(done===4) circleWatermark(canvas,ctx);};
-    });
-}
-
-function circleWatermark(canvas,ctx){
-    const w=canvas.width;
-    ctx.font=`italic bold 46px 'Playfair Display',serif`;
-    ctx.fillStyle='rgba(255,255,255,0.85)';
-    ctx.textAlign='center';
-    ctx.fillText('V-Photobooth',w/2,w-60);
-    ctx.font=`18px 'Space Mono',monospace`;
-    ctx.fillStyle='rgba(255,255,255,0.4)';
-    ctx.fillText('BY DENJI',w/2,w-30);
-    $('fimg').src=canvas.toDataURL('image/jpeg',.95);
-    goTo(5); confettiTime();
-}
-
-/* ═══════ POLAROID RENDER ═══════ */
-function renderPolaroid(pw,ph){
-    const canvas=$('cf'),ctx=canvas.getContext('2d');
-    const picW=680;
-    const picH=Math.round(picW*ph/pw);
-    const border=40;
-    const botH=100;
-    const cardW=picW+border*2;
-    const cardH=picH+border+botH;
-    const gap=45;
-    const rots=[-3,2,-2,3];
-    
-    canvas.width=cardW+120;
-    canvas.height=(cardH+gap)*4+120;
-    
-    // Background
-    ctx.fillStyle='#e6e6e6';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    
-    let done=0;
-    S.photos.forEach((src,i)=>{
-        const img=new Image(); img.src=src;
-        const cx=canvas.width/2;
-        const cy=60+cardH/2+i*(cardH+gap);
+        }
         
         img.onload=()=>{
             ctx.save();
-            ctx.translate(cx,cy);
-            ctx.rotate(rots[i]*Math.PI/180);
-            
-            // Shadow
-            ctx.shadowColor='rgba(0,0,0,0.22)';
-            ctx.shadowBlur=28;
-            ctx.shadowOffsetY=14;
-            
-            // Card bg
-            ctx.fillStyle='#fff';
-            roundRect(ctx,-cardW/2,-cardH/2,cardW,cardH,4);
-            ctx.fill();
-            
-            ctx.shadowColor='transparent';
-            
-            // Image
-            const ix=-picW/2;
-            const iy=-cardH/2+border;
-            rrect(ctx,ix,iy,picW,picH,2);
-            ctx.save(); ctx.clip(); ctx.drawImage(img,ix,iy,picW,picH); ctx.restore();
-            
+            if(S.shape==='polaroid'){
+                clipShape(ctx,x,y,iw,ih,'square');
+            }else{
+                clipShape(ctx,x,y,iw,ih,S.shape);
+            }
+            ctx.drawImage(img,x,y,iw,ih);
             ctx.restore();
-            done++; if(done===4) polaroidWatermark(canvas,ctx);
+            
+            // Border for circle/heart
+            if(S.shape==='circle'||S.shape==='heart'){
+                ctx.save();
+                if(S.shape==='circle'){
+                    ctx.beginPath(); ctx.arc(x+iw/2,y+ih/2,Math.min(iw,ih)/2,0,Math.PI*2);
+                }else if(S.shape==='heart'){
+                    ctx.translate(x+iw/2,y+ih/2);
+                    const s=Math.min(iw,ih);
+                    ctx.scale(s/100,s/100);
+                    ctx.translate(-50,-50);
+                    ctx.beginPath();
+                    ctx.moveTo(50,88); ctx.bezierCurveTo(50,88,12,58,12,32); ctx.bezierCurveTo(12,14,28,4,50,18); ctx.bezierCurveTo(72,4,88,14,88,32); ctx.bezierCurveTo(88,58,50,88,50,88); ctx.closePath();
+                    ctx.restore();
+                }
+                ctx.strokeStyle='rgba(255,255,255,0.15)';
+                ctx.lineWidth=4;
+                ctx.stroke();
+                ctx.restore();
+            }
+            
+            done++; if(done===4) watermark(canvas,ctx);
         };
-        img.onerror=()=>{done++; if(done===4) polaroidWatermark(canvas,ctx);};
+        img.onerror=()=>{ done++; if(done===4) watermark(canvas,ctx); };
     });
-}
-
-function polaroidWatermark(canvas,ctx){
-    const w=canvas.width,h=canvas.height;
-    ctx.save();
-    ctx.translate(w/2,h-50);
-    ctx.rotate(-4*Math.PI/180);
-    ctx.font=`italic bold 36px 'Playfair Display',serif`;
-    ctx.fillStyle='rgba(0,0,0,0.12)';
-    ctx.textAlign='center';
-    ctx.fillText('V-Photobooth',0,0);
-    ctx.restore();
-    $('fimg').src=canvas.toDataURL('image/jpeg',.95);
-    goTo(5); confettiTime();
 }
 
 /* ═══════ FILM STRIP RENDER ═══════ */
@@ -1396,25 +1219,16 @@ function renderFilm(pw,ph){
     canvas.width=picW+side*2+gap*2;
     canvas.height=picH*4+gap*5;
     
-    // Background film
     ctx.fillStyle='#080808';
     ctx.fillRect(0,0,canvas.width,canvas.height);
     
-    // Sprocket holes
     ctx.fillStyle='#1a1a1a';
     for(let i=0;i<4;i++){
         const y=gap+i*(picH+gap);
-        // Left holes (3 holes)
         for(let h=0;h<3;h++){
             const hy=y+h*(holeH+holeGap);
-            roundRect(ctx,(side-holeW)/2+gap/2,hy,holeW,holeH,4);
-            ctx.fill();
-        }
-        // Right holes
-        for(let h=0;h<3;h++){
-            const hy=y+h*(holeH+holeGap);
-            roundRect(ctx,canvas.width-side+gap/2-(side-holeW)/2,hy,holeW,holeH,4);
-            ctx.fill();
+            roundRect(ctx,(side-holeW)/2+gap/2,hy,holeW,holeH,4); ctx.fill();
+            roundRect(ctx,canvas.width-side+gap/2-(side-holeW)/2,hy,holeW,holeH,4); ctx.fill();
         }
     }
     
@@ -1424,8 +1238,10 @@ function renderFilm(pw,ph){
         const x=side+gap;
         const y=gap+i*(picH+gap);
         img.onload=()=>{
+            ctx.save();
+            clipShape(ctx,x,y,picW,picH,S.shape==='polaroid'?'square':S.shape);
             ctx.drawImage(img,x,y,picW,picH);
-            // Frame line
+            ctx.restore();
             ctx.strokeStyle='rgba(255,255,255,0.08)';
             ctx.lineWidth=2;
             ctx.strokeRect(x,y,picW,picH);
@@ -1445,54 +1261,7 @@ function filmWatermark(canvas,ctx){
     goTo(5); confettiTime();
 }
 
-/* ═══════ COLLAGE RENDER ═══════ */
-function renderCollage(pw,ph){
-    const canvas=$('cf'),ctx=canvas.getContext('2d');
-    const W=1000;
-    const H=1200;
-    const pad=24;
-    canvas.width=W; canvas.height=H;
-    
-    // Background
-    if(S.isGrad){
-        ctx.fillStyle=mkGrad(ctx,S.gradCSS,W,H)||'#fff';
-    }else{ ctx.fillStyle=S.color; }
-    ctx.fillRect(0,0,W,H);
-    
-    // Layout: [0] big left, [1] top right, [2] mid right, [3] bottom full
-    const rects=[
-        {x:pad,y:pad,w:Math.round(W*0.58)-pad,h:Math.round(H*0.62)},
-        {x:Math.round(W*0.58)+pad/2,y:pad,w:Math.round(W*0.42)-pad*1.5,h:Math.round(H*0.30)},
-        {x:Math.round(W*0.58)+pad/2,y:Math.round(H*0.30)+pad*1.5,w:Math.round(W*0.42)-pad*1.5,h:Math.round(H*0.30)},
-        {x:pad,y:Math.round(H*0.62)+pad*1.5,w:W-pad*2,h:Math.round(H*0.38)-pad*2}
-    ];
-    
-    let done=0;
-    S.photos.forEach((src,i)=>{
-        const img=new Image(); img.src=src;
-        const r=rects[i];
-        img.onload=()=>{
-            rrect(ctx,r.x,r.y,r.w,r.h,14);
-            ctx.save(); ctx.clip();
-            // Cover fit
-            const ar=img.width/img.height;
-            const tar=r.w/r.h;
-            let sx,sy,sw,sh;
-            if(ar>tar){sh=img.height; sw=img.height*tar; sy=0; sx=(img.width-sw)/2;}
-            else{sw=img.width; sh=img.width/tar; sx=0; sy=(img.height-sh)/2;}
-            ctx.drawImage(img,sx,sy,sw,sh,r.x,r.y,r.w,r.h);
-            ctx.restore();
-            // Border tipis
-            ctx.strokeStyle='rgba(255,255,255,0.06)';
-            ctx.lineWidth=1;
-            ctx.stroke();
-            done++; if(done===4) watermark(canvas,ctx);
-        };
-        img.onerror=()=>{done++; if(done===4) watermark(canvas,ctx);};
-    });
-}
-
-/* ═══════ SPOTIFY RENDER (Vector Icons & Dynamic) ═══════ */
+/* ═══════ SPOTIFY RENDER ═══════ */
 function drawSpIcon(ctx, icon, x, y, size, color) {
     ctx.save();
     ctx.translate(x, y);
@@ -1696,7 +1465,6 @@ function clipText(ctx,text,maxW){
     while(ctx.measureText(t+'…').width>maxW && t.length>0) t=t.slice(0,-1);
     return t+'…';
 }
-
 function roundRect(ctx,x,y,w,h,r){
     ctx.beginPath();
     ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
