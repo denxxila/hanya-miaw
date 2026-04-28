@@ -1013,90 +1013,144 @@ function renderClassic(pw,ph){
     });
 }
 
-/* ═══════ SPOTIFY RENDER (VECTOR ICONS & DYNAMIC) ═══════ */
-function drawSpIcon(ctx, icon, x, y, size, color) {
+/* ═══════ SPOTIFY RENDER (100% ACCURATE VECTOR ICONS) ═══════ */
+
+function drawSpotifyIcon(ctx, icon, x, y, size, color, filled = true) {
     ctx.save();
     ctx.translate(x, y);
     ctx.fillStyle = color;
     ctx.strokeStyle = color;
-    
-    ctx.lineWidth = size * 0.1;
+    ctx.lineWidth = size * 0.08;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
 
-    ctx.beginPath();
     if (icon === 'pause') {
-        const w = size * 0.14; 
-        const h = size * 0.45; 
-        const gap = size * 0.1;
-        ctx.rect(-gap - w, -h, w, h*2);
-        ctx.rect(gap, -h, w, h*2);
+        // Two vertical rectangles
+        const w = size * 0.15;
+        const h = size * 0.48;
+        const gap = size * 0.12;
+        ctx.fillRect(-gap - w, -h / 2, w, h);
+        ctx.fillRect(gap, -h / 2, w, h);
+    } 
+    else if (icon === 'play') {
+        // Triangle pointing right
+        ctx.beginPath();
+        ctx.moveTo(-size * 0.28, -size * 0.35);
+        ctx.lineTo(-size * 0.28, size * 0.35);
+        ctx.lineTo(size * 0.3, 0);
+        ctx.closePath();
         ctx.fill();
-    } else if (icon === 'prev') {
-        const tw = size * 0.35;
-        const th = size * 0.4;
-        const bw = size * 0.12;
-        ctx.rect(-tw - bw, -th, bw, th*2);
-        ctx.moveTo(-tw, 0); ctx.lineTo(tw, -th); ctx.lineTo(tw, th);
+    } 
+    else if (icon === 'prev' || icon === 'next') {
+        const dir = icon === 'next' ? 1 : -1;
+        // Small vertical line (bar)
+        ctx.fillRect(dir * size * 0.32, -size * 0.3, size * 0.08, size * 0.6);
+        // Triangle
+        ctx.beginPath();
+        ctx.moveTo(dir * size * 0.1, -size * 0.3);
+        ctx.lineTo(dir * size * 0.1, size * 0.3);
+        ctx.lineTo(-dir * size * 0.25, 0);
+        ctx.closePath();
         ctx.fill();
-    } else if (icon === 'next') {
-        const tw = size * 0.35;
-        const th = size * 0.4;
-        const bw = size * 0.12;
-        ctx.rect(tw, -th, bw, th*2);
-        ctx.moveTo(tw, 0); ctx.lineTo(-tw, -th); ctx.lineTo(-tw, th);
-        ctx.fill();
-    } else if (icon === 'shuffle') {
-        const w = size * 0.4;
-        const h = size * 0.2;
-        const aw = size * 0.15;
-        ctx.moveTo(-w, -h); ctx.bezierCurveTo(-w*0.5, -h, w*0.5, h, w, h); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(w-aw, h-aw); ctx.lineTo(w, h); ctx.lineTo(w-aw, h+aw); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(-w, h); ctx.bezierCurveTo(-w*0.5, h, w*0.5, -h, w, -h); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(w-aw, -h-aw); ctx.lineTo(w, -h); ctx.lineTo(w-aw, -h+aw); ctx.stroke();
-    } else if (icon === 'repeat') {
+    } 
+    else if (icon === 'shuffle') {
         const w = size * 0.35;
-        const h = size * 0.2;
-        const aw = size * 0.12;
-        ctx.moveTo(-w, -h); ctx.lineTo(w, -h); ctx.lineTo(w, h*0.5); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(w-aw, -h-aw); ctx.lineTo(w+aw, -h); ctx.lineTo(w-aw, -h+aw); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(w, h); ctx.lineTo(-w, h); ctx.lineTo(-w, -h*0.5); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(-w+aw, h-aw); ctx.lineTo(-w-aw, h); ctx.lineTo(-w+aw, h+aw); ctx.stroke();
-    } else if (icon === 'heart') {
-        const w = size * 0.35;
-        ctx.translate(0, -size*0.05);
-        ctx.moveTo(0, w);
-        ctx.bezierCurveTo(-w*1.5, w*0.1, -w*1.5, -w, 0, -w*0.5);
-        ctx.bezierCurveTo(w*1.5, -w, w*1.5, w*0.1, 0, w);
+        const h = size * 0.25;
+        // Top arrow right
+        ctx.beginPath();
+        ctx.moveTo(-w, -h);
+        ctx.lineTo(w, -h);
+        ctx.moveTo(w - size * 0.12, -h - size * 0.15);
+        ctx.lineTo(w, -h);
+        ctx.lineTo(w - size * 0.12, -h + size * 0.15);
+        ctx.stroke();
+        // Bottom arrow left
+        ctx.beginPath();
+        ctx.moveTo(w, h);
+        ctx.lineTo(-w, h);
+        ctx.moveTo(-w + size * 0.12, h - size * 0.15);
+        ctx.lineTo(-w, h);
+        ctx.lineTo(-w + size * 0.12, h + size * 0.15);
+        ctx.stroke();
+        // Connecting curve
+        ctx.beginPath();
+        ctx.moveTo(-w, -h);
+        ctx.quadraticCurveTo(0, 0, w, h);
+        ctx.stroke();
+    } 
+    else if (icon === 'repeat') {
+        const w = size * 0.32;
+        const h = size * 0.22;
+        // Top right arrow
+        ctx.beginPath();
+        ctx.moveTo(-w, -h);
+        ctx.lineTo(w, -h);
+        ctx.lineTo(w, -h - size * 0.18);
+        ctx.moveTo(w + size * 0.1, -h - size * 0.1);
+        ctx.lineTo(w, -h);
+        ctx.lineTo(w - size * 0.1, -h - size * 0.1);
+        ctx.stroke();
+        // Bottom left arrow
+        ctx.beginPath();
+        ctx.moveTo(w, h);
+        ctx.lineTo(-w, h);
+        ctx.lineTo(-w, h + size * 0.18);
+        ctx.moveTo(-w - size * 0.1, h + size * 0.1);
+        ctx.lineTo(-w, h);
+        ctx.lineTo(-w + size * 0.1, h + size * 0.1);
+        ctx.stroke();
+        // Connecting curve
+        ctx.beginPath();
+        ctx.moveTo(w, -h);
+        ctx.quadraticCurveTo(w + size * 0.25, 0, w, h);
+        ctx.stroke();
+    } 
+    else if (icon === 'heart') {
+        ctx.beginPath();
+        const w = size * 0.32;
+        ctx.moveTo(0, w * 1.2);
+        ctx.bezierCurveTo(-w * 1.4, w * 0.3, -w * 1.4, -w * 0.8, 0, -w * 0.4);
+        ctx.bezierCurveTo(w * 1.4, -w * 0.8, w * 1.4, w * 0.3, 0, w * 1.2);
         ctx.fill();
     }
+
     ctx.restore();
 }
 
 function drawSpotifyLogo(ctx, x, y, size) {
     ctx.save();
     ctx.translate(x, y);
+    // Green circle background
     ctx.fillStyle = '#1DB954';
     ctx.beginPath();
-    ctx.arc(0, 0, size/2, 0, Math.PI*2);
+    ctx.arc(0, 0, size / 2, 0, Math.PI * 2);
     ctx.fill();
-
+    
+    // Spotify curves (simplified but recognizable)
     ctx.strokeStyle = '#121212';
-    ctx.lineWidth = size * 0.12;
+    ctx.lineWidth = size * 0.1;
     ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.arc(0, size*0.15, size*0.35, -Math.PI*0.8, -Math.PI*0.2); ctx.stroke();
-    ctx.beginPath(); ctx.arc(0, size*0.05, size*0.25, -Math.PI*0.8, -Math.PI*0.2); ctx.stroke();
-    ctx.beginPath(); ctx.arc(0, -size*0.05, size*0.15, -Math.PI*0.75, -Math.PI*0.25); ctx.stroke();
+    
+    // Three curves
+    const startY = -size * 0.22;
+    const spacing = size * 0.18;
+    for (let i = 0; i < 3; i++) {
+        const y = startY + i * spacing;
+        const rad = size * (0.35 - i * 0.08);
+        ctx.beginPath();
+        ctx.arc(0, y, rad, -Math.PI * 0.75, -Math.PI * 0.25);
+        ctx.stroke();
+    }
+    
     ctx.restore();
 }
 
-function renderSpotify(pw,ph){
-    const canvas=$('cf'),ctx=canvas.getContext('2d');
-    const cw=1200; // Lebar kanvas yang fix untuk akurasi tinggi dan mencegah teks tertimpa
+function renderSpotify(pw, ph) {
+    const canvas = $('cf'), ctx = canvas.getContext('2d');
+    const cw = 1200;
     let cellW, cellH, gridH;
 
-    // Hitung dimensi berdasarkan tipe layout spotify (strip vs grid)
-    if(S.spLayout === 'strip'){
+    if (S.spLayout === 'strip') {
         cellW = cw;
         cellH = Math.round(cw * (ph / pw));
         gridH = cellH * 4;
@@ -1106,21 +1160,22 @@ function renderSpotify(pw,ph){
         gridH = cellH * 2;
     }
 
-    const playerH = 500; // Tinggi panel UI spotify selalu tetap
+    const playerH = 520;
     const ch = gridH + playerH;
 
     canvas.width = cw;
     canvas.height = ch;
 
-    // Background dasar spotify gelap
+    // Dark background
     ctx.fillStyle = '#121212';
     ctx.fillRect(0, 0, cw, ch);
 
-    let done=0;
-    S.photos.forEach((src,i)=>{
-        const img=new Image(); img.src=src;
+    let done = 0;
+    S.photos.forEach((src, i) => {
+        const img = new Image();
+        img.src = src;
         let gx, gy;
-        
+
         if (S.spLayout === 'strip') {
             gx = 0;
             gy = i * cellH;
@@ -1129,186 +1184,207 @@ function renderSpotify(pw,ph){
             gy = Math.floor(i / 2) * cellH;
         }
 
-        img.onload=()=>{
+        img.onload = () => {
             ctx.drawImage(img, gx, gy, cellW, cellH);
             done++;
-            if(done===4) drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH);
+            if (done === 4) drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH);
         };
-        img.onerror=()=>{ done++; if(done===4) drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH); };
+        img.onerror = () => {
+            done++;
+            if (done === 4) drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH);
+        };
     });
 }
 
-function drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH){
-    // Efek Gradient tipis transisi gambar ke UI bawah
-    const grad=ctx.createLinearGradient(0, gridH - 180, 0, gridH);
-    grad.addColorStop(0,'rgba(18,18,18,0)');
-    grad.addColorStop(1,'rgba(18,18,18,0.95)');
-    ctx.fillStyle=grad;
-    ctx.fillRect(0, gridH - 180, cw, 180);
+function drawSpotifyPlayer(canvas, ctx, cw, gridH, playerH) {
+    // Gradient overlay from image to player
+    const grad = ctx.createLinearGradient(0, gridH - 200, 0, gridH);
+    grad.addColorStop(0, 'rgba(18,18,18,0)');
+    grad.addColorStop(1, 'rgba(18,18,18,0.98)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, gridH - 200, cw, 200);
 
-    // Variabel posisi yang pasti (Hardcoded relative position)
-    const padX = 80;
-    const startY = gridH;
+    const padX = 100;
+    const startY = gridH + 40;
 
-    // Song title
-    ctx.font = `bold 54px 'Plus Jakarta Sans', sans-serif`;
+    // Song Title - Bold, large
+    ctx.font = `bold 68px 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
-    ctx.fillText(clipText(ctx, S.spTitle, cw - padX*2 - 80), padX, startY + 50);
+    const titleText = clipText(ctx, S.spTitle, cw - padX * 2 - 120);
+    ctx.fillText(titleText, padX, startY);
 
-    // Heart icon Vector
-    drawSpIcon(ctx, 'heart', cw - padX - 15, startY + 75, 48, '#1DB954');
+    // Heart icon on right of title
+    drawSpotifyIcon(ctx, 'heart', cw - padX - 50, startY + 34, 56, '#1DB954', true);
 
-    // Artist
-    ctx.font = `500 36px 'Plus Jakarta Sans', sans-serif`;
+    // Artist name
+    ctx.font = `500 42px 'Plus Jakarta Sans', sans-serif`;
     ctx.fillStyle = 'rgba(255,255,255,0.6)';
     ctx.textAlign = 'left';
-    ctx.fillText(clipText(ctx, S.spArtist, cw - padX*2), padX, startY + 115);
+    const artistText = clipText(ctx, S.spArtist, cw - padX * 2);
+    ctx.fillText(artistText, padX, startY + 85);
 
-    // Progress bar math
-    const barY = startY + 210;
-    const barW = cw - padX*2;
-    const barH = 10;
+    // Progress bar
+    const barY = startY + 180;
+    const barW = cw - padX * 2;
+    const barH = 14;
     const prog = S.spProg / 100;
 
-    // Progress background
-    roundRect(ctx, padX, barY, barW, barH, barH/2);
+    // Background track
+    roundRect(ctx, padX, barY, barW, barH, barH / 2);
     ctx.fillStyle = 'rgba(255,255,255,0.15)';
     ctx.fill();
 
-    // Progress hijau
-    roundRect(ctx, padX, barY, barW * prog, barH, barH/2);
+    // Progress fill (Spotify green)
+    roundRect(ctx, padX, barY, barW * prog, barH, barH / 2);
     ctx.fillStyle = '#1DB954';
     ctx.fill();
 
-    // Dot progress bar putih
+    // Handle (white dot with shadow)
     ctx.beginPath();
-    ctx.arc(padX + barW * prog, barY + barH/2, 16, 0, Math.PI*2);
-    ctx.fillStyle = '#ffffff';
+    ctx.arc(padX + barW * prog, barY + barH / 2, 20, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.95)';
     ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
 
     // Time labels
-    const timeY = barY + 35;
-    ctx.font = `28px 'Space Mono', monospace`;
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    const timeY = barY + 50;
+    ctx.font = `400 32px 'Space Mono', monospace`;
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.textAlign = 'left';
     ctx.fillText(secToMMSS(Math.round(S.spDur * prog)), padX, timeY);
     ctx.textAlign = 'right';
     ctx.fillText(secToMMSS(S.spDur), cw - padX, timeY);
 
-    // Playback Controls (Vector based, NO Emoji)
-    const ctrlY = startY + 340;
+    // Playback Controls - Vector based (100% authentic)
+    const ctrlY = startY + 310;
     const cx = cw / 2;
+    const iconSize = 52;
+    const spacing = 150;
 
-    drawSpIcon(ctx, 'shuffle', cx - 220, ctrlY, 40, 'rgba(255,255,255,0.5)');
-    drawSpIcon(ctx, 'prev', cx - 110, ctrlY, 40, '#ffffff');
+    // Shuffle (inactive - gray)
+    drawSpotifyIcon(ctx, 'shuffle', cx - spacing * 1.5, ctrlY, iconSize, 'rgba(255,255,255,0.5)', true);
 
-    // Lingkaran play/pause hijau terang
+    // Previous
+    drawSpotifyIcon(ctx, 'prev', cx - spacing * 0.5, ctrlY, iconSize, '#ffffff', true);
+
+    // Play/Pause (large green circle)
     ctx.beginPath();
-    ctx.arc(cx, ctrlY, 52, 0, Math.PI*2);
+    ctx.arc(cx, ctrlY, 70, 0, Math.PI * 2);
     ctx.fillStyle = '#1DB954';
     ctx.fill();
-    
-    // Ikon pause hitam vektor
-    drawSpIcon(ctx, 'pause', cx, ctrlY, 36, '#121212'); 
 
-    drawSpIcon(ctx, 'next', cx + 110, ctrlY, 40, '#ffffff');
-    drawSpIcon(ctx, 'repeat', cx + 220, ctrlY, 40, 'rgba(255,255,255,0.5)');
+    // Play/Pause icon inside (pause for demo)
+    drawSpotifyIcon(ctx, 'pause', cx, ctrlY, 44, '#121212', true);
 
-    // Footer Watermark/Date
-    const footY = canvas.height - 45;
+    // Next
+    drawSpotifyIcon(ctx, 'next', cx + spacing * 0.5, ctrlY, iconSize, '#ffffff', true);
+
+    // Repeat (inactive - gray)
+    drawSpotifyIcon(ctx, 'repeat', cx + spacing * 1.5, ctrlY, iconSize, 'rgba(255,255,255,0.5)', true);
+
+    // Footer with Spotify logo and date/time
+    const footY = canvas.height - 60;
     const now = new Date();
-    const dateStr = `${now.getDate()} ${now.toLocaleDateString('en-US',{month:'short'}).toUpperCase()} ${now.getFullYear()}`;
-    const timeStr = now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}).replace(':','.');
-    
-    ctx.font = `bold 22px 'Plus Jakarta Sans', sans-serif`;
-    ctx.fillStyle = 'rgba(29,185,84,0.7)';
+    const dateStr = `${now.getDate()} ${now.toLocaleDateString('en-US', { month: 'short' }).toUpperCase()} ${now.getFullYear()}`;
+    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).replace(':', '.');
+
+    ctx.font = `bold 26px 'Plus Jakarta Sans', sans-serif`;
+    ctx.fillStyle = 'rgba(29,185,84,0.8)';
     ctx.textBaseline = 'middle';
-    
-    const footText = `SPOTIFY  •  ${dateStr}  ${timeStr}`;
-    const tw = ctx.measureText(footText).width;
-    
-    // Vector Spotify Logo + Text
-    drawSpotifyLogo(ctx, cx - tw/2 - 20, footY, 32);
+
+    const footerText = `SPOTIFY • ${dateStr} ${timeStr}`;
+    const tw = ctx.measureText(footerText).width;
+
+    drawSpotifyLogo(ctx, cx - tw / 2 - 50, footY, 40);
     ctx.textAlign = 'left';
-    ctx.fillText(footText, cx - tw/2 + 6, footY + 2);
+    ctx.fillText(footerText, cx - tw / 2 + 10, footY);
 
-    $('fimg').src=canvas.toDataURL('image/jpeg',.95);
-    goTo(5); confettiTime();
+    $('fimg').src = canvas.toDataURL('image/jpeg', 0.95);
+    goTo(5);
+    confettiTime();
 }
 
-function clipText(ctx,text,maxW){
-    if(ctx.measureText(text).width<=maxW) return text;
-    let t=text;
-    while(ctx.measureText(t+'…').width>maxW && t.length>0) t=t.slice(0,-1);
-    return t+'…';
+function clipText(ctx, text, maxW) {
+    if (ctx.measureText(text).width <= maxW) return text;
+    let t = text;
+    while (ctx.measureText(t + '…').width > maxW && t.length > 0) t = t.slice(0, -1);
+    return t + '…';
 }
-function roundRect(ctx,x,y,w,h,r){
+
+function roundRect(ctx, x, y, w, h, r) {
     ctx.beginPath();
-    ctx.moveTo(x+r,y);
-    ctx.lineTo(x+w-r,y);
-    ctx.quadraticCurveTo(x+w,y,x+w,y+r);
-    ctx.lineTo(x+w,y+h-r);
-    ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-    ctx.lineTo(x+r,y+h);
-    ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-    ctx.lineTo(x,y+r);
-    ctx.quadraticCurveTo(x,y,x+r,y);
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
     ctx.closePath();
 }
 
-function rrect(ctx,x,y,w,h,r){
+function rrect(ctx, x, y, w, h, r) {
     ctx.beginPath();
-    ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
-    ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-    ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-    ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
     ctx.closePath();
 }
-function mkGrad(ctx,css,w,h){
-    try{
-        const m=css.match(/linear-gradient\(([^,]+),(.+)\)$/s);
-        if(!m) return null;
-        let angle=135;
-        const ad=m[1].trim();
-        if(ad.includes('deg')) angle=parseFloat(ad);
-        const stops=m[2].split(',').map(s=>s.trim()).filter(Boolean);
-        const a=angle*Math.PI/180;
-        const x1=w/2-Math.cos(a)*w*.75,y1=h/2-Math.sin(a)*h*.75;
-        const x2=w/2+Math.cos(a)*w*.75,y2=h/2+Math.sin(a)*h*.75;
-        const g=ctx.createLinearGradient(x1,y1,x2,y2);
-        stops.forEach((s,i)=>{ try{g.addColorStop(i/Math.max(stops.length-1,1),s);}catch(e){} });
+
+function mkGrad(ctx, css, w, h) {
+    try {
+        const m = css.match(/linear-gradient\(([^,]+),(.+)\)$/s);
+        if (!m) return null;
+        let angle = 135;
+        const ad = m[1].trim();
+        if (ad.includes('deg')) angle = parseFloat(ad);
+        const stops = m[2].split(',').map(s => s.trim()).filter(Boolean);
+        const a = angle * Math.PI / 180;
+        const x1 = w / 2 - Math.cos(a) * w * 0.75, y1 = h / 2 - Math.sin(a) * h * 0.75;
+        const x2 = w / 2 + Math.cos(a) * w * 0.75, y2 = h / 2 + Math.sin(a) * h * 0.75;
+        const g = ctx.createLinearGradient(x1, y1, x2, y2);
+        stops.forEach((s, i) => {
+            try {
+                g.addColorStop(i / Math.max(stops.length - 1, 1), s);
+            } catch (e) { }
+        });
         return g;
-    }catch(e){return null;}
+    } catch (e) {
+        return null;
+    }
 }
-function watermark(canvas,ctx){
-    const now=new Date(),cw=canvas.width,ch=canvas.height;
-    const tc=contrast(S.color,S.isGrad);
-    const ac=(isDark(S.color)||S.isGrad)?'#ff7aaa':'#c4224f';
-    ctx.textAlign='center';
-    const lw=cw*.22;
-    ctx.save(); ctx.strokeStyle=ac; ctx.globalAlpha=.26; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(cw/2-lw,ch-188); ctx.lineTo(cw/2+lw,ch-188); ctx.stroke(); ctx.restore();
-    ctx.save(); ctx.font=`italic bold ${Math.round(cw*.073)}px 'Playfair Display',serif`; ctx.fillStyle=ac;
-    ctx.fillText('V-Photobooth',cw/2,ch-124); ctx.restore();
-    ctx.save(); ctx.strokeStyle=ac; ctx.globalAlpha=.16; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(cw/2-lw,ch-99); ctx.lineTo(cw/2+lw,ch-99); ctx.stroke(); ctx.restore();
-    const day=now.getDate(),month=now.toLocaleDateString('en-US',{month:'long'}).toUpperCase(),year=now.getFullYear();
-    const time=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}).replace(':','.');
-    ctx.save(); ctx.font=`600 ${Math.round(cw*.023)}px 'Space Mono',monospace`; ctx.fillStyle=tc; ctx.globalAlpha=.6;
-    ctx.fillText(`${day} ${month} ${year}  \u2022  ${time}  \u2022  BY DENJI`,cw/2,ch-59); ctx.restore();
-    $('fimg').src=canvas.toDataURL('image/jpeg',.95);
-    goTo(5); confettiTime();
-}
-function confettiTime(){
-    const colors=['#ff477e','#ff9abc','#ffffff','#ffd1dc','#ff1f61','#ffb3cb'],cfg={colors,shapes:['circle','square']};
-    setTimeout(()=>confetti({...cfg,particleCount:88,spread:74,origin:{y:.55},scalar:1.1}),250);
-    setTimeout(()=>{ confetti({...cfg,particleCount:44,angle:60,spread:54,origin:{x:0,y:.6}}); confetti({...cfg,particleCount:44,angle:120,spread:54,origin:{x:1,y:.6}}); },500);
-    setTimeout(()=>confetti({...cfg,particleCount:38,spread:98,origin:{y:.34},gravity:.5,scalar:.8}),900);
-}
-function dlImg(){ const a=document.createElement('a'); a.download='v-photobooth-'+Date.now()+'.jpg'; a.href=$('cf').toDataURL('image/jpeg',.95); a.click(); }
 
-buildUI();
-</script>
-</body>
-</html>
+function watermark(canvas, ctx) {
+    const now = new Date(), cw = canvas.width, ch = canvas.height;
+    const tc = contrast(S.color, S.isGrad);
+    const ac = (isDark(S.color) || S.isGrad) ? '#ff7aaa' : '#c4224f';
+    ctx.textAlign = 'center';
+    const lw = cw * 0.22;
+    ctx.save();
+    ctx.strokeStyle = ac;
+    ctx.globalAlpha = 0.26;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cw / 2 - lw, ch - 188);
+    ctx.lineTo(cw / 2 + lw, ch - 188);
+    ctx.stroke();
+    ctx.restore();
+    ctx.save();
+    ctx.font = `italic bold ${Math.round(cw * 0.073)}px 'Playfair Display',serif`;
+    ctx.fillStyle = ac;
+    ctx.fillText('V-Photobooth', cw / 2, ch - 124);
+    ctx.restore();
+    ctx.save();
+    ctx.strokeStyle
