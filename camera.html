@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera — V-Photobooth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+<base target="_blank">
+</head>
+<body>
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+<div class="blob b3"></div>
+
+<section class="step active" id="step-4">
+    <div class="dots"><div class="dot d"></div><div class="dot d"></div><div class="dot d"></div><div class="dot a"></div><div class="dot"></div></div>
+    <div class="badge"><span class="bdot"></span>STEP 3 OF 3</div>
+    <h1>Strike a<em> Pose!</em></h1>
+    <div class="cambar">
+        <span><span class="ldot"></span>&nbsp;LIVE</span>
+        <span id="cam-r">4:3</span>
+        <span id="cam-f">NATURAL</span>
+    </div>
+    <div class="camout">
+        <div class="camwrap" id="camwrap">
+            <video id="video" autoplay playsinline muted></video>
+            <div id="flash"></div>
+            <div id="cdown" style="display:none;">3</div>
+        </div>
+    </div>
+    <div class="pips">
+        <div class="pip" id="pip-0"></div><div class="pip" id="pip-1"></div>
+        <div class="pip" id="pip-2"></div><div class="pip" id="pip-3"></div>
+    </div>
+    <p id="caminfo" style="font-size:.65rem;letter-spacing:3px;margin-bottom:16px;color:rgba(255,255,255,.26);">PRESS THE BUTTON TO START</p>
+    <div class="camctrl">
+        <button class="cctrl" onclick="togMirror()" title="Mirror"><i class="fas fa-left-right"></i></button>
+        <button class="shutter" id="shutter" onclick="startShoot()"></button>
+        <button class="cctrl" id="timerbtn" onclick="togTimer()" title="Timer"><i class="fas fa-stopwatch"></i></button>
+    </div>
+    <div class="nav" style="margin-top:18px;">
+        <button class="btnb" onclick="backCam()"><i class="fas fa-arrow-left" style="margin-right:5px;"></i>BACK</button>
+    </div>
+</section>
+
+<canvas id="ct"></canvas>
+<canvas id="cf"></canvas>
+
+<script src="js/common.js"></script>
+<script src="js/step4.js"></script>
+</body>
+</html>
