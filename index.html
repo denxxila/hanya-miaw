@@ -11,880 +11,945 @@
     <style>
         :root {
             --bg: #0a0a0a;
-            --surface: #161616;
             --primary: #ff477e;
-            --primary-dark: #c4224f;
             --text: #ffffff;
             --border: #2a2a2a;
-            --gold: #f5c842;
         }
-        
-        * { 
-            margin: 0; padding: 0; box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        button { outline: none; user-select: none; }
-        
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; -webkit-tap-highlight-color:transparent; }
+        button { outline:none; user-select:none; }
+
         body {
-            background: #080808;
-            color: var(--text);
-            overflow-x: hidden;
-            min-height: 100dvh;
+            background:#080808; color:var(--text);
+            overflow-x:hidden; min-height:100dvh;
         }
-
-        /* ─── NOISE OVERLAY ─── */
         body::before {
-            content: '';
-            position: fixed; inset: 0; z-index: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-            pointer-events: none; opacity: 0.4;
+            content:''; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.35;
+            background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
         }
 
-        /* ─── AMBIENT BLOBS ─── */
-        .blob {
-            position: fixed; border-radius: 50%; filter: blur(120px);
-            pointer-events: none; z-index: 0; opacity: 0.35;
-        }
-        .blob-1 { width: 600px; height: 600px; background: #ff477e; top: -200px; left: -200px; animation: blobMove1 18s ease-in-out infinite; }
-        .blob-2 { width: 500px; height: 500px; background: #8b1a4a; bottom: -150px; right: -150px; animation: blobMove2 22s ease-in-out infinite; }
-        .blob-3 { width: 400px; height: 400px; background: #3d0a20; top: 50%; left: 50%; transform: translate(-50%,-50%); animation: blobMove3 15s ease-in-out infinite; }
+        .blob { position:fixed; border-radius:50%; filter:blur(120px); pointer-events:none; z-index:0; opacity:0.3; }
+        .blob-1 { width:600px; height:600px; background:#ff477e; top:-200px; left:-200px; animation:bm1 18s ease-in-out infinite; }
+        .blob-2 { width:500px; height:500px; background:#8b1a4a; bottom:-150px; right:-150px; animation:bm2 22s ease-in-out infinite; }
+        .blob-3 { width:400px; height:400px; background:#3d0a20; top:50%; left:50%; transform:translate(-50%,-50%); animation:bm3 15s ease-in-out infinite; }
+        @keyframes bm1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(80px,60px) scale(1.1)} }
+        @keyframes bm2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-60px,-80px) scale(1.15)} }
+        @keyframes bm3 { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.2)} }
 
-        @keyframes blobMove1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(80px,60px) scale(1.1)} }
-        @keyframes blobMove2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-60px,-80px) scale(1.15)} }
-        @keyframes blobMove3 { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.2)} }
-
-        /* ─── STEP SYSTEM ─── */
+        /* ── STEP SYSTEM ── */
         .step-container {
-            display: none; min-height: 100dvh; width: 100%;
-            flex-direction: column; align-items: center; justify-content: center;
-            padding: 40px 20px; text-align: center; position: relative; z-index: 1;
+            display:none; min-height:100dvh; width:100%;
+            flex-direction:column; align-items:center; justify-content:center;
+            padding:40px 20px; text-align:center; position:relative; z-index:1;
         }
-        .step-container.active { display: flex; animation: slideUp 0.7s cubic-bezier(0.23, 1, 0.32, 1); }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        .step-container.active { display:flex; animation:slideUp 0.6s cubic-bezier(0.23,1,0.32,1); }
+        @keyframes slideUp { from{opacity:0;transform:translateY(35px)} to{opacity:1;transform:translateY(0)} }
 
-        /* ─── STEP INDICATOR ─── */
-        .step-indicator {
-            display: flex; gap: 8px; margin-bottom: 40px;
-        }
-        .step-dot {
-            width: 8px; height: 8px; border-radius: 50%;
-            background: rgba(255,255,255,0.2); transition: all 0.4s ease;
-        }
-        .step-dot.active { background: var(--primary); width: 28px; border-radius: 10px; }
-        .step-dot.done { background: rgba(255,71,126,0.4); }
+        /* ── STEP INDICATOR ── */
+        .step-indicator { display:flex; gap:8px; margin-bottom:32px; }
+        .step-dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.15); transition:all 0.4s ease; }
+        .step-dot.active { background:var(--primary); width:28px; border-radius:10px; }
+        .step-dot.done { background:rgba(255,71,126,0.4); }
 
-        /* ─── BADGE ─── */
+        /* ── BADGE ── */
         .badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: rgba(255,71,126,0.15); border: 1px solid rgba(255,71,126,0.3);
-            color: var(--primary); padding: 6px 16px; border-radius: 100px;
-            font-size: 0.65rem; font-weight: 800; letter-spacing: 3px;
-            margin-bottom: 20px; text-transform: uppercase;
+            display:inline-flex; align-items:center; gap:6px;
+            background:rgba(255,71,126,0.12); border:1px solid rgba(255,71,126,0.25);
+            color:var(--primary); padding:6px 16px; border-radius:100px;
+            font-size:0.62rem; font-weight:800; letter-spacing:3px;
+            margin-bottom:18px; text-transform:uppercase;
         }
-        .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); animation: ping 1.5s ease-in-out infinite; }
-        @keyframes ping { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.4)} }
+        .badge-dot { width:6px; height:6px; border-radius:50%; background:var(--primary); animation:ping 1.5s ease-in-out infinite; }
+        @keyframes ping { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.5)} }
 
-        /* ─── HEADINGS ─── */
         h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.8rem, 6vw, 4rem);
-            background: linear-gradient(135deg, #fff 30%, #ff9abc);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.1; margin-bottom: 16px;
+            font-family:'Playfair Display',serif;
+            font-size:clamp(2.5rem,5.5vw,3.8rem);
+            background:linear-gradient(135deg,#fff 30%,#ff9abc);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+            line-height:1.1; margin-bottom:14px;
         }
-        h1 em { font-style: italic; color: var(--primary); -webkit-text-fill-color: var(--primary); }
+        h1 em { font-style:italic; -webkit-text-fill-color:#ff9abc; }
+        p.desc { color:rgba(255,255,255,0.5); margin-bottom:32px; font-size:0.92rem; max-width:400px; line-height:1.75; }
 
-        p.desc { color: rgba(255,255,255,0.55); margin-bottom: 40px; font-size: 0.95rem; max-width: 420px; line-height: 1.75; }
+        .divider { width:50px; height:2px; background:linear-gradient(90deg,transparent,var(--primary),transparent); margin:0 auto 30px; }
 
-        /* ─── GLASS CARD ─── */
-        .glass-card {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            backdrop-filter: blur(20px);
-            border-radius: 28px; padding: 32px;
-        }
-
-        /* ─── CTA BUTTON ─── */
+        /* ── BUTTONS ── */
         .btn-main {
-            position: relative; overflow: hidden;
-            background: linear-gradient(135deg, var(--primary), #ff1f61);
-            color: white; border: none; padding: 18px 50px;
-            font-size: 0.9rem; font-weight: 800; border-radius: 100px; cursor: pointer;
-            transition: all 0.3s ease; letter-spacing: 2px; text-transform: uppercase;
-            box-shadow: 0 8px 30px rgba(255,71,126,0.4);
+            position:relative; overflow:hidden;
+            background:linear-gradient(135deg,var(--primary),#ff1f61);
+            color:white; border:none; padding:16px 44px;
+            font-size:0.85rem; font-weight:800; border-radius:100px; cursor:pointer;
+            transition:all 0.3s; letter-spacing:2px; text-transform:uppercase;
+            box-shadow:0 8px 28px rgba(255,71,126,0.38);
         }
-        .btn-main::before {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
-            opacity: 0; transition: opacity 0.3s;
+        .btn-main:hover { transform:translateY(-3px); box-shadow:0 14px 36px rgba(255,71,126,0.5); }
+        .btn-main:active { transform:scale(0.95); }
+        .btn-secondary {
+            background:rgba(255,255,255,0.06); border:1.5px solid rgba(255,255,255,0.1);
+            color:white; padding:16px 36px; font-size:0.85rem; font-weight:800;
+            border-radius:100px; cursor:pointer; transition:all 0.3s; letter-spacing:1.5px;
+            text-transform:uppercase;
         }
-        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255,71,126,0.5); }
-        .btn-main:hover::before { opacity: 1; }
-        .btn-main:active { transform: scale(0.95); }
+        .btn-secondary:hover { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.3); }
 
-        /* ─── OPTION CARDS ─── */
-        .options-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; width: 100%; max-width: 560px; margin-bottom: 32px; }
+        /* NAV BUTTONS (back/next) */
+        .nav-row {
+            display:flex; gap:12px; align-items:center; justify-content:center;
+            margin-top:8px; flex-wrap:wrap;
+        }
+        .btn-back {
+            background:rgba(255,255,255,0.05); border:1.5px solid rgba(255,255,255,0.1);
+            color:rgba(255,255,255,0.55); padding:14px 28px;
+            font-size:0.8rem; font-weight:800; border-radius:100px; cursor:pointer;
+            transition:all 0.3s; letter-spacing:1.5px; text-transform:uppercase;
+        }
+        .btn-back:hover { border-color:rgba(255,255,255,0.3); color:white; }
 
+        /* ── CARD OPTIONS ── */
+        .options-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; width:100%; max-width:540px; margin-bottom:28px; }
         .card-option {
-            background: rgba(255,255,255,0.03);
-            border: 1.5px solid rgba(255,255,255,0.07);
-            border-radius: 20px; padding: 16px 16px 14px;
-            cursor: pointer; transition: all 0.35s ease;
-            position: relative; overflow: hidden;
+            background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.07);
+            border-radius:18px; padding:14px; cursor:pointer; transition:all 0.32s;
+            position:relative; overflow:hidden;
         }
-        .card-option::after {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(255,71,126,0.08), transparent);
-            opacity: 0; transition: opacity 0.3s;
-        }
-        .card-option:hover { border-color: rgba(255,71,126,0.4); transform: translateY(-4px); }
-        .card-option:hover::after { opacity: 1; }
-        .card-option.selected {
-            border-color: var(--primary);
-            background: rgba(255,71,126,0.08);
-            box-shadow: 0 0 0 1px rgba(255,71,126,0.3), 0 10px 30px rgba(255,71,126,0.15);
-        }
-        .card-option.selected::after { opacity: 1; }
+        .card-option:hover { border-color:rgba(255,71,126,0.35); transform:translateY(-3px); }
+        .card-option.selected { border-color:var(--primary); background:rgba(255,71,126,0.08); box-shadow:0 0 0 1px rgba(255,71,126,0.25),0 10px 28px rgba(255,71,126,0.14); }
+        .check-mark { position:absolute; top:9px; right:9px; width:20px; height:20px; border-radius:50%; background:var(--primary); display:none; align-items:center; justify-content:center; font-size:9px; color:white; font-weight:900; z-index:2; }
+        .card-option.selected .check-mark { display:flex; }
+        .card-option img { width:100%; height:auto; object-fit:contain; border-radius:10px; margin-bottom:10px; }
+        .card-option p { font-weight:700; font-size:0.72rem; letter-spacing:1.5px; color:rgba(255,255,255,0.6); }
+        .card-option.selected p { color:var(--primary); }
 
-        .card-option .check-mark {
-            position: absolute; top: 10px; right: 10px; z-index: 2;
-            width: 22px; height: 22px; border-radius: 50%;
-            background: var(--primary); display: none;
-            align-items: center; justify-content: center;
-            font-size: 10px; color: white; font-weight: 900;
-        }
-        .card-option.selected .check-mark { display: flex; }
+        /* filter preview */
+        .filter-preview { width:100%; aspect-ratio:4/3; border-radius:10px; overflow:hidden; margin-bottom:10px; }
+        .filter-preview img { width:100%; height:100%; object-fit:cover; }
 
-        .card-option .preview-wrap {
-            width: 100%; border-radius: 12px; overflow: hidden;
-            margin-bottom: 12px; position: relative;
-        }
-        .card-option img { width: 100%; height: auto; object-fit: contain; display: block; }
+        /* ── SECTION LABEL ── */
+        .section-label { font-size:0.62rem; letter-spacing:3px; font-weight:800; color:rgba(255,255,255,0.28); margin-bottom:12px; text-transform:uppercase; }
 
-        .card-option p { font-weight: 700; font-size: 0.75rem; letter-spacing: 1.5px; color: rgba(255,255,255,0.7); }
-        .card-option.selected p { color: var(--primary); }
-
-        /* ─── FILTER PREVIEW ─── */
-        .filter-preview {
-            width: 100%; aspect-ratio: 4/3; border-radius: 12px;
-            overflow: hidden; margin-bottom: 12px; position: relative;
-        }
-        .filter-preview img { width: 100%; height: 100%; object-fit: cover; }
-        .filter-label-overlay {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
-            padding: 20px 10px 8px; text-align: center;
-        }
-
-        /* ─── PILL BUTTONS ─── */
-        .section-label { font-size: 0.65rem; letter-spacing: 3px; font-weight: 800; color: rgba(255,255,255,0.3); margin-bottom: 14px; text-transform: uppercase; }
-        .btn-group-small { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 32px; }
+        /* ── PILL BUTTONS ── */
+        .btn-group-small { display:flex; flex-wrap:wrap; justify-content:center; gap:9px; margin-bottom:28px; }
         .pill-btn {
-            background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.6); padding: 10px 22px;
-            border-radius: 100px; cursor: pointer; font-weight: 700; font-size: 0.8rem;
-            transition: all 0.3s ease; letter-spacing: 1px;
+            background:rgba(255,255,255,0.05); border:1.5px solid rgba(255,255,255,0.09);
+            color:rgba(255,255,255,0.55); padding:9px 20px;
+            border-radius:100px; cursor:pointer; font-weight:700; font-size:0.78rem;
+            transition:all 0.3s; letter-spacing:1px;
         }
-        .pill-btn:hover { border-color: rgba(255,71,126,0.5); color: white; }
-        .pill-btn.selected { 
-            border-color: var(--primary); background: rgba(255,71,126,0.15); 
-            color: var(--primary); box-shadow: 0 0 20px rgba(255,71,126,0.2);
-        }
+        .pill-btn:hover { border-color:rgba(255,71,126,0.45); color:white; }
+        .pill-btn.selected { border-color:var(--primary); background:rgba(255,71,126,0.14); color:var(--primary); box-shadow:0 0 18px rgba(255,71,126,0.18); }
 
-        /* ─── COLOR SWATCHES ─── */
-        .color-swatches { display: flex; gap: 14px; justify-content: center; margin-bottom: 32px; }
+        /* ── COLOR PICKER SECTION ── */
+        .color-section { width:100%; max-width:540px; margin-bottom:28px; }
+        .color-swatches-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:16px; }
+        .swatch-wrap { display:flex; flex-direction:column; align-items:center; gap:5px; cursor:pointer; }
         .swatch {
-            width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
-            transition: all 0.3s; border: 3px solid transparent;
-            position: relative; display: flex; align-items: center; justify-content: center;
+            width:38px; height:38px; border-radius:50%; border:2.5px solid transparent;
+            transition:all 0.3s; position:relative; flex-shrink:0;
         }
-        .swatch:hover { transform: scale(1.15); }
-        .swatch.selected { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255,71,126,0.3); }
-        .swatch-white { background: #ffffff; }
-        .swatch-black { background: #121212; border: 3px solid #444; }
-        .swatch-pink { background: #ffd1dc; }
-        .swatch-label { font-size: 0.65rem; letter-spacing: 2px; color: rgba(255,255,255,0.4); margin-top: 6px; }
-        .swatch-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .swatch:hover { transform:scale(1.15); }
+        .swatch.selected { border-color:var(--primary); box-shadow:0 0 0 3px rgba(255,71,126,0.28); }
+        .swatch-label { font-size:0.58rem; letter-spacing:1.5px; color:rgba(255,255,255,0.35); font-weight:700; }
 
-        /* ─── CAMERA SECTION ─── */
-        .cam-header { margin-bottom: 24px; }
-        .cam-header h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-style: italic; margin-bottom: 4px; }
+        /* custom color input row */
+        .custom-color-row {
+            display:flex; align-items:center; gap:10px; justify-content:center;
+            background:rgba(255,255,255,0.04); border:1.5px solid rgba(255,255,255,0.08);
+            border-radius:100px; padding:8px 16px; max-width:300px; margin:0 auto;
+            transition:border-color 0.3s;
+        }
+        .custom-color-row:focus-within { border-color:rgba(255,71,126,0.4); }
+        .custom-color-row label { font-size:0.7rem; letter-spacing:2px; color:rgba(255,255,255,0.4); font-weight:700; white-space:nowrap; }
+        #custom-color-input {
+            width:32px; height:32px; border:none; background:none; cursor:pointer;
+            border-radius:50%; padding:0; overflow:hidden;
+        }
+        #custom-color-input::-webkit-color-swatch-wrapper { padding:0; }
+        #custom-color-input::-webkit-color-swatch { border:none; border-radius:50%; }
+        #custom-hex-display {
+            font-family:'Space Mono',monospace; font-size:0.75rem; color:rgba(255,255,255,0.5);
+            background:none; border:none; width:70px; letter-spacing:1px;
+        }
+
+        /* ── LIVE PREVIEW ── */
+        .preview-section { width:100%; max-width:540px; margin-bottom:28px; }
+        .preview-label { font-size:0.62rem; letter-spacing:3px; font-weight:800; color:rgba(255,255,255,0.28); margin-bottom:12px; text-transform:uppercase; }
+
+        .strip-preview-outer {
+            display:flex; justify-content:center; align-items:flex-start;
+        }
+        /* strip */
+        .strip-preview {
+            display:flex; flex-direction:column; gap:0;
+            border-radius:10px; overflow:hidden; padding:10px 10px 14px;
+            box-shadow:0 12px 40px rgba(0,0,0,0.6);
+            transition:background 0.4s; min-width:90px; max-width:110px;
+        }
+        .strip-preview .sp-photo {
+            width:100%; aspect-ratio:4/3; border-radius:5px; overflow:hidden; margin-bottom:8px; background:#222;
+        }
+        .strip-preview .sp-photo img { width:100%; height:100%; object-fit:cover; }
+        .strip-preview .sp-brand { font-family:'Playfair Display',serif; font-style:italic; font-size:0.55rem; text-align:center; margin-top:2px; transition:color 0.4s; }
+
+        /* grid */
+        .grid-preview {
+            display:grid; grid-template-columns:1fr 1fr; gap:6px;
+            border-radius:10px; padding:10px 10px 14px;
+            box-shadow:0 12px 40px rgba(0,0,0,0.6);
+            transition:background 0.4s; max-width:160px;
+        }
+        .grid-preview .gp-photo { width:100%; aspect-ratio:4/3; border-radius:5px; overflow:hidden; background:#222; }
+        .grid-preview .gp-photo img { width:100%; height:100%; object-fit:cover; }
+        .grid-preview .gp-brand { grid-column:span 2; font-family:'Playfair Display',serif; font-style:italic; font-size:0.52rem; text-align:center; margin-top:2px; transition:color 0.4s; }
+
+        /* ── CAMERA ── */
+        .cam-info-bar { display:flex; align-items:center; gap:14px; margin-bottom:18px; font-size:0.68rem; letter-spacing:2px; color:rgba(255,255,255,0.28); font-weight:700; }
+        .live-dot { width:6px; height:6px; border-radius:50%; background:#22c55e; box-shadow:0 0 8px #22c55e; animation:ping 1.5s infinite; }
 
         .camera-outer {
-            position: relative; width: 100%; max-width: 460px;
-            padding: 8px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 28px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,71,126,0.1);
-            margin-bottom: 24px;
+            position:relative; width:100%; max-width:450px; padding:7px;
+            background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07);
+            border-radius:26px; box-shadow:0 28px 70px rgba(0,0,0,0.75),0 0 0 1px rgba(255,71,126,0.08);
+            margin-bottom:20px;
         }
-
         .camera-wrapper {
-            position: relative; background: #000; border-radius: 22px; overflow: hidden;
-            display: flex; justify-content: center; align-items: center;
-            width: 100%; aspect-ratio: 4 / 3;
+            position:relative; background:#000; border-radius:20px; overflow:hidden;
+            display:flex; justify-content:center; align-items:center;
+            width:100%; aspect-ratio:4/3;
         }
-        #video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        #video { width:100%; height:100%; object-fit:cover; transform:scaleX(-1); }
 
-        /* ─── SHOT COUNTER ─── */
-        .shot-counter {
-            display: flex; gap: 8px; justify-content: center; margin: 16px 0 20px;
-        }
-        .shot-pip {
-            width: 32px; height: 6px; border-radius: 3px;
-            background: rgba(255,255,255,0.1); transition: all 0.4s ease;
-        }
-        .shot-pip.done { background: var(--primary); box-shadow: 0 0 8px rgba(255,71,126,0.6); }
+        .shot-counter { display:flex; gap:8px; justify-content:center; margin:14px 0 18px; }
+        .shot-pip { width:30px; height:5px; border-radius:3px; background:rgba(255,255,255,0.1); transition:all 0.4s; }
+        .shot-pip.done { background:var(--primary); box-shadow:0 0 8px rgba(255,71,126,0.6); }
 
-        /* ─── FLASH & COUNTDOWN ─── */
-        #flash-local {
-            position: absolute; inset: 0;
-            background: white; opacity: 0; pointer-events: none; z-index: 10; border-radius: 22px;
-        }
-        .flash-active { animation: flashShot 0.45s ease-out; }
+        #flash-local { position:absolute; inset:0; background:white; opacity:0; pointer-events:none; z-index:10; border-radius:20px; }
+        .flash-active { animation:flashShot 0.45s ease-out; }
         @keyframes flashShot { 0%{opacity:1} 100%{opacity:0} }
 
-        #countdown {
-            position: absolute; font-size: 7rem; font-weight: 900;
-            color: white; z-index: 15; font-style: italic;
-            text-shadow: 0 0 40px rgba(255,71,126,0.8), 0 5px 15px rgba(0,0,0,0.5);
-            animation: countPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        @keyframes countPop { from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1} }
+        #countdown { position:absolute; font-size:6.5rem; font-weight:900; color:white; z-index:15; font-style:italic; text-shadow:0 0 40px rgba(255,71,126,0.8),0 4px 14px rgba(0,0,0,0.5); animation:countPop 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+        @keyframes countPop { from{transform:scale(0.4);opacity:0} to{transform:scale(1);opacity:1} }
 
-        /* ─── SHUTTER CONTROLS ─── */
-        .cam-controls {
-            display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 4px;
-        }
+        .cam-controls { display:flex; align-items:center; justify-content:center; gap:20px; }
         .cam-ctrl-btn {
-            width: 48px; height: 48px; border-radius: 50%;
-            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.5); font-size: 1.1rem; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; transition: all 0.3s;
+            width:46px; height:46px; border-radius:50%;
+            background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.09);
+            color:rgba(255,255,255,0.45); font-size:1rem; cursor:pointer;
+            display:flex; align-items:center; justify-content:center; transition:all 0.3s;
         }
-        .cam-ctrl-btn:hover { background: rgba(255,71,126,0.15); color: var(--primary); border-color: rgba(255,71,126,0.3); }
+        .cam-ctrl-btn:hover { background:rgba(255,71,126,0.14); color:var(--primary); border-color:rgba(255,71,126,0.3); }
 
         .shutter-btn {
-            width: 80px; height: 80px; border-radius: 50%;
-            background: linear-gradient(135deg, #fff, #e0e0e0);
-            border: 6px solid rgba(255,255,255,0.3);
-            cursor: pointer; transition: all 0.2s;
-            box-shadow: 0 0 0 4px rgba(255,255,255,0.1), 0 8px 25px rgba(0,0,0,0.4);
-            position: relative;
+            width:76px; height:76px; border-radius:50%;
+            background:linear-gradient(135deg,#fff,#e0e0e0);
+            border:6px solid rgba(255,255,255,0.25); cursor:pointer; transition:all 0.2s;
+            box-shadow:0 0 0 4px rgba(255,255,255,0.08),0 8px 22px rgba(0,0,0,0.4);
+            position:relative;
         }
-        .shutter-btn::after {
-            content: ''; position: absolute;
-            inset: 8px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), #ff1f61);
-            transition: all 0.2s;
-        }
-        .shutter-btn:hover { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(255,71,126,0.3), 0 12px 35px rgba(0,0,0,0.5); }
-        .shutter-btn:active { transform: scale(0.9); }
-        .shutter-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .shutter-btn::after { content:''; position:absolute; inset:8px; border-radius:50%; background:linear-gradient(135deg,var(--primary),#ff1f61); transition:all 0.2s; }
+        .shutter-btn:hover { transform:scale(1.06); box-shadow:0 0 0 6px rgba(255,71,126,0.28),0 12px 32px rgba(0,0,0,0.5); }
+        .shutter-btn:active { transform:scale(0.9); }
+        .shutter-btn:disabled { opacity:0.35; cursor:not-allowed; }
 
-        /* ─── RESULT ─── */
-        #final-img {
-            max-width: 320px; width: 100%;
-            object-fit: contain; border-radius: 18px;
-            margin-bottom: 28px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,71,126,0.2);
-            transition: transform 0.3s;
-        }
-        #final-img:hover { transform: scale(1.02) rotate(-0.5deg); }
+        /* ── RESULT ── */
+        #final-img { max-width:300px; width:100%; object-fit:contain; border-radius:16px; margin-bottom:24px; box-shadow:0 28px 70px rgba(0,0,0,0.75),0 0 0 1px rgba(255,71,126,0.18); transition:transform 0.3s; }
+        #final-img:hover { transform:scale(1.02) rotate(-0.5deg); }
+        .result-btns { display:flex; gap:11px; margin-bottom:22px; flex-wrap:wrap; justify-content:center; }
 
-        .result-btns { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; justify-content: center; }
-        .btn-secondary {
-            background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.1);
-            color: white; padding: 16px 36px; font-size: 0.9rem; font-weight: 800;
-            border-radius: 100px; cursor: pointer; transition: all 0.3s; letter-spacing: 1.5px;
-        }
-        .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
-
-        /* ─── SOCIAL ─── */
-        .about-me {
-            margin-top: 20px; padding: 24px 32px 0;
-            border-top: 1px solid rgba(255,255,255,0.07);
-            width: 100%; max-width: 380px;
-        }
-        .about-me p { font-size: 0.65rem; color: rgba(255,255,255,0.3); margin-bottom: 18px; letter-spacing: 3px; font-weight: 800; }
-        .social-icons { display: flex; justify-content: center; gap: 16px; }
+        .about-me { margin-top:18px; padding:22px 28px 0; border-top:1px solid rgba(255,255,255,0.07); width:100%; max-width:360px; }
+        .about-me p { font-size:0.62rem; color:rgba(255,255,255,0.28); margin-bottom:16px; letter-spacing:3px; font-weight:800; }
+        .social-icons { display:flex; justify-content:center; gap:12px; }
         .social-icons a {
-            width: 44px; height: 44px; border-radius: 50%;
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
-            color: rgba(255,255,255,0.6); font-size: 1rem;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.3s; text-decoration: none;
+            width:42px; height:42px; border-radius:50%;
+            background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.07);
+            color:rgba(255,255,255,0.55); font-size:0.95rem;
+            display:flex; align-items:center; justify-content:center;
+            transition:all 0.3s; text-decoration:none;
         }
-        .social-icons a:hover { background: rgba(255,71,126,0.15); border-color: var(--primary); color: var(--primary); transform: translateY(-4px); }
+        .social-icons a:hover { background:rgba(255,71,126,0.14); border-color:var(--primary); color:var(--primary); transform:translateY(-4px); }
 
-        /* ─── CANVAS ─── */
-        canvas { display: none; }
+        /* ── HERO FILM ── */
+        .hero-film { display:flex; gap:10px; margin-bottom:44px; perspective:800px; }
+        .film-frame { width:68px; height:88px; border-radius:6px; overflow:hidden; border:2px solid rgba(255,255,255,0.07); transform:rotateY(var(--ry,0deg)) rotateZ(var(--rz,0deg)); transition:transform 0.4s; flex-shrink:0; }
+        .film-frame:hover { transform:rotateY(0deg) rotateZ(0deg) scale(1.1) !important; }
+        .film-frame img { width:100%; height:100%; object-fit:cover; }
 
-        /* ─── DIVIDER ─── */
-        .divider { width: 60px; height: 2px; background: linear-gradient(90deg, transparent, var(--primary), transparent); margin: 0 auto 32px; }
-
-        /* ─── SCROLL ─── */
-        .scroll-hint { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.2); font-size: 1.2rem; animation: bounce 2s ease-in-out infinite; }
+        .scroll-hint { position:absolute; bottom:26px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,0.18); font-size:1.1rem; animation:bounce 2s ease-in-out infinite; }
         @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-8px)} }
 
-        /* ─── HERO FILM ─── */
-        .hero-film {
-            display: flex; gap: 10px; margin-bottom: 50px;
-            perspective: 800px;
-        }
-        .film-frame {
-            width: 70px; height: 90px; border-radius: 6px; overflow: hidden;
-            border: 2px solid rgba(255,255,255,0.08);
-            transform: rotateY(var(--ry, 0deg)) rotateZ(var(--rz, 0deg));
-            transition: transform 0.4s;
-            flex-shrink: 0;
-        }
-        .film-frame img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); }
-        .film-frame:hover { transform: rotateY(0deg) rotateZ(0deg) scale(1.1); }
+        canvas { display:none; }
 
-        /* ─── STEP NAV ─── */
-        .step-nav { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 560px; margin-bottom: 32px; }
-        .back-btn {
-            background: none; border: 1.5px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4);
-            padding: 10px 20px; border-radius: 100px; cursor: pointer; font-size: 0.8rem;
-            font-weight: 700; letter-spacing: 1px; transition: all 0.3s;
-        }
-        .back-btn:hover { border-color: rgba(255,255,255,0.3); color: white; }
-
-        /* ─── CAMERA INFO BAR ─── */
-        .cam-info-bar {
-            display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
-            font-size: 0.7rem; letter-spacing: 2px; color: rgba(255,255,255,0.3); font-weight: 700;
-        }
-        .cam-info-bar span { display: flex; align-items: center; gap: 6px; }
-        .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: ping 1.5s infinite; }
-
-        /* ─── MOBILE ─── */
-        @media(max-width: 480px) {
-            .hero-film .film-frame { width: 55px; height: 75px; }
-            h1 { font-size: 2.2rem; }
-            .options-grid { gap: 12px; }
+        @media(max-width:480px) {
+            .hero-film .film-frame { width:52px; height:70px; }
+            h1 { font-size:2rem; }
+            .options-grid { gap:10px; }
+            .strip-preview { min-width:76px; max-width:90px; }
+            .grid-preview { max-width:130px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Ambient blobs -->
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
 
-    <!-- ══════════ STEP 1: LANDING ══════════ -->
-    <section class="step-container active" id="step-1">
-        <div class="step-indicator">
-            <div class="step-dot active" id="dot-1"></div>
-            <div class="step-dot" id="dot-2"></div>
-            <div class="step-dot" id="dot-3"></div>
-            <div class="step-dot" id="dot-4"></div>
-            <div class="step-dot" id="dot-5"></div>
+<!-- ══════════ STEP 1: LANDING ══════════ -->
+<section class="step-container active" id="step-1">
+    <div class="step-indicator">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+    </div>
+
+    <div class="badge"><span class="badge-dot"></span> EST. 2026 &middot; BY YUNA</div>
+    <h1>V&#8209;Photo<em>booth</em></h1>
+    <div class="divider"></div>
+
+    <div class="hero-film">
+        <div class="film-frame" style="--ry:-12deg;--rz:-4deg;">
+            <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="">
         </div>
-
-        <div class="badge"><span class="badge-dot"></span> EST. 2026 · BY YUNA</div>
-
-        <h1>V&#8209;Photo<em>booth</em></h1>
-
-        <div class="divider"></div>
-
-        <div class="hero-film">
-            <div class="film-frame" style="--ry:-12deg; --rz:-4deg;">
-                <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="">
-            </div>
-            <div class="film-frame" style="--ry:0deg; --rz:2deg; width:90px; height:110px;">
-                <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(0.5) brightness(0.8);">
-            </div>
-            <div class="film-frame" style="--ry:12deg; --rz:4deg;">
-                <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1) brightness(0.7);">
-            </div>
+        <div class="film-frame" style="--ry:0deg;--rz:2deg;width:88px;height:108px;">
+            <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(0.5) brightness(0.8);">
         </div>
-
-        <p class="desc">Capture your best moments in a vintage-styled virtual photobooth. Pick your layout, choose your filter, and let's shoot!</p>
-
-        <button class="btn-main" onclick="goToStep(2)">
-            <i class="fas fa-camera" style="margin-right:8px;"></i> GET STARTED
-        </button>
-
-        <div style="margin-top: 50px; color: rgba(255,255,255,0.15); font-size: 0.65rem; letter-spacing: 3px;">
-            SCROLL DOWN TO EXPLORE
+        <div class="film-frame" style="--ry:12deg;--rz:4deg;">
+            <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1) brightness(0.7);">
         </div>
-        <div class="scroll-hint"><i class="fas fa-chevron-down"></i></div>
-    </section>
+    </div>
 
-    <!-- ══════════ STEP 2: CUSTOMIZE ══════════ -->
-    <section class="step-container" id="step-2">
-        <div class="step-indicator">
-            <div class="step-dot done"></div>
-            <div class="step-dot active"></div>
-            <div class="step-dot"></div>
-            <div class="step-dot"></div>
-            <div class="step-dot"></div>
+    <p class="desc">Capture your best moments in a vintage-styled virtual photobooth. Pick your layout, choose your filter, and let's shoot!</p>
+    <button class="btn-main" onclick="goToStep(2)"><i class="fas fa-camera" style="margin-right:8px;"></i>GET STARTED</button>
+    <div class="scroll-hint"><i class="fas fa-chevron-down"></i></div>
+</section>
+
+<!-- ══════════ STEP 2: LAYOUT & COLOR ══════════ -->
+<section class="step-container" id="step-2">
+    <div class="step-indicator">
+        <div class="step-dot done"></div>
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+    </div>
+
+    <div class="badge"><span class="badge-dot"></span> STEP 1 OF 3</div>
+    <h1>Layout &amp;<em> Color</em></h1>
+    <p class="desc">Choose your strip layout and frame color. The preview updates live!</p>
+
+    <!-- LAYOUT CARDS -->
+    <div class="options-grid">
+        <div class="card-option selected" onclick="selectLayout('strip', this)">
+            <div class="check-mark"><i class="fas fa-check"></i></div>
+            <img src="https://cdn.nekohime.site/file/Tm2-TSOP.png" alt="Classic Strip">
+            <p>CLASSIC STRIP (1&times;4)</p>
         </div>
-
-        <div class="badge"><span class="badge-dot"></span> STEP 1 OF 3</div>
-        <h1>Pick Your<em> Layout</em></h1>
-        <p class="desc">Choose how your photos will be arranged on the final print.</p>
-
-        <div class="options-grid">
-            <div class="card-option selected" onclick="selectCard('layout', 'strip', this)">
-                <div class="check-mark"><i class="fas fa-check"></i></div>
-                <div class="preview-wrap">
-                    <img src="https://cdn.nekohime.site/file/Tm2-TSOP.png" alt="Classic Strip">
-                </div>
-                <p>CLASSIC STRIP (1×4)</p>
-            </div>
-            <div class="card-option" onclick="selectCard('layout', 'grid', this)">
-                <div class="check-mark"><i class="fas fa-check"></i></div>
-                <div class="preview-wrap">
-                    <img src="https://cdn.nekohime.site/file/vxijEdyv.png" alt="Modern Grid">
-                </div>
-                <p>MODERN GRID (2×2)</p>
-            </div>
+        <div class="card-option" onclick="selectLayout('grid', this)">
+            <div class="check-mark"><i class="fas fa-check"></i></div>
+            <img src="https://cdn.nekohime.site/file/vxijEdyv.png" alt="Modern Grid">
+            <p>MODERN GRID (2&times;2)</p>
         </div>
+    </div>
 
+    <!-- COLOR PICKER -->
+    <div class="color-section">
         <p class="section-label">FRAME COLOR</p>
-        <div class="color-swatches">
-            <div class="swatch-wrap">
-                <div class="swatch swatch-white selected" id="sw-white" onclick="selectSwatch('#ffffff', 'sw-white')"></div>
+        <div class="color-swatches-row" id="swatch-row">
+            <div class="swatch-wrap" onclick="selectSwatch('#ffffff','sw-white')">
+                <div class="swatch selected" id="sw-white" style="background:#ffffff;"></div>
                 <span class="swatch-label">WHITE</span>
             </div>
-            <div class="swatch-wrap">
-                <div class="swatch swatch-black" id="sw-black" onclick="selectSwatch('#121212', 'sw-black')"></div>
+            <div class="swatch-wrap" onclick="selectSwatch('#121212','sw-black')">
+                <div class="swatch" id="sw-black" style="background:#121212;border:2px solid #555;"></div>
                 <span class="swatch-label">BLACK</span>
             </div>
-            <div class="swatch-wrap">
-                <div class="swatch swatch-pink" id="sw-pink" onclick="selectSwatch('#ffd1dc', 'sw-pink')"></div>
-                <span class="swatch-label">PINK</span>
+            <div class="swatch-wrap" onclick="selectSwatch('#ffd1dc','sw-pink')">
+                <div class="swatch" id="sw-pink" style="background:#ffd1dc;"></div>
+                <span class="swatch-label">BLUSH</span>
+            </div>
+            <div class="swatch-wrap" onclick="selectSwatch('#d4f1f4','sw-mint')">
+                <div class="swatch" id="sw-mint" style="background:#d4f1f4;"></div>
+                <span class="swatch-label">MINT</span>
+            </div>
+            <div class="swatch-wrap" onclick="selectSwatch('#fff8dc','sw-cream')">
+                <div class="swatch" id="sw-cream" style="background:#fff8dc;"></div>
+                <span class="swatch-label">CREAM</span>
+            </div>
+            <div class="swatch-wrap" onclick="selectSwatch('#1a1a2e','sw-navy')">
+                <div class="swatch" id="sw-navy" style="background:#1a1a2e;border:2px solid #444;"></div>
+                <span class="swatch-label">NAVY</span>
             </div>
         </div>
 
-        <button class="btn-main" onclick="goToStep(3)">
-            NEXT <i class="fas fa-arrow-right" style="margin-left:8px;"></i>
-        </button>
-    </section>
-
-    <!-- ══════════ STEP 3: FILTERS & RATIO ══════════ -->
-    <section class="step-container" id="step-3">
-        <div class="step-indicator">
-            <div class="step-dot done"></div>
-            <div class="step-dot done"></div>
-            <div class="step-dot active"></div>
-            <div class="step-dot"></div>
-            <div class="step-dot"></div>
+        <div class="custom-color-row">
+            <label>CUSTOM</label>
+            <input type="color" id="custom-color-input" value="#ffffff" oninput="onCustomColor(this.value)">
+            <span id="custom-hex-display">#FFFFFF</span>
         </div>
+    </div>
 
-        <div class="badge"><span class="badge-dot"></span> STEP 2 OF 3</div>
-        <h1>Filters &amp;<em> Ratio</em></h1>
-        <p class="desc">Set your vibe. Each filter changes the whole mood of your strip.</p>
-
-        <p class="section-label" style="margin-bottom:14px;">CAMERA ASPECT RATIO</p>
-        <div class="btn-group-small" id="ratio-group">
-            <button class="pill-btn selected" onclick="selectRatio('4:3', this)">3:4</button>
-            <button class="pill-btn" onclick="selectRatio('3:4', this)">4:3</button>
-            <button class="pill-btn" onclick="selectRatio('9:16', this)">9:16</button>
-            <button class="pill-btn" onclick="selectRatio('16:9', this)">16:9</button>
-        </div>
-
-        <p class="section-label" style="margin-top:8px; margin-bottom:14px;">PHOTO FILTER</p>
-        <div class="options-grid">
-            <div class="card-option selected" onclick="selectCard('filter', 'none', this)">
-                <div class="check-mark"><i class="fas fa-check"></i></div>
-                <div class="filter-preview">
-                    <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="Natural">
-                </div>
-                <p>🌿 NATURAL</p>
+    <!-- LIVE PREVIEW -->
+    <div class="preview-section">
+        <p class="preview-label">LIVE PREVIEW</p>
+        <div class="strip-preview-outer">
+            <div id="live-preview-strip" class="strip-preview" style="background:#ffffff;">
+                <div class="sp-photo"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div>
+                <div class="sp-photo"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(0.4);"></div>
+                <div class="sp-photo"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div>
+                <div class="sp-photo"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div>
+                <div class="sp-brand" id="preview-brand" style="color:#000;">V-Photobooth</div>
             </div>
-            <div class="card-option" onclick="selectCard('filter', 'vintage', this)">
-                <div class="check-mark"><i class="fas fa-check"></i></div>
-                <div class="filter-preview">
-                    <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="filter:sepia(0.6) contrast(1.2);" alt="Vintage">
-                </div>
-                <p>🎞 VINTAGE</p>
-            </div>
-            <div class="card-option" onclick="selectCard('filter', 'bnw', this)">
-                <div class="check-mark"><i class="fas fa-check"></i></div>
-                <div class="filter-preview">
-                    <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="filter:grayscale(1);" alt="B&W">
-                </div>
-                <p>🖤 B &amp; W</p>
-            </div>
-            <div class="card-option" onclick="selectCard('filter', 'sharpen', this)">
-                <div class="check-mark"><i class="fas fa-check"></i></div>
-                <div class="filter-preview">
-                    <img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="filter:contrast(1.4) saturate(1.4);" alt="Vivid">
-                </div>
-                <p>✨ VIVID GLOW</p>
+            <div id="live-preview-grid" class="grid-preview" style="background:#ffffff;display:none;">
+                <div class="gp-photo"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div>
+                <div class="gp-photo"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(0.4);"></div>
+                <div class="gp-photo"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div>
+                <div class="gp-photo"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div>
+                <div class="gp-brand" id="preview-brand-grid" style="color:#000;">V-Photobooth</div>
             </div>
         </div>
+    </div>
 
-        <button class="btn-main" onclick="goToStep(4)">
-            <i class="fas fa-camera" style="margin-right:8px;"></i> GO TO CAMERA
-        </button>
-    </section>
+    <div class="nav-row">
+        <button class="btn-back" onclick="goToStep(1)"><i class="fas fa-arrow-left" style="margin-right:6px;"></i>BACK</button>
+        <button class="btn-main" onclick="goToStep(3)">NEXT<i class="fas fa-arrow-right" style="margin-left:8px;"></i></button>
+    </div>
+</section>
 
-    <!-- ══════════ STEP 4: CAMERA ══════════ -->
-    <section class="step-container" id="step-4">
-        <div class="step-indicator">
-            <div class="step-dot done"></div>
-            <div class="step-dot done"></div>
-            <div class="step-dot done"></div>
-            <div class="step-dot active"></div>
-            <div class="step-dot"></div>
+<!-- ══════════ STEP 3: FILTERS & RATIO ══════════ -->
+<section class="step-container" id="step-3">
+    <div class="step-indicator">
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+    </div>
+
+    <div class="badge"><span class="badge-dot"></span> STEP 2 OF 3</div>
+    <h1>Filters &amp;<em> Ratio</em></h1>
+    <p class="desc">Set your vibe. Each filter changes the whole mood of your strip.</p>
+
+    <p class="section-label">CAMERA ASPECT RATIO</p>
+    <div class="btn-group-small" id="ratio-group">
+        <button class="pill-btn selected" onclick="selectRatio('4:3',this)">3:4</button>
+        <button class="pill-btn" onclick="selectRatio('3:4',this)">4:3</button>
+        <button class="pill-btn" onclick="selectRatio('9:16',this)">9:16</button>
+        <button class="pill-btn" onclick="selectRatio('16:9',this)">16:9</button>
+    </div>
+
+    <p class="section-label" style="margin-top:6px;">PHOTO FILTER</p>
+    <div class="options-grid">
+        <div class="card-option selected" onclick="selectCard('filter','none',this)">
+            <div class="check-mark"><i class="fas fa-check"></i></div>
+            <div class="filter-preview"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="Natural"></div>
+            <p>NATURAL</p>
         </div>
-
-        <div class="cam-header">
-            <div class="badge"><span class="badge-dot"></span> STEP 3 OF 3</div>
-            <h1>Strike a<em> Pose!</em></h1>
+        <div class="card-option" onclick="selectCard('filter','vintage',this)">
+            <div class="check-mark"><i class="fas fa-check"></i></div>
+            <div class="filter-preview"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="filter:sepia(0.6) contrast(1.2);" alt="Vintage"></div>
+            <p>VINTAGE</p>
         </div>
-
-        <div class="cam-info-bar">
-            <span><span class="live-dot"></span> LIVE</span>
-            <span id="cam-ratio-badge">4:3</span>
-            <span id="cam-filter-badge">NATURAL</span>
+        <div class="card-option" onclick="selectCard('filter','bnw',this)">
+            <div class="check-mark"><i class="fas fa-check"></i></div>
+            <div class="filter-preview"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="filter:grayscale(1);" alt="B&W"></div>
+            <p>B &amp; W</p>
         </div>
-
-        <div class="camera-outer">
-            <div class="camera-wrapper" id="cam-wrapper">
-                <video id="video" autoplay playsinline></video>
-                <div id="flash-local"></div>
-                <div id="countdown" style="display:none;">3</div>
-            </div>
+        <div class="card-option" onclick="selectCard('filter','sharpen',this)">
+            <div class="check-mark"><i class="fas fa-check"></i></div>
+            <div class="filter-preview"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="filter:contrast(1.4) saturate(1.4);" alt="Vivid"></div>
+            <p>VIVID GLOW</p>
         </div>
+    </div>
 
-        <div class="shot-counter">
-            <div class="shot-pip" id="pip-0"></div>
-            <div class="shot-pip" id="pip-1"></div>
-            <div class="shot-pip" id="pip-2"></div>
-            <div class="shot-pip" id="pip-3"></div>
+    <div class="nav-row">
+        <button class="btn-back" onclick="goToStep(2)"><i class="fas fa-arrow-left" style="margin-right:6px;"></i>BACK</button>
+        <button class="btn-main" onclick="goToStep(4)"><i class="fas fa-camera" style="margin-right:8px;"></i>CAMERA</button>
+    </div>
+</section>
+
+<!-- ══════════ STEP 4: CAMERA ══════════ -->
+<section class="step-container" id="step-4">
+    <div class="step-indicator">
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+    </div>
+
+    <div class="badge"><span class="badge-dot"></span> STEP 3 OF 3</div>
+    <h1>Strike a<em> Pose!</em></h1>
+
+    <div class="cam-info-bar">
+        <span><span class="live-dot"></span>&nbsp;LIVE</span>
+        <span id="cam-ratio-badge">4:3</span>
+        <span id="cam-filter-badge">NATURAL</span>
+    </div>
+
+    <div class="camera-outer">
+        <div class="camera-wrapper" id="cam-wrapper">
+            <video id="video" autoplay playsinline></video>
+            <div id="flash-local"></div>
+            <div id="countdown" style="display:none;">3</div>
         </div>
+    </div>
 
-        <p id="cam-info" style="font-size:0.7rem; letter-spacing:3px; margin-bottom:20px; color:rgba(255,255,255,0.3);">PRESS THE BUTTON TO START</p>
+    <div class="shot-counter">
+        <div class="shot-pip" id="pip-0"></div>
+        <div class="shot-pip" id="pip-1"></div>
+        <div class="shot-pip" id="pip-2"></div>
+        <div class="shot-pip" id="pip-3"></div>
+    </div>
 
-        <div class="cam-controls">
-            <button class="cam-ctrl-btn" title="Mirror" onclick="toggleMirror()"><i class="fas fa-left-right"></i></button>
-            <button class="shutter-btn" id="shutter-btn" onclick="startShoot()"></button>
-            <button class="cam-ctrl-btn" title="Timer" onclick="toggleTimer()"><i class="fas fa-stopwatch"></i></button>
+    <p id="cam-info" style="font-size:0.68rem;letter-spacing:3px;margin-bottom:18px;color:rgba(255,255,255,0.28);">PRESS THE BUTTON TO START</p>
+
+    <div class="cam-controls">
+        <button class="cam-ctrl-btn" title="Mirror" onclick="toggleMirror()"><i class="fas fa-left-right"></i></button>
+        <button class="shutter-btn" id="shutter-btn" onclick="startShoot()"></button>
+        <button class="cam-ctrl-btn" id="timer-btn" title="Timer" onclick="toggleTimer()"><i class="fas fa-stopwatch"></i></button>
+    </div>
+
+    <div class="nav-row" style="margin-top:22px;">
+        <button class="btn-back" onclick="backFromCamera()"><i class="fas fa-arrow-left" style="margin-right:6px;"></i>BACK</button>
+    </div>
+</section>
+
+<!-- ══════════ STEP 5: RESULT ══════════ -->
+<section class="step-container" id="step-5">
+    <div class="step-indicator">
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot active"></div>
+    </div>
+
+    <div class="badge"><span class="badge-dot"></span> YOUR PHOTOS ARE READY</div>
+    <h1>Look at<em> You!</em></h1>
+    <p class="desc">Gorgeous! Save your strip and share it with the world.</p>
+
+    <img id="final-img" alt="Result">
+
+    <div class="result-btns">
+        <button class="btn-main" onclick="downloadImage()"><i class="fas fa-download" style="margin-right:8px;"></i>SAVE</button>
+        <button class="btn-secondary" onclick="goToStep(4)"><i class="fas fa-rotate-left" style="margin-right:8px;"></i>RESHOOT</button>
+        <button class="btn-secondary" onclick="location.reload()">START OVER</button>
+    </div>
+
+    <div class="about-me">
+        <p>KEEP IN TOUCH WITH YUNA</p>
+        <div class="social-icons">
+            <a href="https://www.instagram.com/hii.yvnaa_" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://whatsapp.com/channel/0029Vb7adkSAojYxeMA7oU3v" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <a href="mailto:hiiyunaaa@gmail.com" target="_blank" title="Email"><i class="far fa-envelope"></i></a>
+            <a href="https://saweria.co/itsyunaa" target="_blank" title="Support Yuna"><i class="far fa-heart"></i></a>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- ══════════ STEP 5: RESULT ══════════ -->
-    <section class="step-container" id="step-5">
-        <div class="step-indicator">
-            <div class="step-dot done"></div>
-            <div class="step-dot done"></div>
-            <div class="step-dot done"></div>
-            <div class="step-dot done"></div>
-            <div class="step-dot active"></div>
-        </div>
+<canvas id="c-temp"></canvas>
+<canvas id="c-final"></canvas>
 
-        <div class="badge"><span class="badge-dot"></span> YOUR PHOTOS ARE READY</div>
-        <h1>Tad<em>aaa!</em> 🎉</h1>
-        <p class="desc">Looking gorgeous! Save your strip and share it with the world 💕</p>
+<script>
+/* ─────────────────────────────────────────────
+   STATE
+───────────────────────────────────────────── */
+let state = {
+    layout: 'strip',
+    color: '#ffffff',
+    filter: 'none',
+    ratio: '4:3',
+    photos: [],
+    mirrored: true,
+    timerSec: 3,
+    shooting: false
+};
 
-        <img id="final-img" alt="Result">
+const video      = document.getElementById('video');
+const shutterBtn = document.getElementById('shutter-btn');
+const countdownEl= document.getElementById('countdown');
+const flashLocal = document.getElementById('flash-local');
 
-        <div class="result-btns">
-            <button class="btn-main" onclick="downloadImage()">
-                <i class="fas fa-download" style="margin-right:8px;"></i> SAVE
-            </button>
-            <button class="btn-secondary" onclick="location.reload()">
-                <i class="fas fa-rotate-left" style="margin-right:8px;"></i> RETRY
-            </button>
-        </div>
+/* ─────────────────────────────────────────────
+   NAVIGATION
+───────────────────────────────────────────── */
+function goToStep(s) {
+    document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+    document.getElementById(`step-${s}`).classList.add('active');
+    window.scrollTo({ top:0, behavior:'smooth' });
 
-        <div class="about-me">
-            <p>KEEP IN TOUCH WITH YUNA</p>
-            <div class="social-icons">
-                <a href="https://www.instagram.com/hii.yvnaa_" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://whatsapp.com/channel/0029Vb7adkSAojYxeMA7oU3v" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                <a href="mailto:hiiyunaaa@gmail.com" target="_blank" title="Email"><i class="far fa-envelope"></i></a>
-                <a href="https://saweria.co/itsyunaa" target="_blank" title="Support Yuna"><i class="far fa-heart"></i></a>
-            </div>
-        </div>
-    </section>
+    if (s === 4) {
+        const cssRatio = state.ratio.replace(':', ' / ');
+        document.getElementById('cam-wrapper').style.aspectRatio = cssRatio;
+        const filterNames = { none:'NATURAL', vintage:'VINTAGE', bnw:'B & W', sharpen:'VIVID GLOW' };
+        document.getElementById('cam-ratio-badge').textContent = state.ratio;
+        document.getElementById('cam-filter-badge').textContent = filterNames[state.filter] || 'NATURAL';
+        initCamera();
+    }
+}
 
-    <canvas id="c-temp"></canvas>
-    <canvas id="c-final"></canvas>
+function backFromCamera() {
+    // stop camera stream before going back
+    if (video.srcObject) {
+        video.srcObject.getTracks().forEach(t => t.stop());
+        video.srcObject = null;
+    }
+    goToStep(3);
+}
 
-    <script>
-        let state = {
-            layout: 'strip',
-            color: '#ffffff',
-            filter: 'none',
-            ratio: '4:3',
-            photos: [],
-            mirrored: true,
-            timerSec: 3
+/* ─────────────────────────────────────────────
+   LAYOUT SELECT
+───────────────────────────────────────────── */
+function selectLayout(val, el) {
+    state.layout = val;
+    el.parentElement.querySelectorAll('.card-option').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    updatePreview();
+}
+
+/* ─────────────────────────────────────────────
+   COLOR SELECT
+───────────────────────────────────────────── */
+function selectSwatch(color, id) {
+    state.color = color;
+    document.querySelectorAll('#swatch-row .swatch').forEach(s => s.classList.remove('selected'));
+    document.getElementById(id).classList.add('selected');
+    // sync custom color picker
+    document.getElementById('custom-color-input').value = color;
+    document.getElementById('custom-hex-display').textContent = color.toUpperCase();
+    updatePreview();
+}
+
+function onCustomColor(val) {
+    state.color = val;
+    document.querySelectorAll('#swatch-row .swatch').forEach(s => s.classList.remove('selected'));
+    document.getElementById('custom-hex-display').textContent = val.toUpperCase();
+    updatePreview();
+}
+
+/* ─────────────────────────────────────────────
+   LIVE PREVIEW
+───────────────────────────────────────────── */
+function updatePreview() {
+    const stripEl = document.getElementById('live-preview-strip');
+    const gridEl  = document.getElementById('live-preview-grid');
+    const brandEl = document.getElementById('preview-brand');
+    const brandGEl= document.getElementById('preview-brand-grid');
+
+    // show/hide
+    if (state.layout === 'strip') {
+        stripEl.style.display = 'flex';
+        gridEl.style.display  = 'none';
+    } else {
+        stripEl.style.display = 'none';
+        gridEl.style.display  = 'grid';
+    }
+
+    // color
+    stripEl.style.background = state.color;
+    gridEl.style.background  = state.color;
+
+    // brand text color (contrast)
+    const textCol = getContrastColor(state.color);
+    brandEl.style.color  = textCol;
+    brandGEl.style.color = textCol;
+}
+
+function getContrastColor(hex) {
+    // parse hex to rgb
+    let r=255,g=255,b=255;
+    const h = hex.replace('#','');
+    if (h.length===6) {
+        r=parseInt(h.slice(0,2),16);
+        g=parseInt(h.slice(2,4),16);
+        b=parseInt(h.slice(4,6),16);
+    }
+    const luminance = (0.299*r + 0.587*g + 0.114*b)/255;
+    return luminance > 0.55 ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.85)';
+}
+
+/* ─────────────────────────────────────────────
+   GENERIC CARD / RATIO SELECT
+───────────────────────────────────────────── */
+function selectCard(type, val, el) {
+    state[type] = val;
+    el.parentElement.querySelectorAll('.card-option').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    if (type === 'filter') applyFilter();
+}
+
+function selectRatio(val, el) {
+    state.ratio = val;
+    document.querySelectorAll('#ratio-group .pill-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+}
+
+/* ─────────────────────────────────────────────
+   FILTER
+───────────────────────────────────────────── */
+function applyFilter() {
+    const filters = {
+        none:    'none',
+        vintage: 'sepia(0.6) contrast(1.2) saturate(0.8)',
+        bnw:     'grayscale(1)',
+        sharpen: 'contrast(1.3) saturate(1.4) brightness(1.1)'
+    };
+    video.style.filter = filters[state.filter] || 'none';
+}
+
+/* ─────────────────────────────────────────────
+   CAMERA
+───────────────────────────────────────────── */
+async function initCamera() {
+    try {
+        if (video.srcObject) return; // already running
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: { width:{ideal:1280}, height:{ideal:720}, facingMode:'user' }
+        });
+        video.srcObject = stream;
+        video.style.transform = 'scaleX(-1)';
+        applyFilter();
+        resetPips();
+        shutterBtn.disabled = false;
+        state.shooting = false;
+        document.getElementById('cam-info').textContent = 'PRESS THE BUTTON TO START';
+    } catch(e) {
+        alert('Camera access is required. Please allow it and try again.');
+    }
+}
+
+function toggleMirror() {
+    state.mirrored = !state.mirrored;
+    video.style.transform = state.mirrored ? 'scaleX(-1)' : 'scaleX(1)';
+}
+
+function toggleTimer() {
+    const opts = [3,5,10];
+    const idx = opts.indexOf(state.timerSec);
+    state.timerSec = opts[(idx+1) % opts.length];
+    document.getElementById('timer-btn').innerHTML =
+        `<i class="fas fa-stopwatch"></i><span style="font-size:0.58rem;margin-left:2px;">${state.timerSec}s</span>`;
+}
+
+function resetPips() {
+    for(let i=0;i<4;i++) document.getElementById(`pip-${i}`).classList.remove('done');
+}
+
+/* ─────────────────────────────────────────────
+   SHOOT
+───────────────────────────────────────────── */
+async function startShoot() {
+    if (state.shooting) return;
+    state.shooting = true;
+    shutterBtn.disabled = true;
+    state.photos = [];
+    resetPips();
+
+    const [rW, rH] = state.ratio.split(':').map(Number);
+    const pw = 800, ph = Math.round((pw * rH) / rW);
+
+    const tempC = document.getElementById('c-temp');
+    const tCtx  = tempC.getContext('2d');
+    tempC.width = pw; tempC.height = ph;
+
+    for (let i=0; i<4; i++) {
+        document.getElementById('cam-info').textContent = `PHOTO ${i+1} OF 4 — GET READY!`;
+
+        // countdown
+        countdownEl.style.display = 'block';
+        for (let c=state.timerSec; c>0; c--) {
+            countdownEl.innerText = c;
+            countdownEl.style.animation = 'none';
+            void countdownEl.offsetWidth;
+            countdownEl.style.animation = 'countPop 0.3s cubic-bezier(0.34,1.56,0.64,1)';
+            await sleep(800);
+        }
+        countdownEl.style.display = 'none';
+
+        // flash
+        flashLocal.classList.add('flash-active');
+        setTimeout(() => flashLocal.classList.remove('flash-active'), 450);
+
+        // capture frame
+        const vW = video.videoWidth, vH = video.videoHeight;
+        const vR = vW/vH, tR = pw/ph;
+        let sW,sH,sX,sY;
+        if (vR > tR) { sW=vH*tR; sX=(vW-sW)/2; sY=0; sH=vH; }
+        else         { sH=vW/tR; sY=(vH-sH)/2; sX=0; sW=vW; }
+
+        tCtx.save();
+        tCtx.filter = video.style.filter || 'none';
+        if (state.mirrored) { tCtx.translate(pw,0); tCtx.scale(-1,1); }
+        tCtx.drawImage(video, sX,sY,sW,sH, 0,0,pw,ph);
+        tCtx.restore();
+
+        state.photos.push(tempC.toDataURL('image/jpeg',0.95));
+        document.getElementById(`pip-${i}`).classList.add('done');
+        await sleep(500);
+    }
+
+    document.getElementById('cam-info').textContent = 'COMPOSING YOUR STRIP...';
+    renderFinal(pw, ph);
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* ─────────────────────────────────────────────
+   RENDER FINAL
+───────────────────────────────────────────── */
+function renderFinal(pw, ph) {
+    const canvas = document.getElementById('c-final');
+    const ctx    = canvas.getContext('2d');
+    const pad=50, bottom=240;
+
+    if (state.layout==='strip') {
+        canvas.width  = pw + pad*2;
+        canvas.height = ph*4 + pad*5 + bottom;
+    } else {
+        canvas.width  = pw*2 + pad*3;
+        canvas.height = ph*2 + pad*3 + bottom;
+    }
+
+    // background
+    ctx.fillStyle = state.color;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    // subtle grain on light frames
+    if (state.color !== '#121212' && state.color !== '#1a1a2e') {
+        ctx.fillStyle = 'rgba(0,0,0,0.018)';
+        for(let x=0;x<canvas.width;x+=3){
+            for(let y=0;y<canvas.height;y+=3){
+                if(Math.random()>0.5) ctx.fillRect(x,y,1,1);
+            }
+        }
+    }
+
+    let loaded = 0;
+    state.photos.forEach((src,i) => {
+        const img = new Image(); img.src = src;
+        let x,y;
+        if (state.layout==='strip') {
+            x=pad; y=pad + i*(ph+pad);
+        } else {
+            x=pad + (i%2)*(pw+pad);
+            y=pad + Math.floor(i/2)*(ph+pad);
+        }
+        img.onload = () => {
+            // draw with rounded corners
+            roundRect(ctx, x, y, pw, ph, 18);
+            ctx.save(); ctx.clip();
+            ctx.drawImage(img, x, y, pw, ph);
+            ctx.restore();
+            loaded++;
+            if (loaded===4) addWatermark(canvas, ctx);
         };
+    });
+}
 
-        const video = document.getElementById('video');
-        const shutterBtn = document.getElementById('shutter-btn');
-        const countdownEl = document.getElementById('countdown');
-        const flashLocal = document.getElementById('flash-local');
+function roundRect(ctx,x,y,w,h,r) {
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+    ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+    ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
+    ctx.closePath();
+}
 
-        // ── NAVIGATION ──────────────────────────────────────────────
-        function goToStep(s) {
-            document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
-            document.getElementById(`step-${s}`).classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+function addWatermark(canvas, ctx) {
+    const now     = new Date();
+    const isDark  = isDarkColor(state.color);
+    const textCol = isDark ? 'rgba(255,255,255,0.82)' : 'rgba(0,0,0,0.72)';
+    const accent  = isDark ? '#ff7aaa' : '#c4224f';
 
-            if (s === 4) {
-                const cssRatio = state.ratio.replace(':', ' / ');
-                document.getElementById('cam-wrapper').style.aspectRatio = cssRatio;
-                document.getElementById('cam-ratio-badge').textContent = state.ratio;
-                const filterNames = { none:'NATURAL', vintage:'VINTAGE', bnw:'B & W', sharpen:'VIVID GLOW' };
-                document.getElementById('cam-filter-badge').textContent = filterNames[state.filter] || 'NATURAL';
-                initCamera();
-            }
-        }
+    ctx.textAlign = 'center';
 
-        // ── CARD SELECTION ──────────────────────────────────────────
-        function selectCard(type, val, el) {
-            state[type] = val;
-            const siblings = el.parentElement.querySelectorAll('.card-option');
-            siblings.forEach(s => s.classList.remove('selected'));
-            el.classList.add('selected');
-            if (type === 'filter') applyFilter();
-        }
+    // decorative top line
+    const lw = canvas.width * 0.22;
+    const ly = canvas.height - 190;
+    ctx.strokeStyle = accent; ctx.globalAlpha=0.28; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(canvas.width/2-lw,ly); ctx.lineTo(canvas.width/2+lw,ly); ctx.stroke();
+    ctx.globalAlpha=1;
 
-        // ── COLOR SWATCHES ──────────────────────────────────────────
-        function selectSwatch(color, id) {
-            state.color = color;
-            document.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
-            document.getElementById(id).classList.add('selected');
-        }
+    // brand
+    ctx.font = `italic bold ${Math.round(canvas.width*0.075)}px 'Playfair Display',serif`;
+    ctx.fillStyle = accent;
+    ctx.fillText('V-Photobooth', canvas.width/2, canvas.height-125);
 
-        // ── RATIO ────────────────────────────────────────────────────
-        function selectRatio(val, el) {
-            state.ratio = val;
-            document.querySelectorAll('#ratio-group .pill-btn').forEach(b => b.classList.remove('selected'));
-            el.classList.add('selected');
-        }
+    // bottom line
+    ctx.strokeStyle = accent; ctx.globalAlpha=0.18;
+    ctx.beginPath(); ctx.moveTo(canvas.width/2-lw,canvas.height-100); ctx.lineTo(canvas.width/2+lw,canvas.height-100); ctx.stroke();
+    ctx.globalAlpha=1;
 
-        // ── FILTER ───────────────────────────────────────────────────
-        function applyFilter() {
-            const filters = {
-                none: 'none',
-                vintage: 'sepia(0.6) contrast(1.2) saturate(0.8)',
-                bnw: 'grayscale(1)',
-                sharpen: 'contrast(1.3) saturate(1.4) brightness(1.1)'
-            };
-            video.style.filter = filters[state.filter] || 'none';
-        }
+    // date & time
+    const day   = now.getDate();
+    const month = now.toLocaleDateString('en-US',{month:'long'}).toUpperCase();
+    const year  = now.getFullYear();
+    const time  = now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}).replace(':','.');
+    ctx.font = `600 ${Math.round(canvas.width*0.025)}px 'Space Mono',monospace`;
+    ctx.fillStyle = textCol; ctx.globalAlpha = 0.6;
+    ctx.fillText(`${day} ${month} ${year}  \u2022  ${time}  \u2022  BY YUNA`, canvas.width/2, canvas.height-60);
+    ctx.globalAlpha=1;
 
-        // ── MIRROR TOGGLE ─────────────────────────────────────────────
-        function toggleMirror() {
-            state.mirrored = !state.mirrored;
-            video.style.transform = state.mirrored ? 'scaleX(-1)' : 'scaleX(1)';
-        }
+    // done
+    document.getElementById('final-img').src = canvas.toDataURL('image/jpeg',0.95);
+    goToStep(5);
+    launchConfetti();
+}
 
-        // ── TIMER TOGGLE ──────────────────────────────────────────────
-        function toggleTimer() {
-            const opts = [3, 5, 10];
-            const idx = opts.indexOf(state.timerSec);
-            state.timerSec = opts[(idx + 1) % opts.length];
-            const btn = document.querySelector('.cam-ctrl-btn[title="Timer"]');
-            btn.innerHTML = `<i class="fas fa-stopwatch"></i><span style="font-size:0.6rem;margin-left:2px;">${state.timerSec}s</span>`;
-        }
+function isDarkColor(hex) {
+    const h = hex.replace('#','');
+    if(h.length<6) return false;
+    const r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);
+    return (0.299*r+0.587*g+0.114*b)/255 < 0.45;
+}
 
-        // ── CAMERA INIT ───────────────────────────────────────────────
-        async function initCamera() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: "user" }
-                });
-                video.srcObject = stream;
-                video.style.transform = 'scaleX(-1)';
-                applyFilter();
-            } catch (e) {
-                alert("Hey, allow camera access first :p");
-            }
-        }
+/* ─────────────────────────────────────────────
+   CONFETTI — no external emoji shapes
+───────────────────────────────────────────── */
+function launchConfetti() {
+    const colors = ['#ff477e','#ff9abc','#ffffff','#ffd1dc','#ff1f61','#ffb3cb'];
+    // burst 1
+    setTimeout(() => confetti({
+        particleCount: 90,
+        spread: 75,
+        origin: { y:0.55 },
+        colors,
+        shapes: ['circle','square'],
+        scalar: 1.1
+    }), 250);
+    // burst 2 — sides
+    setTimeout(() => {
+        confetti({ particleCount:45, angle:60,  spread:55, origin:{x:0,y:0.6}, colors, shapes:['circle','square'] });
+        confetti({ particleCount:45, angle:120, spread:55, origin:{x:1,y:0.6}, colors, shapes:['circle','square'] });
+    }, 500);
+    // burst 3 — slow drift
+    setTimeout(() => confetti({
+        particleCount: 40,
+        spread: 100,
+        origin: { y:0.35 },
+        gravity: 0.5,
+        colors,
+        shapes: ['circle'],
+        scalar: 0.8
+    }), 900);
+}
 
-        // ── SHOOT ─────────────────────────────────────────────────────
-        async function startShoot() {
-            shutterBtn.disabled = true;
-            state.photos = [];
-            document.getElementById('cam-info').textContent = 'GET READY…';
+/* ─────────────────────────────────────────────
+   DOWNLOAD
+───────────────────────────────────────────── */
+function downloadImage() {
+    const link = document.createElement('a');
+    link.download = `v-photobooth-${Date.now()}.jpg`;
+    link.href = document.getElementById('c-final').toDataURL('image/jpeg',0.95);
+    link.click();
+}
 
-            // Reset pips
-            for (let i = 0; i < 4; i++) document.getElementById(`pip-${i}`).classList.remove('done');
-
-            const [ratioW, ratioH] = state.ratio.split(':').map(Number);
-            const w = 800;
-            const h = Math.round((w * ratioH) / ratioW);
-
-            const tempC = document.getElementById('c-temp');
-            const tCtx = tempC.getContext('2d');
-            tempC.width = w;
-            tempC.height = h;
-
-            for (let i = 0; i < 4; i++) {
-                document.getElementById('cam-info').textContent = `PHOTO ${i + 1} OF 4`;
-
-                // Countdown
-                countdownEl.style.display = 'block';
-                for (let c = state.timerSec; c > 0; c--) {
-                    countdownEl.innerText = c;
-                    countdownEl.style.animation = 'none';
-                    void countdownEl.offsetWidth; // reflow
-                    countdownEl.style.animation = 'countPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                    await new Promise(r => setTimeout(r, 800));
-                }
-                countdownEl.style.display = 'none';
-
-                // Flash
-                flashLocal.classList.add('flash-active');
-                setTimeout(() => flashLocal.classList.remove('flash-active'), 450);
-
-                // Capture
-                const vW = video.videoWidth;
-                const vH = video.videoHeight;
-                const vRatio = vW / vH;
-                const tRatio = w / h;
-
-                let sW, sH, sX, sY;
-                if (vRatio > tRatio) {
-                    sW = vH * tRatio; sX = (vW - sW) / 2; sY = 0; sH = vH;
-                } else {
-                    sH = vW / tRatio; sY = (vH - sH) / 2; sX = 0; sW = vW;
-                }
-
-                tCtx.filter = video.style.filter || 'none';
-                tCtx.save();
-                if (state.mirrored) { tCtx.translate(w, 0); tCtx.scale(-1, 1); }
-                tCtx.drawImage(video, sX, sY, sW, sH, 0, 0, w, h);
-                tCtx.restore();
-
-                state.photos.push(tempC.toDataURL('image/jpeg', 0.95));
-                document.getElementById(`pip-${i}`).classList.add('done');
-
-                await new Promise(r => setTimeout(r, 600));
-            }
-
-            document.getElementById('cam-info').textContent = 'COMPOSING YOUR STRIP…';
-            renderFinal(w, h);
-        }
-
-        // ── RENDER FINAL ──────────────────────────────────────────────
-        function renderFinal(pw, ph) {
-            const canvas = document.getElementById('c-final');
-            const ctx = canvas.getContext('2d');
-            const pad = 50, bottom = 230;
-
-            if (state.layout === 'strip') {
-                canvas.width = pw + pad * 2;
-                canvas.height = ph * 4 + pad * 5 + bottom;
-            } else {
-                canvas.width = pw * 2 + pad * 3;
-                canvas.height = ph * 2 + pad * 3 + bottom;
-            }
-
-            // Background
-            ctx.fillStyle = state.color;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Subtle texture dots on light frames
-            if (state.color !== '#121212') {
-                ctx.fillStyle = 'rgba(0,0,0,0.025)';
-                for (let x = 0; x < canvas.width; x += 4) {
-                    for (let y = 0; y < canvas.height; y += 4) {
-                        if (Math.random() > 0.5) ctx.fillRect(x, y, 1, 1);
-                    }
-                }
-            }
-
-            let loaded = 0;
-            state.photos.forEach((src, i) => {
-                const img = new Image();
-                img.src = src;
-                let x, y;
-                if (state.layout === 'strip') {
-                    x = pad; y = pad + i * (ph + pad);
-                } else {
-                    x = pad + (i % 2) * (pw + pad);
-                    y = pad + Math.floor(i / 2) * (ph + pad);
-                }
-                img.onload = () => {
-                    // Rounded photo corners
-                    ctx.save();
-                    const r = 16;
-                    ctx.beginPath();
-                    ctx.moveTo(x + r, y);
-                    ctx.lineTo(x + pw - r, y);
-                    ctx.quadraticCurveTo(x + pw, y, x + pw, y + r);
-                    ctx.lineTo(x + pw, y + ph - r);
-                    ctx.quadraticCurveTo(x + pw, y + ph, x + pw - r, y + ph);
-                    ctx.lineTo(x + r, y + ph);
-                    ctx.quadraticCurveTo(x, y + ph, x, y + ph - r);
-                    ctx.lineTo(x, y + r);
-                    ctx.quadraticCurveTo(x, y, x + r, y);
-                    ctx.closePath();
-                    ctx.clip();
-                    ctx.drawImage(img, x, y, pw, ph);
-                    ctx.restore();
-                    loaded++;
-                    if (loaded === 4) finish();
-                };
-            });
-
-            function finish() {
-                const now = new Date();
-                const textColor = state.color === '#121212' ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.75)';
-                const accentColor = state.color === '#121212' ? '#ff6b9d' : '#d63a6a';
-
-                ctx.textAlign = 'center';
-
-                // Brand name
-                ctx.font = "italic bold 68px 'Playfair Display', serif";
-                ctx.fillStyle = accentColor;
-                ctx.fillText("V-Photobooth", canvas.width / 2, canvas.height - 130);
-
-                // Decorative line
-                const lw = 180;
-                ctx.strokeStyle = accentColor;
-                ctx.globalAlpha = 0.3;
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(canvas.width / 2 - lw, canvas.height - 105);
-                ctx.lineTo(canvas.width / 2 + lw, canvas.height - 105);
-                ctx.stroke();
-                ctx.globalAlpha = 1;
-
-                // Date & time
-                const day = now.getDate();
-                const month = now.toLocaleDateString('en-US', { month: 'long' }).toUpperCase();
-                const year = now.getFullYear();
-                const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).replace(':', '.');
-
-                ctx.font = "600 22px 'Space Mono', monospace";
-                ctx.fillStyle = textColor;
-                ctx.globalAlpha = 0.65;
-                ctx.fillText(`${day} ${month} ${year}  •  ${timeStr}  •  BY YUNA`, canvas.width / 2, canvas.height - 65);
-                ctx.globalAlpha = 1;
-
-                document.getElementById('final-img').src = canvas.toDataURL('image/jpeg', 0.95);
-                goToStep(5);
-                setTimeout(() => {
-                    confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 }, colors: ['#ff477e', '#ff9abc', '#fff', '#ffd1dc'] });
-                }, 300);
-            }
-        }
-
-        // ── DOWNLOAD ──────────────────────────────────────────────────
-        function downloadImage() {
-            const link = document.createElement('a');
-            link.download = `v-photobooth-${Date.now()}.jpg`;
-            link.href = document.getElementById('c-final').toDataURL('image/jpeg', 0.95);
-            link.click();
-        }
-    </script>
+/* ─────────────────────────────────────────────
+   INIT PREVIEW
+───────────────────────────────────────────── */
+updatePreview();
+</script>
 </body>
 </html>
