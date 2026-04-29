@@ -225,8 +225,59 @@
         .shutter:hover{transform:scale(1.06);box-shadow:0 0 0 6px rgba(255,71,126,.26),0 12px 30px rgba(0,0,0,.5);}
         .shutter:active{transform:scale(.9);}
         .shutter:disabled{opacity:.34;cursor:not-allowed;transform:none;}
-        #fimg{max-width:280px;width:100%;object-fit:contain;border-radius:14px;margin-bottom:20px;box-shadow:0 26px 65px rgba(0,0,0,.74),0 0 0 1px rgba(255,71,126,.16);transition:transform .3s;display:block;}
-        #fimg:hover{transform:scale(1.02) rotate(-.5deg);}
+        .result-wrap{position:relative;display:inline-block;max-width:280px;width:100%;margin-bottom:20px;}
+        .result-wrap img{width:100%;object-fit:contain;border-radius:14px;box-shadow:0 26px 65px rgba(0,0,0,.74),0 0 0 1px rgba(255,71,126,.16);transition:transform .3s;display:block;}
+        .result-wrap:hover img{transform:scale(1.02) rotate(-.5deg);}
+        .sticker-overlay{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;}
+        .placed-sticker{position:absolute;pointer-events:auto;cursor:grab;user-select:none;-webkit-user-select:none;transition:filter .2s;animation:stickerPop .35s cubic-bezier(.34,1.56,.64,1);}
+        .placed-sticker:active{cursor:grabbing;}
+        .placed-sticker:hover{filter:drop-shadow(0 0 8px rgba(255,71,126,.6));}
+        .placed-sticker.dragging{opacity:.85;filter:drop-shadow(0 0 12px rgba(255,71,126,.8));cursor:grabbing;}
+        .placed-sticker img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;}
+        .sticker-delete{position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;background:var(--p);color:#fff;font-size:.55rem;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:all .2s;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.5);}
+        .placed-sticker:hover .sticker-delete,.placed-sticker.active .sticker-delete{opacity:1;}
+        .sticker-delete:hover{background:#e0105a;transform:scale(1.15);}
+        .sticker-resize{position:absolute;bottom:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#fff;border:2.5px solid var(--p);cursor:nwse-resize;opacity:0;transition:all .2s;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.5);}
+        .placed-sticker:hover .sticker-resize,.placed-sticker.active .sticker-resize{opacity:1;}
+        .sticker-resize:hover{transform:scale(1.2);background:var(--p);}
+        @keyframes stickerPop{0%{transform:scale(0) rotate(-15deg);opacity:0}70%{transform:scale(1.12) rotate(3deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+        .sticker-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
+        .sticker-backdrop.show{opacity:1;pointer-events:auto;}
+        .sticker-panel{position:fixed;bottom:0;left:0;right:0;background:rgba(16,16,16,.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,255,255,.08);border-radius:22px 22px 0 0;z-index:100;max-height:52vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .4s cubic-bezier(.23,1,.32,1);}
+        .sticker-panel.open{transform:translateY(0);}
+        .sp-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;}
+        .sp-header-left{display:flex;align-items:center;gap:8px;}
+        .sp-header-left i{color:var(--p);font-size:.75rem;}
+        .sp-header-left span{font-size:.62rem;font-weight:800;letter-spacing:3px;color:rgba(255,255,255,.5);text-transform:uppercase;}
+        .sp-header-right{display:flex;align-items:center;gap:6px;}
+        .sp-hdr-btn{background:none;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.35);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem;transition:all .25s;}
+        .sp-hdr-btn:hover{border-color:rgba(255,71,126,.4);color:var(--p);background:rgba(255,71,126,.08);}
+        .sp-tabs{display:flex;gap:6px;padding:10px 20px;overflow-x:auto;flex-shrink:0;-ms-overflow-style:none;scrollbar-width:none;}
+        .sp-tabs::-webkit-scrollbar{display:none;}
+        .sp-tab{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.07);color:rgba(255,255,255,.4);padding:7px 15px;border-radius:100px;cursor:pointer;font-weight:700;font-size:.62rem;transition:all .3s;letter-spacing:1px;white-space:nowrap;}
+        .sp-tab:hover{border-color:rgba(255,71,126,.35);color:#fff;}
+        .sp-tab.active{border-color:var(--p);background:rgba(255,71,126,.12);color:var(--p);}
+        .sp-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:10px 20px 24px;overflow-y:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none;}
+        .sp-grid::-webkit-scrollbar{display:none;}
+        .sp-item{aspect-ratio:1;border-radius:14px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.05);cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;padding:12px;overflow:hidden;}
+        .sp-item:hover{border-color:rgba(255,71,126,.45);background:rgba(255,71,126,.08);transform:scale(1.08);}
+        .sp-item:active{transform:scale(.9);}
+        .sp-item img{width:100%;height:100%;object-fit:contain;pointer-events:none;}
+        .sticker-toggle{background:rgba(255,71,126,.1);border:1.5px solid rgba(255,71,126,.28);color:var(--p);padding:14px 28px;font-size:.78rem;font-weight:800;border-radius:100px;cursor:pointer;transition:all .3s;letter-spacing:1.5px;text-transform:uppercase;}
+        .sticker-toggle:hover{background:rgba(255,71,126,.2);transform:translateY(-2px);box-shadow:0 8px 22px rgba(255,71,126,.22);}
+        .sticker-toggle:active{transform:scale(.95);}
+        .sticker-count{display:none;align-items:center;justify-content:center;background:#fff;color:var(--p);font-size:.55rem;font-weight:900;min-width:18px;height:18px;border-radius:100px;padding:0 5px;margin-left:6px;}
+        .sticker-count.show{display:inline-flex;}
+        .sp-hint{font-size:.5rem;color:rgba(255,255,255,.2);letter-spacing:1px;text-align:center;padding:0 20px 6px;flex-shrink:0;}
+        @media(max-width:440px){
+            .sp-grid{grid-template-columns:repeat(5,1fr);padding:8px 14px 20px;}
+            .sp-tabs{padding:8px 14px;}
+            .sp-header{padding:12px 14px;}
+            .result-wrap{max-width:240px;}
+            .sticker-delete{width:26px;height:26px;top:-10px;right:-10px;opacity:1;}
+            .sticker-resize{width:22px;height:22px;bottom:-8px;right:-8px;opacity:1;}
+        }
+        .cambar{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:.65rem;letter-spacing:2px;color:rgba(255,255,255,.26);font-weight:700;}
         .rbtns{display:flex;gap:9px;margin-bottom:18px;flex-wrap:wrap;justify-content:center;}
         .about{margin-top:14px;padding:18px 24px 0;border-top:1px solid rgba(255,255,255,.07);width:100%;max-width:340px;}
         .about>p{font-size:.58rem;color:rgba(255,255,255,.26);margin-bottom:14px;letter-spacing:3px;font-weight:800;}
@@ -351,13 +402,36 @@
     <div class="nav" style="margin-top:18px;"><button class="btnb" onclick="backCam()"><i class="fas fa-arrow-left" style="margin-right:5px;"></i>BACK</button></div>
 </section>
 
+<!-- ═══ STEP 5: RESULT + STICKERS ═══ -->
 <section class="step" id="step-5">
+    <div class="sticker-backdrop" id="sticker-backdrop" onclick="closeStickerPanel()"></div>
+    <div class="sticker-panel" id="sticker-panel">
+        <div class="sp-header">
+            <div class="sp-header-left"><i class="fas fa-icons"></i><span>STICKERS</span></div>
+            <div class="sp-header-right">
+                <button class="sp-hdr-btn" onclick="clearAllStickers()" title="Clear All"><i class="fas fa-trash-can"></i></button>
+                <button class="sp-hdr-btn" onclick="closeStickerPanel()"><i class="fas fa-xmark"></i></button>
+            </div>
+        </div>
+        <div class="sp-tabs" id="sticker-tabs"></div>
+        <div class="sp-grid" id="sticker-grid"></div>
+        <p class="sp-hint">Tap a sticker to place it &middot; Drag to move &middot; Corner to resize</p>
+    </div>
+
     <div class="dots"><div class="dot d"></div><div class="dot d"></div><div class="dot d"></div><div class="dot d"></div><div class="dot a"></div></div>
     <div class="badge"><span class="bdot"></span>YOUR PHOTOS ARE READY</div>
     <h1>Look at<em> You!</em></h1>
-    <p class="desc">Gorgeous! Save your strip and share it with the world.</p>
-    <img id="fimg" alt="Result">
-    <div class="rbtns"><button class="btn" onclick="dlImg()"><i class="fas fa-download" style="margin-right:7px;"></i>SAVE</button><button class="btn2" onclick="reshoot()"><i class="fas fa-rotate-left" style="margin-right:7px;"></i>RESHOOT</button><button class="btn2" onclick="location.reload()">START OVER</button></div>
+    <p class="desc">Gorgeous! Add stickers, save your strip, and share it with the world.</p>
+    <div class="result-wrap" id="result-wrap">
+        <img id="fimg" alt="Result">
+        <div class="sticker-overlay" id="sticker-overlay"></div>
+    </div>
+    <div class="rbtns">
+        <button class="btn" onclick="dlImg()"><i class="fas fa-download" style="margin-right:7px;"></i>SAVE</button>
+        <button class="sticker-toggle" onclick="openStickerPanel()"><i class="fas fa-icons" style="margin-right:6px;"></i>STICKERS<span class="sticker-count" id="sticker-count">0</span></button>
+        <button class="btn2" onclick="reshoot()"><i class="fas fa-rotate-left" style="margin-right:7px;"></i>RESHOOT</button>
+        <button class="btn2" onclick="location.reload()">START OVER</button>
+    </div>
     <div class="about"><p>KEEP IN TOUCH WITH DENJI</p><div class="soc"><a href="https://www.instagram.com/hii.yvnaa_" target="_blank"><i class="fab fa-instagram"></i></a><a href="https://whatsapp.com/channel/0029Vb7adkSAojYxeMA7oU3v" target="_blank"><i class="fab fa-whatsapp"></i></a><a href="mailto:hiiyunaaa@gmail.com"><i class="far fa-envelope"></i></a><a href="https://saweria.co/itsyunaa" target="_blank"><i class="far fa-heart"></i></a></div></div>
 </section>
 
@@ -387,6 +461,97 @@ const HEART_POLYGON=(()=>{
     return`polygon(${pts.join(',')})`;
 })();
 
+/* ═══ STICKER DATA (JSON — 1:1 images) ═══ */
+const STICKER_DATA = {
+    packs: [
+        {
+            name: "Faces",
+            stickers: [
+                { id:"heart-eyes", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f60d.png" },
+                { id:"star-struck", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f929.png" },
+                { id:"cool", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f60e.png" },
+                { id:"wink", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f609.png" },
+                { id:"tongue", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f61c.png" },
+                { id:"zany", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f92a.png" },
+                { id:"cat-smile", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f63a.png" },
+                { id:"ghost", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f47b.png" },
+                { id:"unicorn", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f984.png" },
+                { id:"alien", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f47e.png" },
+                { id:"clown", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f921.png" },
+                { id:"sunglasses-bw", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3ad.png" }
+            ]
+        },
+        {
+            name: "Hearts",
+            stickers: [
+                { id:"red-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2764.png" },
+                { id:"sparkling-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f496.png" },
+                { id:"growing-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f497.png" },
+                { id:"blue-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f499.png" },
+                { id:"green-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f49a.png" },
+                { id:"yellow-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f49b.png" },
+                { id:"purple-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f49c.png" },
+                { id:"orange-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f9e1.png" },
+                { id:"black-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f5a4.png" },
+                { id:"white-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f90d.png" },
+                { id:"two-hearts", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f495.png" },
+                { id:"heart-exclaim", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2763.png" }
+            ]
+        },
+        {
+            name: "Nature",
+            stickers: [
+                { id:"cherry-blossom", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f338.png" },
+                { id:"hibiscus", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f33a.png" },
+                { id:"rose", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f339.png" },
+                { id:"butterfly", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98b.png" },
+                { id:"bee", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f41d.png" },
+                { id:"paw", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f43e.png" },
+                { id:"strawberry", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f353.png" },
+                { id:"donut", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f369.png" },
+                { id:"cake", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f370.png" },
+                { id:"ice-cream", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f368.png" },
+                { id:"cactus", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f335.png" },
+                { id:"mushroom", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f344.png" }
+            ]
+        },
+        {
+            name: "Effects",
+            stickers: [
+                { id:"sparkles", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2728.png" },
+                { id:"glowing-star", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f31f.png" },
+                { id:"star", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2b50.png" },
+                { id:"collision", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4a5.png" },
+                { id:"dizzy", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4ab.png" },
+                { id:"fire", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f525.png" },
+                { id:"hundred", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4af.png" },
+                { id:"rainbow", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f308.png" },
+                { id:"sun", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2600.png" },
+                { id:"moon", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f319.png" },
+                { id:"shooting-star", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f320.png" },
+                { id:"snowflake", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2744.png" }
+            ]
+        },
+        {
+            name: "Fun",
+            stickers: [
+                { id:"crown", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f451.png" },
+                { id:"gem", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f48e.png" },
+                { id:"ribbon", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f380.png" },
+                { id:"gift", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f381.png" },
+                { id:"party", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f389.png" },
+                { id:"confetti", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f38a.png" },
+                { id:"ring", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f48d.png" },
+                { id:"kiss", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f48b.png" },
+                { id:"eyes", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f440.png" },
+                { id:"thumbs-up", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44d.png" },
+                { id:"wave", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44b.png" },
+                { id:"peace", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/270c.png" }
+            ]
+        }
+    ]
+};
+
 const SW_C=[{hex:'#ffffff',n:'WHITE'},{hex:'#f5f5f5',n:'SNOW'},{hex:'#e0e0e0',n:'SILVER'},{hex:'#9e9e9e',n:'GRAY'},{hex:'#121212',n:'BLACK'},{hex:'#2d2d2d',n:'CHARCOAL'},{hex:'#ff477e',n:'PINK'},{hex:'#ff1f61',n:'ROSE'},{hex:'#e91e8c',n:'FUCHSIA'},{hex:'#c4224f',n:'RUBY'},{hex:'#ff9800',n:'AMBER'},{hex:'#ffc107',n:'YELLOW'}];
 const SW_P=[{hex:'#ffd1dc',n:'BLUSH'},{hex:'#ffb3cb',n:'SAKURA'},{hex:'#ffc8dd',n:'COTTON'},{hex:'#fff0f3',n:'PETAL'},{hex:'#d4f1f4',n:'MINT'},{hex:'#b5ead7',n:'SAGE'},{hex:'#c7f2a4',n:'LIME'},{hex:'#fff8dc',n:'CREAM'},{hex:'#fce4ec',n:'LACE'},{hex:'#e1bee7',n:'LAVND'},{hex:'#d1c4e9',n:'LILAC'},{hex:'#bbdefb',n:'SKY'}];
 const SW_D=[{hex:'#1a1a2e',n:'NAVY'},{hex:'#16213e',n:'OCEAN'},{hex:'#0f3460',n:'COBALT'},{hex:'#2c2c54',n:'DUSK'},{hex:'#2d1b69',n:'VIOLET'},{hex:'#3d0a20',n:'MERLOT'},{hex:'#1b1b2f',n:'SPACE'},{hex:'#0d1117',n:'VOID'},{hex:'#1a0a00',n:'EMBER'},{hex:'#0a1628',n:'ABYSS'},{hex:'#1c1c3a',n:'INK'},{hex:'#2a0a2e',n:'PLUM'}];
@@ -400,7 +565,7 @@ function secToMMSS(s){const m=Math.floor(s/60);return m+':'+(s%60<10?'0':'')+(s%
 function setSpLayout(t,b){S.spLayout=t;document.querySelectorAll('.sp-lo-btn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const pg=$('sp-prev-grid');if(t==='strip'){pg.classList.add('strip-mode');$('lp-spotify').style.maxWidth='100px';}else{pg.classList.remove('strip-mode');$('lp-spotify').style.maxWidth='140px';}}
 function updSpotifyPreview(){S.spTitle=$('sp-title').value||'Song Title';S.spArtist=$('sp-artist').value||'Artist';S.spDur=+$('sp-dur').value;S.spProg=+$('sp-prog').value;$('sp-dur-val').textContent=secToMMSS(S.spDur);$('sp-prog-val').textContent=S.spProg+'%';const c=Math.round(S.spDur*S.spProg/100);$('sp-prev-song').textContent=S.spTitle;$('sp-prev-artist').textContent=S.spArtist;$('sp-prev-bar').style.width=S.spProg+'%';$('sp-prev-cur').textContent=secToMMSS(c);$('sp-prev-tot').textContent=secToMMSS(S.spDur);}
 
-function buildUI(){buildSW('sg-c',SW_C);buildSW('sg-p',SW_P);buildSW('sg-d',SW_D);buildGrads();buildQC();buildGStops();onGradChange();updPreview();updSpotifyPreview();}
+function buildUI(){buildSW('sg-c',SW_C);buildSW('sg-p',SW_P);buildSW('sg-d',SW_D);buildGrads();buildQC();buildGStops();onGradChange();updPreview();updSpotifyPreview();buildStickerUI();}
 function buildSW(id,list){const g=$(id);list.forEach(sw=>{const w=document.createElement('div');w.className='swi';w.innerHTML=`<div class="swc${sw.hex==='#ffffff'?' sel':''}" style="background:${sw.hex};${isDark(sw.hex)?'border-color:#555;':''}" data-hex="${sw.hex}"><span class="swck"><i class="fas fa-check"></i></span></div><span class="swn">${sw.n}</span>`;w.querySelector('.swc').addEventListener('click',()=>applyColor(sw.hex,false,''));g.appendChild(w);});}
 function buildGrads(){const g=$('ggrid');GRADS.forEach(gr=>{const d=document.createElement('div');d.className='gi';d.style.background=gr.css;d.dataset.css=gr.css;d.innerHTML=`<div class="gick"><i class="fas fa-check"></i></div>`;d.addEventListener('click',()=>applyColor(gr.css,true,gr.css));g.appendChild(d);});}
 function buildQC(){const c=$('qcodes');QC.forEach(code=>{const b=document.createElement('button');b.className='qcbtn';b.textContent=code;b.addEventListener('click',()=>quickHex(code));c.appendChild(b);});}
@@ -442,7 +607,7 @@ function updPreview(){const bg=S.isGrad?S.gradCSS:S.color;const tc=contrast(S.co
 
 function goTo(s){document.querySelectorAll('.step').forEach(e=>e.classList.remove('active'));$('step-'+s).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});if(s===4){const[rw,rh]=S.ratio.split(':');$('camwrap').style.aspectRatio=rw+' / '+rh;$('cam-r').textContent=S.ratio;$('cam-f').textContent=FNAMES[S.filter]||'NATURAL';initCam();}}
 function backCam(){stopCam();S.shooting=false;shutter.disabled=false;goTo(3);}
-function reshoot(){S.photos=[];S.shooting=false;shutter.disabled=false;resetPips();$('caminfo').textContent='PRESS THE BUTTON TO START';goTo(4);}
+function reshoot(){S.photos=[];S.shooting=false;shutter.disabled=false;resetPips();clearAllStickers();$('caminfo').textContent='PRESS THE BUTTON TO START';goTo(4);}
 function stopCam(){if(video.srcObject){video.srcObject.getTracks().forEach(t=>t.stop());video.srcObject=null;}}
 function selLayout(v,el){S.layout=v;el.parentElement.querySelectorAll('.card').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');updPreview();}
 function selShape(v,el){S.shape=v;el.parentElement.querySelectorAll('.card').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');updPreview();}
@@ -453,10 +618,10 @@ async function initCam(){stopCam();try{const stream=await navigator.mediaDevices
 function togMirror(){S.mirrored=!S.mirrored;video.style.transform=S.mirrored?'scaleX(-1)':'scaleX(1)';}
 function togTimer(){const o=[3,5,10];S.timerSec=o[(o.indexOf(S.timerSec)+1)%o.length];$('timerbtn').innerHTML=`<i class="fas fa-stopwatch"></i><span style="font-size:.55rem;margin-left:2px;">${S.timerSec}s</span>`;}
 function resetPips(){for(let i=0;i<4;i++)$('pip-'+i).classList.remove('d');}
-async function startShoot(){if(S.shooting)return;S.shooting=true;shutter.disabled=true;S.photos=[];resetPips();const[rW,rH]=S.ratio.split(':').map(Number);const pw=800,ph=Math.round(pw*rH/rW);const tc=$('ct'),ctx=tc.getContext('2d');tc.width=pw;tc.height=ph;for(let i=0;i<4;i++){$('caminfo').textContent=`PHOTO ${i+1} OF 4 \u2014 GET READY!`;cdownEl.style.display='block';for(let c=S.timerSec;c>0;c--){cdownEl.textContent=c;cdownEl.style.animation='none';void cdownEl.offsetWidth;cdownEl.style.animation='cpop .3s cubic-bezier(.34,1.56,.64,1)';await sleep(800);}cdownEl.style.display='none';flashEl.classList.add('flash-a');setTimeout(()=>flashEl.classList.remove('flash-a'),450);const vW=video.videoWidth||pw,vH=video.videoHeight||ph;const vR=vW/vH,tR=pw/ph;let sW,sH,sX,sY;if(vR>tR){sH=vH;sW=vH*tR;sX=(vW-sW)/2;sY=0;}else{sW=vW;sH=vW/tR;sY=(vH-sH)/2;sX=0;}ctx.save();ctx.filter=FCSS[S.filter]||'none';if(S.mirrored){ctx.translate(pw,0);ctx.scale(-1,1);}ctx.drawImage(video,sX,sY,sW,sH,0,0,pw,ph);ctx.restore();ctx.filter='none';S.photos.push(tc.toDataURL('image/jpeg',.95));$('pip-'+i).classList.add('d');await sleep(500);}$('caminfo').textContent='COMPOSING YOUR STRIP...';renderFinal(pw,ph);}
+async function startShoot(){if(S.shooting)return;S.shooting=true;shutter.disabled=true;S.photos=[];resetPips();clearAllStickers();const[rW,rH]=S.ratio.split(':').map(Number);const pw=800,ph=Math.round(pw*rH/rW);const tc=$('ct'),ctx=tc.getContext('2d');tc.width=pw;tc.height=ph;for(let i=0;i<4;i++){$('caminfo').textContent=`PHOTO ${i+1} OF 4 \u2014 GET READY!`;cdownEl.style.display='block';for(let c=S.timerSec;c>0;c--){cdownEl.textContent=c;cdownEl.style.animation='none';void cdownEl.offsetWidth;cdownEl.style.animation='cpop .3s cubic-bezier(.34,1.56,.64,1)';await sleep(800);}cdownEl.style.display='none';flashEl.classList.add('flash-a');setTimeout(()=>flashEl.classList.remove('flash-a'),450);const vW=video.videoWidth||pw,vH=video.videoHeight||ph;const vR=vW/vH,tR=pw/ph;let sW,sH,sX,sY;if(vR>tR){sH=vH;sW=vH*tR;sX=(vW-sW)/2;sY=0;}else{sW=vW;sH=vW/tR;sY=(vH-sH)/2;sX=0;}ctx.save();ctx.filter=FCSS[S.filter]||'none';if(S.mirrored){ctx.translate(pw,0);ctx.scale(-1,1);}ctx.drawImage(video,sX,sY,sW,sH,0,0,pw,ph);ctx.restore();ctx.filter='none';S.photos.push(tc.toDataURL('image/jpeg',.95));$('pip-'+i).classList.add('d');await sleep(500);}$('caminfo').textContent='COMPOSING YOUR STRIP...';renderFinal(pw,ph);}
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
-function drawCropped(ctx,img,x,y,w,h){const ir=img.width/img.height,cr=w/h;let sx,sy,sw,sh;if(ir>cr){sh=img.height;sw=sh*cr;sx=(img.width-sw)/2;sy=0;}else{sw=img.width;sh=sw/cellR;sx=0;sy=(img.height-sh)/2;}ctx.drawImage(img,sx,sy,sw,sh,x,y,w,h);}
+function drawCropped(ctx,img,x,y,w,h){const ir=img.width/img.height,cr=w/h;let sx,sy,sw,sh;if(ir>cr){sh=img.height;sw=sh*cr;sx=(img.width-sw)/2;sy=0;}else{sw=img.width;sh=sw/cr;sx=0;sy=(img.height-sh)/2;}ctx.drawImage(img,sx,sy,sw,sh,x,y,w,h);}
 
 /* ═══ PERFECT HEART BEZIER (canvas) ═══ */
 function heartPath(ctx,x,y,w,h){
@@ -514,7 +679,252 @@ function rrect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r
 function mkGrad(ctx,css,w,h){try{const m=css.match(/linear-gradient\(([^,]+),(.+)\)$/s);if(!m)return null;let angle=135;const ad=m[1].trim();if(ad.includes('deg'))angle=parseFloat(ad);const stops=m[2].split(',').map(s=>s.trim()).filter(Boolean);const a=angle*Math.PI/180;const x1=w/2-Math.cos(a)*w*.75,y1=h/2-Math.sin(a)*h*.75;const x2=w/2+Math.cos(a)*w*.75,y2=h/2+Math.sin(a)*h*.75;const g=ctx.createLinearGradient(x1,y1,x2,y2);stops.forEach((s,i)=>{try{g.addColorStop(i/Math.max(stops.length-1,1),s);}catch(e){}});return g;}catch(e){return null;}}
 function watermark(canvas,ctx){const now=new Date(),cw=canvas.width,ch=canvas.height;const tc=contrast(S.color,S.isGrad);const ac=(isDark(S.color)||S.isGrad)?'#ff7aaa':'#c4224f';ctx.textAlign='center';const lw=cw*.22;ctx.save();ctx.strokeStyle=ac;ctx.globalAlpha=.26;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cw/2-lw,ch-188);ctx.lineTo(cw/2+lw,ch-188);ctx.stroke();ctx.restore();ctx.save();ctx.font=`italic bold ${Math.round(cw*.073)}px 'Playfair Display',serif`;ctx.fillStyle=ac;ctx.fillText('V-Photobooth',cw/2,ch-124);ctx.restore();ctx.save();ctx.strokeStyle=ac;ctx.globalAlpha=.16;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cw/2-lw,ch-99);ctx.lineTo(cw/2+lw,ch-99);ctx.stroke();ctx.restore();const day=now.getDate(),month=now.toLocaleDateString('en-US',{month:'long'}).toUpperCase(),year=now.getFullYear();const time=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}).replace(':','.');ctx.save();ctx.font=`600 ${Math.round(cw*.023)}px 'Space Mono',monospace`;ctx.fillStyle=tc;ctx.globalAlpha=.6;ctx.fillText(`${day} ${month} ${year}  \u2022  ${time}  \u2022  BY DENJI`,cw/2,ch-59);ctx.restore();$('fimg').src=canvas.toDataURL('image/jpeg',.95);goTo(5);confettiTime();}
 function confettiTime(){const colors=['#ff477e','#ff9abc','#ffffff','#ffd1dc','#ff1f61','#ffb3cb'],cfg={colors,shapes:['circle','square']};setTimeout(()=>confetti({...cfg,particleCount:88,spread:74,origin:{y:.55},scalar:1.1}),250);setTimeout(()=>{confetti({...cfg,particleCount:44,angle:60,spread:54,origin:{x:0,y:.6}});confetti({...cfg,particleCount:44,angle:120,spread:54,origin:{x:1,y:.6}});},500);setTimeout(()=>confetti({...cfg,particleCount:38,spread:98,origin:{y:.34},gravity:.5,scalar:.8}),900);}
-function dlImg(){const a=document.createElement('a');a.download='v-photobooth-'+Date.now()+'.jpg';a.href=$('cf').toDataURL('image/jpeg',.95);a.click();}
+
+/* ═══════════════════════════════════════
+   STICKER SYSTEM
+   ═══════════════════════════════════════ */
+let maxZIdx = 10;
+let activePack = 0;
+
+function buildStickerUI() {
+    const tabsEl = $('sticker-tabs');
+    const gridEl = $('sticker-grid');
+    tabsEl.innerHTML = '';
+    STICKER_DATA.packs.forEach((pack, i) => {
+        const tab = document.createElement('button');
+        tab.className = 'sp-tab' + (i === 0 ? ' active' : '');
+        tab.textContent = pack.name;
+        tab.onclick = () => switchStickerPack(i);
+        tabsEl.appendChild(tab);
+    });
+    renderStickerGrid(0);
+}
+
+function switchStickerPack(idx) {
+    activePack = idx;
+    document.querySelectorAll('.sp-tab').forEach((t, i) => {
+        t.classList.toggle('active', i === idx);
+    });
+    renderStickerGrid(idx);
+}
+
+function renderStickerGrid(packIdx) {
+    const gridEl = $('sticker-grid');
+    gridEl.innerHTML = '';
+    const pack = STICKER_DATA.packs[packIdx];
+    pack.stickers.forEach((sticker, i) => {
+        const item = document.createElement('div');
+        item.className = 'sp-item';
+        item.style.opacity = '0';
+        item.style.animation = `stickerPop .3s ${i * 0.03}s cubic-bezier(.34,1.56,.64,1) forwards`;
+        item.onclick = () => placeSticker(sticker.url);
+        const img = document.createElement('img');
+        img.src = sticker.url;
+        img.alt = sticker.id;
+        img.crossOrigin = 'anonymous';
+        img.loading = 'lazy';
+        item.appendChild(img);
+        gridEl.appendChild(item);
+    });
+}
+
+function openStickerPanel() {
+    $('sticker-backdrop').classList.add('show');
+    $('sticker-panel').classList.add('open');
+}
+
+function closeStickerPanel() {
+    $('sticker-backdrop').classList.remove('show');
+    $('sticker-panel').classList.remove('open');
+}
+
+function placeSticker(url) {
+    const overlay = $('sticker-overlay');
+    const wrapper = document.createElement('div');
+    wrapper.className = 'placed-sticker';
+    const size = 50;
+    wrapper.style.width = size + 'px';
+    wrapper.style.height = size + 'px';
+    wrapper.style.left = 'calc(50% - ' + (size / 2) + 'px)';
+    wrapper.style.top = 'calc(50% - ' + (size / 2) + 'px)';
+    wrapper.style.zIndex = ++maxZIdx;
+
+    wrapper.innerHTML = `<img class="sticker-img" src="${url}" alt="sticker" crossorigin="anonymous" draggable="false">
+        <button class="sticker-delete" title="Delete"><i class="fas fa-xmark"></i></button>
+        <div class="sticker-resize" title="Resize"></div>`;
+
+    overlay.appendChild(wrapper);
+
+    // Delete handler
+    wrapper.querySelector('.sticker-delete').addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteSticker(wrapper);
+    });
+
+    makeStickerInteractive(wrapper);
+    updateStickerCount();
+
+    // Close panel on mobile after placing
+    if (window.innerWidth < 560) closeStickerPanel();
+}
+
+function deleteSticker(el) {
+    if (el._cleanup) el._cleanup();
+    el.style.transition = 'transform .2s ease, opacity .2s ease';
+    el.style.transform = 'scale(0)';
+    el.style.opacity = '0';
+    setTimeout(() => { el.remove(); updateStickerCount(); }, 200);
+}
+
+function clearAllStickers() {
+    const overlay = $('sticker-overlay');
+    const stickers = overlay.querySelectorAll('.placed-sticker');
+    stickers.forEach(el => { if (el._cleanup) el._cleanup(); });
+    overlay.innerHTML = '';
+    updateStickerCount();
+}
+
+function updateStickerCount() {
+    const count = document.querySelectorAll('#sticker-overlay .placed-sticker').length;
+    const badge = $('sticker-count');
+    badge.textContent = count;
+    badge.classList.toggle('show', count > 0);
+}
+
+function makeStickerInteractive(wrapper) {
+    let isDragging = false, isResizing = false;
+    let startX, startY, origLeft, origTop, origW;
+    const resizeHandle = wrapper.querySelector('.sticker-resize');
+
+    function getPos(e) {
+        if (e.touches && e.touches.length > 0) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        return { x: e.clientX, y: e.clientY };
+    }
+
+    function startDrag(e) {
+        if (e.target.closest('.sticker-delete') || e.target.closest('.sticker-resize')) return;
+        e.preventDefault();
+        isDragging = true;
+        const p = getPos(e);
+        startX = p.x; startY = p.y;
+        origLeft = wrapper.offsetLeft;
+        origTop = wrapper.offsetTop;
+        wrapper.style.zIndex = ++maxZIdx;
+        wrapper.classList.add('dragging');
+    }
+
+    function startResize(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        isResizing = true;
+        startX = getPos(e).x;
+        origW = wrapper.offsetWidth;
+        wrapper.style.zIndex = ++maxZIdx;
+    }
+
+    function onMove(e) {
+        if (isDragging) {
+            e.preventDefault();
+            const p = getPos(e);
+            wrapper.style.left = (origLeft + p.x - startX) + 'px';
+            wrapper.style.top = (origTop + p.y - startY) + 'px';
+        } else if (isResizing) {
+            e.preventDefault();
+            const p = getPos(e);
+            const newW = Math.max(24, Math.min(260, origW + (p.x - startX)));
+            wrapper.style.width = newW + 'px';
+            wrapper.style.height = newW + 'px';
+        }
+    }
+
+    function onEnd() {
+        isDragging = false;
+        isResizing = false;
+        wrapper.classList.remove('dragging');
+    }
+
+    wrapper.addEventListener('mousedown', startDrag);
+    wrapper.addEventListener('touchstart', startDrag, { passive: false });
+    resizeHandle.addEventListener('mousedown', startResize);
+    resizeHandle.addEventListener('touchstart', startResize, { passive: false });
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('mouseup', onEnd);
+    document.addEventListener('touchend', onEnd);
+
+    wrapper._cleanup = () => {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('touchmove', onMove);
+        document.removeEventListener('mouseup', onEnd);
+        document.removeEventListener('touchend', onEnd);
+    };
+}
+
+/* ═══ SAVE WITH STICKERS ═══ */
+async function dlImg() {
+    const srcCanvas = $('cf');
+    const stickers = document.querySelectorAll('#sticker-overlay .placed-sticker');
+
+    if (stickers.length === 0) {
+        const a = document.createElement('a');
+        a.download = 'v-photobooth-' + Date.now() + '.jpg';
+        a.href = srcCanvas.toDataURL('image/jpeg', .95);
+        a.click();
+        return;
+    }
+
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = srcCanvas.width;
+    tempCanvas.height = srcCanvas.height;
+    const ctx = tempCanvas.getContext('2d');
+    ctx.drawImage(srcCanvas, 0, 0);
+
+    const fimg = $('fimg');
+    const dispW = fimg.clientWidth;
+    const dispH = fimg.clientHeight;
+    if (!dispW || !dispH) {
+        const a = document.createElement('a');
+        a.download = 'v-photobooth-' + Date.now() + '.jpg';
+        a.href = srcCanvas.toDataURL('image/jpeg', .95);
+        a.click();
+        return;
+    }
+    const scaleX = srcCanvas.width / dispW;
+    const scaleY = srcCanvas.height / dispH;
+
+    const loadPromises = [];
+    stickers.forEach(el => {
+        const img = el.querySelector('.sticker-img');
+        const x = el.offsetLeft * scaleX;
+        const y = el.offsetTop * scaleY;
+        const w = el.offsetWidth * scaleX;
+        const h = el.offsetHeight * scaleY;
+
+        loadPromises.push(new Promise(resolve => {
+            if (img.complete && img.naturalWidth > 0) {
+                ctx.drawImage(img, x, y, w, h);
+                resolve();
+            } else {
+                img.onload = () => { ctx.drawImage(img, x, y, w, h); resolve(); };
+                img.onerror = resolve;
+            }
+        }));
+    });
+
+    await Promise.all(loadPromises);
+
+    try {
+        const dataUrl = tempCanvas.toDataURL('image/jpeg', .95);
+        const a = document.createElement('a');
+        a.download = 'v-photobooth-' + Date.now() + '.jpg';
+        a.href = dataUrl;
+        a.click();
+    } catch (e) {
+        console.error('Canvas tainted:', e);
+        alert('Could not save with stickers. Try removing stickers and saving again.');
+    }
+}
+
 buildUI();
 </script>
 </body>
