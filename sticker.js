@@ -27,10 +27,10 @@ const STICKER_PACKS = [
 
   // ──────────── KATEGORI: FACES ────────────
   {
-    name: "Faces",
+    name: "Gummy",
     stickers: [
       { id: "heart-eyes",      url: "https://files.catbox.moe/ruhjs3.png" },
-      { id: "star-struck",     url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f929.png" },
+      { id: "star-struck",     url: "https://files.catbox.moe/8acuc9.png" },
       { id: "wink",            url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f609.png" },
       { id: "cool",            url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f60e.png" },
       { id: "angel",           url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f607.png" },
@@ -46,7 +46,7 @@ const STICKER_PACKS = [
 
   // ──────────── KATEGORI: HEARTS & LOVE ────────────
   {
-    name: "Hearts",
+    name: "2",
     icon: "fa-heart",
     stickers: [
       { id: "heart-red",       url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2764.png" },
