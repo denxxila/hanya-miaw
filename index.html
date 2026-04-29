@@ -229,56 +229,7 @@
         .result-wrap img{width:100%;object-fit:contain;border-radius:14px;box-shadow:0 26px 65px rgba(0,0,0,.74),0 0 0 1px rgba(255,71,126,.16);transition:transform .3s;display:block;}
         .result-wrap:hover img{transform:scale(1.02) rotate(-.5deg);}
 
-        /* STICKER TOGGLE */
-        .sticker-toggle{background:rgba(255,71,126,.1);border:1.5px solid rgba(255,71,126,.28);color:var(--p);padding:14px 28px;font-size:.78rem;font-weight:800;border-radius:100px;cursor:pointer;transition:all .3s;letter-spacing:1.5px;text-transform:uppercase;}
-        .sticker-toggle:hover{background:rgba(255,71,126,.2);transform:translateY(-2px);box-shadow:0 8px 22px rgba(255,71,126,.22);}
-        .sticker-toggle:active{transform:scale(.95);}
-        .sticker-count{display:none;align-items:center;justify-content:center;background:#fff;color:var(--p);font-size:.55rem;font-weight:900;min-width:18px;height:18px;border-radius:100px;padding:0 5px;margin-left:6px;}
-        .sticker-count.show{display:inline-flex;}
-
-        /* STICKER BACKDROP */
-        .sticker-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99;opacity:0;pointer-events:none;transition:opacity .35s;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
-        .sticker-backdrop.show{opacity:1;pointer-events:auto;}
-
-        /* STICKER PANEL */
-        .sticker-panel{position:fixed;bottom:0;left:0;right:0;background:rgba(12,12,12,.99);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid rgba(255,255,255,.06);border-radius:24px 24px 0 0;z-index:100;max-height:62vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .45s cubic-bezier(.23,1,.32,1);overflow:hidden;}
-        .sticker-panel.open{transform:translateY(0);}
-
-        .sp-header{display:flex;align-items:center;justify-content:space-between;padding:16px 22px 12px;border-bottom:1px solid rgba(255,255,255,.05);flex-shrink:0;}
-        .sp-header-left{display:flex;align-items:center;gap:10px;}
-        .sp-header-left i{color:var(--p);font-size:.85rem;}
-        .sp-header-left span{font-size:.65rem;font-weight:800;letter-spacing:3.5px;color:rgba(255,255,255,.55);text-transform:uppercase;}
-        .sp-header-right{display:flex;align-items:center;gap:6px;}
-        .sp-hdr-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.3);width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem;transition:all .25s;}
-        .sp-hdr-btn:hover{border-color:rgba(255,71,126,.4);color:var(--p);background:rgba(255,71,126,.08);}
-
-        /* STICKER BODY */
-        .sp-body{flex:1;overflow-y:auto;-ms-overflow-style:none;scrollbar-width:none;}
-        .sp-body::-webkit-scrollbar{display:none;}
-
-        /* STICKER PACK SECTIONS */
-        .sp-pack{padding:0 0 2px;}
-        .sp-pack-header{display:flex;align-items:center;gap:8px;padding:12px 22px 8px;}
-        .sp-pack-icon{width:24px;height:24px;border-radius:7px;background:rgba(255,71,126,.1);border:1px solid rgba(255,71,126,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-        .sp-pack-icon i{color:var(--p);font-size:.55rem;}
-        .sp-pack-name{font-size:.56rem;font-weight:800;letter-spacing:2.5px;color:rgba(255,255,255,.45);text-transform:uppercase;white-space:nowrap;}
-        .sp-pack-count{font-size:.46rem;font-weight:700;color:rgba(255,255,255,.18);letter-spacing:.5px;background:rgba(255,255,255,.04);padding:2px 8px;border-radius:100px;white-space:nowrap;}
-        .sp-pack-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.06),transparent);min-width:20px;}
-        .sp-pack-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:2px 22px 10px;}
-
-        /* STICKER ITEM */
-        .sp-item{aspect-ratio:1;border-radius:14px;background:rgba(255,255,255,.02);border:1.5px solid rgba(255,255,255,.035);cursor:pointer;transition:all .25s cubic-bezier(.23,1,.32,1);display:flex;align-items:center;justify-content:center;padding:12px;overflow:hidden;position:relative;}
-        .sp-item::after{content:'';position:absolute;inset:0;border-radius:14px;background:radial-gradient(circle at 50% 50%,rgba(255,71,126,.06) 0%,transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none;}
-        .sp-item:hover{border-color:rgba(255,71,126,.35);background:rgba(255,71,126,.05);transform:scale(1.08) translateY(-2px);box-shadow:0 6px 16px rgba(255,71,126,.1);}
-        .sp-item:hover::after{opacity:1;}
-        .sp-item:active{transform:scale(.88);transition-duration:.1s;}
-        .sp-item img{width:100%;height:100%;object-fit:contain;pointer-events:none;transition:transform .2s;}
-        .sp-item:hover img{transform:scale(1.04);}
-
-        /* STICKER HINT */
-        .sp-hint{font-size:.46rem;color:rgba(255,255,255,.16);letter-spacing:1.5px;text-align:center;padding:6px 22px 16px;flex-shrink:0;text-transform:uppercase;font-weight:600;}
-
-        /* STICKER OVERLAY ON RESULT */
+        /* FIXED STICKER OVERLAY - matches image exactly */
         .sticker-overlay{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;}
         .placed-sticker{position:absolute;pointer-events:auto;cursor:grab;user-select:none;-webkit-user-select:none;transition:filter .2s;animation:stickerPop .4s cubic-bezier(.34,1.56,.64,1);}
         .placed-sticker:active{cursor:grabbing;}
@@ -291,8 +242,57 @@
         .sticker-resize{position:absolute;bottom:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#fff;border:2.5px solid var(--p);cursor:nwse-resize;opacity:0;transition:all .2s;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.5);}
         .placed-sticker:hover .sticker-resize,.placed-sticker.active .sticker-resize{opacity:1;}
         .sticker-resize:hover{transform:scale(1.2);background:var(--p);}
+        /* ROTATE HANDLE */
+        .sticker-rotate{position:absolute;top:-6px;left:-6px;width:18px;height:18px;border-radius:50%;background:#fff;border:2.5px solid #6bb3ff;cursor:grab;opacity:0;transition:all .2s;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;}
+        .sticker-rotate i{font-size:8px;color:#6bb3ff;pointer-events:none;}
+        .placed-sticker:hover .sticker-rotate,.placed-sticker.active .sticker-rotate{opacity:1;}
+        .sticker-rotate:hover{transform:scale(1.2);background:#6bb3ff;}
+        .sticker-rotate:hover i{color:#fff;}
+        .sticker-rotate:active{cursor:grabbing;}
         @keyframes stickerPop{0%{transform:scale(0) rotate(-15deg);opacity:0}70%{transform:scale(1.12) rotate(3deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
         @keyframes fadeUp{from{opacity:0;transform:translateY(8px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+        .sticker-toggle{background:rgba(255,71,126,.1);border:1.5px solid rgba(255,71,126,.28);color:var(--p);padding:14px 28px;font-size:.78rem;font-weight:800;border-radius:100px;cursor:pointer;transition:all .3s;letter-spacing:1.5px;text-transform:uppercase;}
+        .sticker-toggle:hover{background:rgba(255,71,126,.2);transform:translateY(-2px);box-shadow:0 8px 22px rgba(255,71,126,.22);}
+        .sticker-toggle:active{transform:scale(.95);}
+        .sticker-count{display:none;align-items:center;justify-content:center;background:#fff;color:var(--p);font-size:.55rem;font-weight:900;min-width:18px;height:18px;border-radius:100px;padding:0 5px;margin-left:6px;}
+        .sticker-count.show{display:inline-flex;}
+
+        .sticker-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99;opacity:0;pointer-events:none;transition:opacity .35s;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
+        .sticker-backdrop.show{opacity:1;pointer-events:auto;}
+
+        .sticker-panel{position:fixed;bottom:0;left:0;right:0;background:rgba(12,12,12,.99);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid rgba(255,255,255,.06);border-radius:24px 24px 0 0;z-index:100;max-height:62vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .45s cubic-bezier(.23,1,.32,1);overflow:hidden;}
+        .sticker-panel.open{transform:translateY(0);}
+
+        .sp-header{display:flex;align-items:center;justify-content:space-between;padding:16px 22px 12px;border-bottom:1px solid rgba(255,255,255,.05);flex-shrink:0;}
+        .sp-header-left{display:flex;align-items:center;gap:10px;}
+        .sp-header-left i{color:var(--p);font-size:.85rem;}
+        .sp-header-left span{font-size:.65rem;font-weight:800;letter-spacing:3.5px;color:rgba(255,255,255,.55);text-transform:uppercase;}
+        .sp-header-right{display:flex;align-items:center;gap:6px;}
+        .sp-hdr-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.3);width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem;transition:all .25s;}
+        .sp-hdr-btn:hover{border-color:rgba(255,71,126,.4);color:var(--p);background:rgba(255,71,126,.08);}
+
+        .sp-body{flex:1;overflow-y:auto;-ms-overflow-style:none;scrollbar-width:none;}
+        .sp-body::-webkit-scrollbar{display:none;}
+
+        .sp-pack{padding:0 0 2px;}
+        .sp-pack-header{display:flex;align-items:center;gap:8px;padding:12px 22px 8px;}
+        .sp-pack-icon{width:24px;height:24px;border-radius:7px;background:rgba(255,71,126,.1);border:1px solid rgba(255,71,126,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+        .sp-pack-icon i{color:var(--p);font-size:.55rem;}
+        .sp-pack-name{font-size:.56rem;font-weight:800;letter-spacing:2.5px;color:rgba(255,255,255,.45);text-transform:uppercase;white-space:nowrap;}
+        .sp-pack-count{font-size:.46rem;font-weight:700;color:rgba(255,255,255,.18);letter-spacing:.5px;background:rgba(255,255,255,.04);padding:2px 8px;border-radius:100px;white-space:nowrap;}
+        .sp-pack-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.06),transparent);min-width:20px;}
+        .sp-pack-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:2px 22px 10px;}
+
+        .sp-item{aspect-ratio:1;border-radius:14px;background:rgba(255,255,255,.02);border:1.5px solid rgba(255,255,255,.035);cursor:pointer;transition:all .25s cubic-bezier(.23,1,.32,1);display:flex;align-items:center;justify-content:center;padding:12px;overflow:hidden;position:relative;}
+        .sp-item::after{content:'';position:absolute;inset:0;border-radius:14px;background:radial-gradient(circle at 50% 50%,rgba(255,71,126,.06) 0%,transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none;}
+        .sp-item:hover{border-color:rgba(255,71,126,.35);background:rgba(255,71,126,.05);transform:scale(1.08) translateY(-2px);box-shadow:0 6px 16px rgba(255,71,126,.1);}
+        .sp-item:hover::after{opacity:1;}
+        .sp-item:active{transform:scale(.88);transition-duration:.1s;}
+        .sp-item img{width:100%;height:100%;object-fit:contain;pointer-events:none;transition:transform .2s;}
+        .sp-item:hover img{transform:scale(1.04);}
+
+        .sp-hint{font-size:.46rem;color:rgba(255,255,255,.16);letter-spacing:1.5px;text-align:center;padding:6px 22px 16px;flex-shrink:0;text-transform:uppercase;font-weight:600;}
 
         .cambar{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:.65rem;letter-spacing:2px;color:rgba(255,255,255,.26);font-weight:700;}
         .rbtns{display:flex;gap:9px;margin-bottom:18px;flex-wrap:wrap;justify-content:center;}
@@ -329,6 +329,7 @@
             .result-wrap{max-width:240px;}
             .sticker-delete{width:26px;height:26px;top:-10px;right:-10px;opacity:1;}
             .sticker-resize{width:22px;height:22px;bottom:-8px;right:-8px;opacity:1;}
+            .sticker-rotate{width:22px;height:22px;top:-8px;left:-8px;opacity:1;}
             .sp-item{border-radius:12px;padding:10px;}
             .sticker-panel{max-height:56vh;}
         }
@@ -395,7 +396,7 @@
             <div id="lps" class="lpstrip" style="background:#ffffff;"><div class="spp" id="lp-s0"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div><div class="spp" id="lp-s1"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div><div class="spp" id="lp-s2"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div><div class="spp" id="lp-s3"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div><div class="spb" id="lpbs" style="color:#000;">V-Photobooth</div></div>
             <div id="lpg" class="lpgrid" style="background:#ffffff;display:none;"><div class="gpp" id="lp-g0"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div><div class="gpp" id="lp-g1"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div><div class="gpp" id="lp-g2"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div><div class="gpp" id="lp-g3"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div><div class="gpb" id="lpbg" style="color:#000;">V-Photobooth</div></div>
             <div id="lpf" class="lpfilm" style="display:none;"><div class="film-holes"><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div></div><div class="film-photos"><div class="fpp" id="lp-f0"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div><div class="fpp" id="lp-f1"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div><div class="fpp" id="lp-f2"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div><div class="fpp" id="lp-f3"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3);"></div></div><div class="film-holes"><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div></div></div>
-            <div id="lp-spotify" class="lp-spotify" style="display:none;"><div class="sp-cover"><div class="sp-photo-grid" id="sp-prev-grid"><div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div><div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div><div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div><div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3);"></div></div></div><div class="sp-info"><div class="sp-song" id="sp-prev-song">Cruel Summer</div><div class="sp-artist" id="sp-prev-artist">Taylor Swift</div><div class="sp-bar-wrap"><div class="sp-bar" id="sp-prev-bar" style="width:38%;"></div></div><div class="sp-time"><span id="sp-prev-cur">1:18</span><span id="sp-prev-tot">3:27</span></div><div class="sp-controls"><span class="sp-ctrl"><i class="fas fa-shuffle"></i></span><span class="sp-ctrl"><i class="fas fa-backward-step"></i></span><span class="sp-ctrl play"><i class="fas fa-circle-pause"></i></span><span class="sp-ctrl"><i class="fas fa-forward-step"></i></span><span class="sp-ctrl"><i class="fas fa-repeat"></i></span></div><div class="sp-logo"><svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg><span class="sp-logo-txt">SPOTIFY</span></div></div></div>
+            <div id="lp-spotify" class="lp-spotify" style="display:none;"><div class="sp-cover"><div class="sp-photo-grid" id="sp-prev-grid"><div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div><div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div><div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div><div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3);"></div></div></div><div class="sp-info"><div class="sp-song" id="sp-prev-song">Cruel Summer</div><div class="sp-artist" id="sp-prev-artist">Taylor Swift</div><div class="sp-bar-wrap"><div class="sp-bar" id="sp-prev-bar" style="width:38%;"></div></div><div class="sp-time"><span id="sp-prev-cur">1:18</span><span id="sp-prev-tot">3:27</span></div><div class="sp-controls"><span class="sp-ctrl"><i class="fas fa-shuffle"></i></span><span class="sp-ctrl"><i class="fas fa-backward-step"></i></span><span class="sp-ctrl play"><i class="fas fa-circle-pause"></i></span><span class="sp-ctrl"><i class="fas fa-forward-step"></i></span><span class="sp-ctrl"><i class="fas fa-repeat"></i></span></div><div class="sp-logo"><svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg><span class="sp-logo-txt">SPOTIFY</span></div></div></div>
         </div>
     </div>
     <div class="nav"><button class="btnb" onclick="goTo(1)"><i class="fas fa-arrow-left" style="margin-right:5px;"></i>BACK</button><button class="btn" onclick="goTo(3)">NEXT<i class="fas fa-arrow-right" style="margin-left:7px;"></i></button></div>
@@ -442,7 +443,7 @@
             </div>
         </div>
         <div class="sp-body" id="sticker-body"></div>
-        <p class="sp-hint">Tap to place &middot; Drag to move &middot; Corner to resize</p>
+        <p class="sp-hint">Tap to place &middot; Drag to move &middot; Corner to resize &middot; Top-left to rotate</p>
     </div>
 
     <div class="dots"><div class="dot d"></div><div class="dot d"></div><div class="dot d"></div><div class="dot d"></div><div class="dot a"></div></div>
@@ -570,7 +571,7 @@ function mkGrad(ctx,css,w,h){try{const m=css.match(/linear-gradient\(([^,]+),(.+
 function watermark(canvas,ctx){const now=new Date(),cw=canvas.width,ch=canvas.height;const tc=contrast(S.color,S.isGrad);const ac=(isDark(S.color)||S.isGrad)?'#ff7aaa':'#c4224f';ctx.textAlign='center';const lw=cw*.22;ctx.save();ctx.strokeStyle=ac;ctx.globalAlpha=.26;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cw/2-lw,ch-188);ctx.lineTo(cw/2+lw,ch-188);ctx.stroke();ctx.restore();ctx.save();ctx.font=`italic bold ${Math.round(cw*.073)}px 'Playfair Display',serif`;ctx.fillStyle=ac;ctx.fillText('V-Photobooth',cw/2,ch-124);ctx.restore();ctx.save();ctx.strokeStyle=ac;ctx.globalAlpha=.16;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cw/2-lw,ch-99);ctx.lineTo(cw/2+lw,ch-99);ctx.stroke();ctx.restore();const day=now.getDate(),month=now.toLocaleDateString('en-US',{month:'long'}).toUpperCase(),year=now.getFullYear();const time=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}).replace(':','.');ctx.save();ctx.font=`600 ${Math.round(cw*.023)}px 'Space Mono',monospace`;ctx.fillStyle=tc;ctx.globalAlpha=.6;ctx.fillText(`${day} ${month} ${year}  \u2022  ${time}  \u2022  BY DENJI`,cw/2,ch-59);ctx.restore();$('fimg').src=canvas.toDataURL('image/jpeg',.95);goTo(5);confettiTime();}
 function confettiTime(){const colors=['#ff477e','#ff9abc','#ffffff','#ffd1dc','#ff1f61','#ffb3cb'],cfg={colors,shapes:['circle','square']};setTimeout(()=>confetti({...cfg,particleCount:88,spread:74,origin:{y:.55},scalar:1.1}),250);setTimeout(()=>{confetti({...cfg,particleCount:44,angle:60,spread:54,origin:{x:0,y:.6}});confetti({...cfg,particleCount:44,angle:120,spread:54,origin:{x:1,y:.6}});},500);setTimeout(()=>confetti({...cfg,particleCount:38,spread:98,origin:{y:.34},gravity:.5,scalar:.8}),900);}
 
-/* ===================== STICKER SYSTEM ===================== */
+/* ===================== STICKER SYSTEM (IMPROVED) ===================== */
 let maxZIdx=10;
 let placedStickers=[];
 
@@ -618,19 +619,24 @@ function placeSticker(url){
     const wrapH=wrap.offsetHeight;
     const el=document.createElement('div');
     el.className='placed-sticker';
-    const size=Math.round(wrapW*0.22);
-    el.style.width=size+'px';
-    el.style.height=size+'px';
-    el.style.left=(wrapW/2-size/2)+'px';
-    el.style.top=(wrapH/2-size/2)+'px';
+    /* Use percentage-based sizing so it scales proportionally with the image */
+    const sizePct=22;
+    el.style.width=sizePct+'%';
+    el.style.height='auto';
+    el.style.aspectRatio='1/1';
+    el.style.left=((100-sizePct)/2)+'%';
+    el.style.top=((100-sizePct)/2)+'%';
     el.style.zIndex=++maxZIdx;
     el.dataset.stickerUrl=url;
-    el.innerHTML=`<img src="${url}" alt="sticker" crossorigin="anonymous"><button class="sticker-delete" onclick="removeSticker(this.parentElement)"><i class="fas fa-xmark"></i></button><div class="sticker-resize"></div>`;
+    el.dataset.rotation='0';
+    el.dataset.sizePct=sizePct;
+    el.innerHTML=`<img src="${url}" alt="sticker" crossorigin="anonymous"><button class="sticker-delete" onclick="event.stopPropagation();removeSticker(this.parentElement)"><i class="fas fa-xmark"></i></button><div class="sticker-resize"></div><div class="sticker-rotate"><i class="fas fa-rotate"></i></div>`;
     overlay.appendChild(el);
     placedStickers.push(el);
     updateStickerCount();
     enableDrag(el);
     enableResize(el);
+    enableRotate(el);
 }
 
 function removeSticker(el){el.remove();placedStickers=placedStickers.filter(s=>s!==el);updateStickerCount();}
@@ -640,13 +646,25 @@ function updateStickerCount(){const countEl=$('sticker-count');const n=placedSti
 function enableDrag(el){
     let startX,startY,origX,origY,dragging=false;
     const onStart=(e)=>{
-        if(e.target.classList.contains('sticker-delete')||e.target.classList.contains('sticker-resize'))return;
+        if(e.target.classList.contains('sticker-delete')||e.target.classList.contains('sticker-resize')||e.target.classList.contains('sticker-rotate'))return;
         e.preventDefault();
         const ev=e.touches?e.touches[0]:e;
         startX=ev.clientX;startY=ev.clientY;
-        origX=el.offsetLeft;origY=el.offsetTop;
+        /* Use percentage positions for consistency */
+        origX=parseFloat(el.style.left)||0;
+        origY=parseFloat(el.style.top)||0;
+        const wrap=el.closest('.result-wrap');
+        const wrapW=wrap.offsetWidth;
+        const wrapH=wrap.offsetHeight;
         dragging=true;el.classList.add('dragging');el.style.zIndex=++maxZIdx;
-        const onMove=(e2)=>{if(!dragging)return;const ev2=e2.touches?e2.touches[0]:e2;el.style.left=(origX+ev2.clientX-startX)+'px';el.style.top=(origY+ev2.clientY-startY)+'px';};
+        const onMove=(e2)=>{
+            if(!dragging)return;
+            const ev2=e2.touches?e2.touches[0]:e2;
+            const dx=((ev2.clientX-startX)/wrapW)*100;
+            const dy=((ev2.clientY-startY)/wrapH)*100;
+            el.style.left=(origX+dx)+'%';
+            el.style.top=(origY+dy)+'%';
+        };
         const onEnd=()=>{dragging=false;el.classList.remove('dragging');document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onEnd);document.removeEventListener('touchmove',onMove);document.removeEventListener('touchend',onEnd);};
         document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onEnd);
         document.addEventListener('touchmove',onMove,{passive:false});document.addEventListener('touchend',onEnd);
@@ -657,9 +675,17 @@ function enableDrag(el){
 function enableResize(el){
     const handle=el.querySelector('.sticker-resize');
     if(!handle)return;
-    let startX,startY,startW,startH;
-    const onStart=(e)=>{e.preventDefault();e.stopPropagation();const ev=e.touches?e.touches[0]:e;startX=ev.clientX;startY=ev.clientY;startW=el.offsetWidth;startH=el.offsetHeight;
-        const onMove=(e2)=>{const ev2=e2.touches?e2.touches[0]:e2;el.style.width=Math.max(24,startW+ev2.clientX-startX)+'px';el.style.height=Math.max(24,startH+ev2.clientY-startY)+'px';};
+    let startX,startY,startW;
+    const onStart=(e)=>{e.preventDefault();e.stopPropagation();const ev=e.touches?e.touches[0]:e;startX=ev.clientX;startY=ev.clientY;startW=el.offsetWidth;
+        const wrap=el.closest('.result-wrap');
+        const wrapW=wrap.offsetWidth;
+        const onMove=(e2)=>{
+            const ev2=e2.touches?e2.touches[0]:e2;
+            const newPx=Math.max(20,startW+ev2.clientX-startX);
+            const newPct=(newPx/wrapW)*100;
+            el.style.width=Math.max(5,Math.min(80,newPct))+'%';
+            el.style.height='auto';
+        };
         const onEnd=()=>{document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onEnd);document.removeEventListener('touchmove',onMove);document.removeEventListener('touchend',onEnd);};
         document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onEnd);
         document.addEventListener('touchmove',onMove,{passive:false});document.addEventListener('touchend',onEnd);
@@ -667,7 +693,52 @@ function enableResize(el){
     handle.addEventListener('mousedown',onStart);handle.addEventListener('touchstart',onStart,{passive:false});
 }
 
-/* ===================== DOWNLOAD WITH STICKERS ===================== */
+function enableRotate(el){
+    const handle=el.querySelector('.sticker-rotate');
+    if(!handle)return;
+    let rotating=false;
+    let startAngle=0;
+    let origRotation=0;
+    const getAngle=(e,el)=>{
+        const rect=el.getBoundingClientRect();
+        const cx=rect.left+rect.width/2;
+        const cy=rect.top+rect.height/2;
+        const ev=e.touches?e.touches[0]:e;
+        return Math.atan2(ev.clientY-cy,ev.clientX-cx)*(180/Math.PI);
+    };
+    const onStart=(e)=>{
+        e.preventDefault();e.stopPropagation();
+        rotating=true;
+        startAngle=getAngle(e,el);
+        origRotation=parseFloat(el.dataset.rotation)||0;
+        el.classList.add('active');
+        const onMove=(e2)=>{
+            if(!rotating)return;
+            e2.preventDefault();
+            const currentAngle=getAngle(e2,el);
+            const delta=currentAngle-startAngle;
+            const newRot=origRotation+delta;
+            el.dataset.rotation=newRot;
+            el.style.transform=`rotate(${newRot}deg)`;
+        };
+        const onEnd=()=>{
+            rotating=false;
+            el.classList.remove('active');
+            document.removeEventListener('mousemove',onMove);
+            document.removeEventListener('mouseup',onEnd);
+            document.removeEventListener('touchmove',onMove);
+            document.removeEventListener('touchend',onEnd);
+        };
+        document.addEventListener('mousemove',onMove);
+        document.addEventListener('mouseup',onEnd);
+        document.addEventListener('touchmove',onMove,{passive:false});
+        document.addEventListener('touchend',onEnd);
+    };
+    handle.addEventListener('mousedown',onStart);
+    handle.addEventListener('touchstart',onStart,{passive:false});
+}
+
+/* ===================== DOWNLOAD WITH STICKERS (FIXED) ===================== */
 function dlImg(){
     const btn=$('dl-btn');
     btn.classList.add('dl-loading');
@@ -689,11 +760,6 @@ function dlImg(){
         canvas.height=baseImg.naturalHeight;
         ctx.drawImage(baseImg,0,0);
 
-        const displayW=resultWrap.offsetWidth;
-        const displayH=resultWrap.offsetHeight;
-        const scaleX=baseImg.naturalWidth/displayW;
-        const scaleY=baseImg.naturalHeight/displayH;
-
         if(stickerEls.length===0){
             finishDownload(canvas,btn);
             return;
@@ -706,11 +772,23 @@ function dlImg(){
             const sImg=new Image();
             sImg.crossOrigin='anonymous';
             sImg.onload=function(){
-                const left=parseFloat(stickerEl.style.left)*scaleX;
-                const top=parseFloat(stickerEl.style.top)*scaleY;
-                const w=stickerEl.offsetWidth*scaleX;
-                const h=stickerEl.offsetHeight*scaleY;
-                ctx.drawImage(sImg,left,top,w,h);
+                /* Convert percentage positions to pixel positions on the canvas */
+                const leftPct=parseFloat(stickerEl.style.left)||0;
+                const topPct=parseFloat(stickerEl.style.top)||0;
+                const widthPct=parseFloat(stickerEl.style.width)||22;
+                const rotation=parseFloat(stickerEl.dataset.rotation)||0;
+
+                const drawX=(leftPct/100)*canvas.width;
+                const drawY=(topPct/100)*canvas.height;
+                const drawW=(widthPct/100)*canvas.width;
+                const drawH=drawW*(sImg.naturalHeight/sImg.naturalWidth);
+
+                ctx.save();
+                ctx.translate(drawX+drawW/2,drawY+drawH/2);
+                ctx.rotate(rotation*Math.PI/180);
+                ctx.drawImage(sImg,-drawW/2,-drawH/2,drawW,drawH);
+                ctx.restore();
+
                 loaded++;
                 if(loaded===total)finishDownload(canvas,btn);
             };
