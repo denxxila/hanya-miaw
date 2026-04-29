@@ -228,55 +228,333 @@
         .result-wrap{position:relative;display:inline-block;max-width:280px;width:100%;margin-bottom:20px;}
         .result-wrap img{width:100%;object-fit:contain;border-radius:14px;box-shadow:0 26px 65px rgba(0,0,0,.74),0 0 0 1px rgba(255,71,126,.16);transition:transform .3s;display:block;}
         .result-wrap:hover img{transform:scale(1.02) rotate(-.5deg);}
-        .sticker-overlay{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;}
-        .placed-sticker{position:absolute;pointer-events:auto;cursor:grab;user-select:none;-webkit-user-select:none;transition:filter .2s;animation:stickerPop .35s cubic-bezier(.34,1.56,.64,1);}
-        .placed-sticker:active{cursor:grabbing;}
-        .placed-sticker:hover{filter:drop-shadow(0 0 8px rgba(255,71,126,.6));}
-        .placed-sticker.dragging{opacity:.85;filter:drop-shadow(0 0 12px rgba(255,71,126,.8));cursor:grabbing;}
-        .placed-sticker img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;}
-        .sticker-delete{position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;background:var(--p);color:#fff;font-size:.55rem;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:all .2s;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.5);}
-        .placed-sticker:hover .sticker-delete,.placed-sticker.active .sticker-delete{opacity:1;}
-        .sticker-delete:hover{background:#e0105a;transform:scale(1.15);}
-        .sticker-resize{position:absolute;bottom:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#fff;border:2.5px solid var(--p);cursor:nwse-resize;opacity:0;transition:all .2s;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.5);}
-        .placed-sticker:hover .sticker-resize,.placed-sticker.active .sticker-resize{opacity:1;}
-        .sticker-resize:hover{transform:scale(1.2);background:var(--p);}
-        @keyframes stickerPop{0%{transform:scale(0) rotate(-15deg);opacity:0}70%{transform:scale(1.12) rotate(3deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
-        .sticker-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
-        .sticker-backdrop.show{opacity:1;pointer-events:auto;}
-        .sticker-panel{position:fixed;bottom:0;left:0;right:0;background:rgba(16,16,16,.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,255,255,.08);border-radius:22px 22px 0 0;z-index:100;max-height:52vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .4s cubic-bezier(.23,1,.32,1);}
-        .sticker-panel.open{transform:translateY(0);}
-        .sp-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;}
-        .sp-header-left{display:flex;align-items:center;gap:8px;}
-        .sp-header-left i{color:var(--p);font-size:.75rem;}
-        .sp-header-left span{font-size:.62rem;font-weight:800;letter-spacing:3px;color:rgba(255,255,255,.5);text-transform:uppercase;}
-        .sp-header-right{display:flex;align-items:center;gap:6px;}
-        .sp-hdr-btn{background:none;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.35);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem;transition:all .25s;}
-        .sp-hdr-btn:hover{border-color:rgba(255,71,126,.4);color:var(--p);background:rgba(255,71,126,.08);}
-        .sp-tabs{display:flex;gap:6px;padding:10px 20px;overflow-x:auto;flex-shrink:0;-ms-overflow-style:none;scrollbar-width:none;}
-        .sp-tabs::-webkit-scrollbar{display:none;}
-        .sp-tab{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.07);color:rgba(255,255,255,.4);padding:7px 15px;border-radius:100px;cursor:pointer;font-weight:700;font-size:.62rem;transition:all .3s;letter-spacing:1px;white-space:nowrap;}
-        .sp-tab:hover{border-color:rgba(255,71,126,.35);color:#fff;}
-        .sp-tab.active{border-color:var(--p);background:rgba(255,71,126,.12);color:var(--p);}
-        .sp-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:10px 20px 24px;overflow-y:auto;flex:1;-ms-overflow-style:none;scrollbar-width:none;}
-        .sp-grid::-webkit-scrollbar{display:none;}
-        .sp-item{aspect-ratio:1;border-radius:14px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.05);cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;padding:12px;overflow:hidden;}
-        .sp-item:hover{border-color:rgba(255,71,126,.45);background:rgba(255,71,126,.08);transform:scale(1.08);}
-        .sp-item:active{transform:scale(.9);}
-        .sp-item img{width:100%;height:100%;object-fit:contain;pointer-events:none;}
-        .sticker-toggle{background:rgba(255,71,126,.1);border:1.5px solid rgba(255,71,126,.28);color:var(--p);padding:14px 28px;font-size:.78rem;font-weight:800;border-radius:100px;cursor:pointer;transition:all .3s;letter-spacing:1.5px;text-transform:uppercase;}
-        .sticker-toggle:hover{background:rgba(255,71,126,.2);transform:translateY(-2px);box-shadow:0 8px 22px rgba(255,71,126,.22);}
-        .sticker-toggle:active{transform:scale(.95);}
-        .sticker-count{display:none;align-items:center;justify-content:center;background:#fff;color:var(--p);font-size:.55rem;font-weight:900;min-width:18px;height:18px;border-radius:100px;padding:0 5px;margin-left:6px;}
-        .sticker-count.show{display:inline-flex;}
-        .sp-hint{font-size:.5rem;color:rgba(255,255,255,.2);letter-spacing:1px;text-align:center;padding:0 20px 6px;flex-shrink:0;}
-        @media(max-width:440px){
-            .sp-grid{grid-template-columns:repeat(5,1fr);padding:8px 14px 20px;}
-            .sp-tabs{padding:8px 14px;}
-            .sp-header{padding:12px 14px;}
-            .result-wrap{max-width:240px;}
-            .sticker-delete{width:26px;height:26px;top:-10px;right:-10px;opacity:1;}
-            .sticker-resize{width:22px;height:22px;bottom:-8px;right:-8px;opacity:1;}
+
+        /* ===================== STICKER TOGGLE BUTTON ===================== */
+        .sticker-toggle {
+            background: rgba(255,71,126,.1);
+            border: 1.5px solid rgba(255,71,126,.28);
+            color: var(--p);
+            padding: 14px 28px;
+            font-size: .78rem;
+            font-weight: 800;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all .3s;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
         }
+        .sticker-toggle:hover {
+            background: rgba(255,71,126,.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(255,71,126,.22);
+        }
+        .sticker-toggle:active { transform: scale(.95); }
+        .sticker-count {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            color: var(--p);
+            font-size: .55rem;
+            font-weight: 900;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 100px;
+            padding: 0 5px;
+            margin-left: 6px;
+        }
+        .sticker-count.show { display: inline-flex; }
+
+        /* ===================== STICKER BACKDROP ===================== */
+        .sticker-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.55);
+            z-index: 99;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .35s;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+        .sticker-backdrop.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ===================== STICKER PANEL ===================== */
+        .sticker-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(12,12,12,.99);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-top: 1px solid rgba(255,255,255,.06);
+            border-radius: 24px 24px 0 0;
+            z-index: 100;
+            max-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(100%);
+            transition: transform .45s cubic-bezier(.23,1,.32,1);
+            overflow: hidden;
+        }
+        .sticker-panel.open { transform: translateY(0); }
+
+        /* ===================== PANEL HEADER ===================== */
+        .sp-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 22px 12px;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+            flex-shrink: 0;
+        }
+        .sp-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sp-header-left i {
+            color: var(--p);
+            font-size: .85rem;
+        }
+        .sp-header-left span {
+            font-size: .65rem;
+            font-weight: 800;
+            letter-spacing: 3.5px;
+            color: rgba(255,255,255,.55);
+            text-transform: uppercase;
+        }
+        .sp-header-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .sp-hdr-btn {
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.08);
+            color: rgba(255,255,255,.3);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .65rem;
+            transition: all .25s;
+        }
+        .sp-hdr-btn:hover {
+            border-color: rgba(255,71,126,.4);
+            color: var(--p);
+            background: rgba(255,71,126,.08);
+        }
+
+        /* ===================== CATEGORY TABS ===================== */
+        .sp-tabs {
+            display: flex;
+            gap: 6px;
+            padding: 12px 22px 4px;
+            overflow-x: auto;
+            flex-shrink: 0;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .sp-tabs::-webkit-scrollbar { display: none; }
+        .sp-tab {
+            background: rgba(255,255,255,.035);
+            border: 1.5px solid rgba(255,255,255,.06);
+            color: rgba(255,255,255,.35);
+            padding: 8px 16px;
+            border-radius: 100px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: .62rem;
+            transition: all .3s;
+            letter-spacing: 1.2px;
+            white-space: nowrap;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .sp-tab i {
+            font-size: .6rem;
+            opacity: .6;
+            transition: opacity .3s;
+        }
+        .sp-tab:hover {
+            border-color: rgba(255,71,126,.3);
+            color: rgba(255,255,255,.7);
+            background: rgba(255,71,126,.04);
+        }
+        .sp-tab:hover i { opacity: 1; }
+        .sp-tab.active {
+            border-color: var(--p);
+            background: rgba(255,71,126,.14);
+            color: var(--p);
+            box-shadow: 0 0 12px rgba(255,71,126,.1);
+        }
+        .sp-tab.active i { opacity: 1; }
+
+        /* ===================== STICKER GRID ===================== */
+        .sp-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            padding: 14px 22px 20px;
+            overflow-y: auto;
+            flex: 1;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            transition: opacity .2s ease, transform .2s ease;
+        }
+        .sp-grid::-webkit-scrollbar { display: none; }
+
+        /* ===================== STICKER ITEM ===================== */
+        .sp-item {
+            aspect-ratio: 1;
+            border-radius: 16px;
+            background: rgba(255,255,255,.025);
+            border: 1.5px solid rgba(255,255,255,.04);
+            cursor: pointer;
+            transition: all .28s cubic-bezier(.23,1,.32,1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
+            overflow: hidden;
+            position: relative;
+        }
+        .sp-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            background: radial-gradient(circle at 50% 50%, rgba(255,71,126,.08) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity .3s;
+            pointer-events: none;
+        }
+        .sp-item:hover {
+            border-color: rgba(255,71,126,.4);
+            background: rgba(255,71,126,.06);
+            transform: scale(1.1) translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255,71,126,.12);
+        }
+        .sp-item:hover::after { opacity: 1; }
+        .sp-item:active {
+            transform: scale(.88);
+            transition-duration: .1s;
+        }
+        .sp-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+            transition: transform .2s;
+        }
+        .sp-item:hover img { transform: scale(1.05); }
+
+        /* ===================== HINT TEXT ===================== */
+        .sp-hint {
+            font-size: .48rem;
+            color: rgba(255,255,255,.18);
+            letter-spacing: 1.5px;
+            text-align: center;
+            padding: 0 22px 14px;
+            flex-shrink: 0;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* ===================== STICKER RESULT OVERLAY ===================== */
+        .sticker-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .placed-sticker {
+            position: absolute;
+            pointer-events: auto;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
+            transition: filter .2s;
+            animation: stickerPop .4s cubic-bezier(.34,1.56,.64,1);
+        }
+        .placed-sticker:active { cursor: grabbing; }
+        .placed-sticker:hover { filter: drop-shadow(0 0 10px rgba(255,71,126,.6)); }
+        .placed-sticker.dragging {
+            opacity: .85;
+            filter: drop-shadow(0 0 14px rgba(255,71,126,.8));
+            cursor: grabbing;
+        }
+        .placed-sticker img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            pointer-events: none;
+        }
+        .sticker-delete {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--p);
+            color: #fff;
+            font-size: .55rem;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all .2s;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,.5);
+        }
+        .placed-sticker:hover .sticker-delete,
+        .placed-sticker.active .sticker-delete { opacity: 1; }
+        .sticker-delete:hover { background: #e0105a; transform: scale(1.15); }
+        .sticker-resize {
+            position: absolute;
+            bottom: -6px;
+            right: -6px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2.5px solid var(--p);
+            cursor: nwse-resize;
+            opacity: 0;
+            transition: all .2s;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,.5);
+        }
+        .placed-sticker:hover .sticker-resize,
+        .placed-sticker.active .sticker-resize { opacity: 1; }
+        .sticker-resize:hover { transform: scale(1.2); background: var(--p); }
+        @keyframes stickerPop {
+            0% { transform: scale(0) rotate(-15deg); opacity: 0; }
+            70% { transform: scale(1.12) rotate(3deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0); opacity: 1; }
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(10px) scale(.92); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
         .cambar{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:.65rem;letter-spacing:2px;color:rgba(255,255,255,.26);font-weight:700;}
         .rbtns{display:flex;gap:9px;margin-bottom:18px;flex-wrap:wrap;justify-content:center;}
         .about{margin-top:14px;padding:18px 24px 0;border-top:1px solid rgba(255,255,255,.07);width:100%;max-width:340px;}
@@ -297,7 +575,25 @@
         .card.spotify-card.sel p{color:var(--sp);}
         .card.spotify-card:hover{border-color:rgba(29,185,84,.38);}
         canvas{display:none;}
-        @media(max-width:440px){.sgrid{grid-template-columns:repeat(5,1fr);}.ggrid{grid-template-columns:repeat(3,1fr);}.cptab{font-size:.52rem;padding:9px 3px;}h1{font-size:2rem;}}
+        @media(max-width:440px){
+            .sgrid{grid-template-columns:repeat(5,1fr);}
+            .ggrid{grid-template-columns:repeat(3,1fr);}
+            .cptab{font-size:.52rem;padding:9px 3px;}
+            h1{font-size:2rem;}
+            .sp-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 8px;
+                padding: 10px 14px 18px;
+            }
+            .sp-tabs { padding: 10px 14px 2px; gap: 5px; }
+            .sp-tab { padding: 7px 12px; font-size: .56rem; }
+            .sp-header { padding: 12px 14px 10px; }
+            .result-wrap { max-width: 240px; }
+            .sticker-delete { width: 26px; height: 26px; top: -10px; right: -10px; opacity: 1; }
+            .sticker-resize { width: 22px; height: 22px; bottom: -8px; right: -8px; opacity: 1; }
+            .sp-item { border-radius: 14px; padding: 10px; }
+            .sticker-panel { max-height: 55vh; }
+        }
     </style>
 </head>
 <body>
@@ -402,12 +698,15 @@
     <div class="nav" style="margin-top:18px;"><button class="btnb" onclick="backCam()"><i class="fas fa-arrow-left" style="margin-right:5px;"></i>BACK</button></div>
 </section>
 
-<!-- ═══ STEP 5: RESULT + STICKERS ═══ -->
+<!-- STEP 5: RESULT + STICKERS -->
 <section class="step" id="step-5">
     <div class="sticker-backdrop" id="sticker-backdrop" onclick="closeStickerPanel()"></div>
     <div class="sticker-panel" id="sticker-panel">
         <div class="sp-header">
-            <div class="sp-header-left"><i class="fas fa-icons"></i><span>STICKERS</span></div>
+            <div class="sp-header-left">
+                <i class="fas fa-icons"></i>
+                <span>Stickers</span>
+            </div>
             <div class="sp-header-right">
                 <button class="sp-hdr-btn" onclick="clearAllStickers()" title="Clear All"><i class="fas fa-trash-can"></i></button>
                 <button class="sp-hdr-btn" onclick="closeStickerPanel()"><i class="fas fa-xmark"></i></button>
@@ -415,7 +714,7 @@
         </div>
         <div class="sp-tabs" id="sticker-tabs"></div>
         <div class="sp-grid" id="sticker-grid"></div>
-        <p class="sp-hint">Tap a sticker to place it &middot; Drag to move &middot; Corner to resize</p>
+        <p class="sp-hint">Tap to place &middot; Drag to move &middot; Corner to resize</p>
     </div>
 
     <div class="dots"><div class="dot d"></div><div class="dot d"></div><div class="dot d"></div><div class="dot d"></div><div class="dot a"></div></div>
@@ -443,7 +742,6 @@ const S={layout:'strip',spLayout:'grid',color:'#ffffff',isGrad:false,gradCSS:'',
 const $=id=>document.getElementById(id);
 const video=$('video'),shutter=$('shutter'),cdownEl=$('cdown'),flashEl=$('flash');
 
-/* ═══ PERFECT HEART POLYGON (120-point parametric) ═══ */
 const HEART_POLYGON=(()=>{
     const N=150,pts=[],raw=[];
     let yMin=1e9,yMax=-1e9;
@@ -461,94 +759,78 @@ const HEART_POLYGON=(()=>{
     return`polygon(${pts.join(',')})`;
 })();
 
-/* ═══ STICKER DATA (JSON — 1:1 images) ═══ */
 const STICKER_DATA = {
     packs: [
-        {
-            name: "Faces",
-            stickers: [
-                { id:"heart-eyes", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f60d.png" },
-                { id:"star-struck", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f929.png" },
-                { id:"cool", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f60e.png" },
-                { id:"wink", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f609.png" },
-                { id:"tongue", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f61c.png" },
-                { id:"zany", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f92a.png" },
-                { id:"cat-smile", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f63a.png" },
-                { id:"ghost", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f47b.png" },
-                { id:"unicorn", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f984.png" },
-                { id:"alien", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f47e.png" },
-                { id:"clown", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f921.png" },
-                { id:"sunglasses-bw", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3ad.png" }
-            ]
-        },
-        {
-            name: "Hearts",
-            stickers: [
-                { id:"red-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2764.png" },
-                { id:"sparkling-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f496.png" },
-                { id:"growing-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f497.png" },
-                { id:"blue-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f499.png" },
-                { id:"green-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f49a.png" },
-                { id:"yellow-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f49b.png" },
-                { id:"purple-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f49c.png" },
-                { id:"orange-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f9e1.png" },
-                { id:"black-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f5a4.png" },
-                { id:"white-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f90d.png" },
-                { id:"two-hearts", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f495.png" },
-                { id:"heart-exclaim", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2763.png" }
-            ]
-        },
-        {
-            name: "Nature",
-            stickers: [
-                { id:"cherry-blossom", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f338.png" },
-                { id:"hibiscus", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f33a.png" },
-                { id:"rose", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f339.png" },
-                { id:"butterfly", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98b.png" },
-                { id:"bee", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f41d.png" },
-                { id:"paw", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f43e.png" },
-                { id:"strawberry", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f353.png" },
-                { id:"donut", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f369.png" },
-                { id:"cake", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f370.png" },
-                { id:"ice-cream", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f368.png" },
-                { id:"cactus", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f335.png" },
-                { id:"mushroom", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f344.png" }
-            ]
-        },
-        {
-            name: "Effects",
-            stickers: [
-                { id:"sparkles", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2728.png" },
-                { id:"glowing-star", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f31f.png" },
-                { id:"star", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2b50.png" },
-                { id:"collision", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4a5.png" },
-                { id:"dizzy", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4ab.png" },
-                { id:"fire", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f525.png" },
-                { id:"hundred", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4af.png" },
-                { id:"rainbow", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f308.png" },
-                { id:"sun", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2600.png" },
-                { id:"moon", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f319.png" },
-                { id:"shooting-star", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f320.png" },
-                { id:"snowflake", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2744.png" }
-            ]
-        },
-        {
-            name: "Fun",
-            stickers: [
-                { id:"crown", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f451.png" },
-                { id:"gem", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f48e.png" },
-                { id:"ribbon", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f380.png" },
-                { id:"gift", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f381.png" },
-                { id:"party", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f389.png" },
-                { id:"confetti", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f38a.png" },
-                { id:"ring", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f48d.png" },
-                { id:"kiss", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f48b.png" },
-                { id:"eyes", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f440.png" },
-                { id:"thumbs-up", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44d.png" },
-                { id:"wave", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44b.png" },
-                { id:"peace", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/270c.png" }
-            ]
-        }
+        { name: "Faces", stickers: [
+            { id:"heart-eyes", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f60d.png" },
+            { id:"star-struck", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f929.png" },
+            { id:"cool", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f60e.png" },
+            { id:"wink", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f609.png" },
+            { id:"tongue", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f61c.png" },
+            { id:"zany", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f92a.png" },
+            { id:"cat-smile", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f63a.png" },
+            { id:"ghost", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f47b.png" },
+            { id:"unicorn", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f984.png" },
+            { id:"alien", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f47e.png" },
+            { id:"clown", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f921.png" },
+            { id:"sunglasses-bw", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f3ad.png" }
+        ]},
+        { name: "Hearts", stickers: [
+            { id:"red-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2764.png" },
+            { id:"sparkling-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f496.png" },
+            { id:"growing-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f497.png" },
+            { id:"blue-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f499.png" },
+            { id:"green-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f49a.png" },
+            { id:"yellow-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f49b.png" },
+            { id:"purple-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f49c.png" },
+            { id:"orange-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f9e1.png" },
+            { id:"black-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f5a4.png" },
+            { id:"white-heart", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f90d.png" },
+            { id:"two-hearts", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f495.png" },
+            { id:"heart-exclaim", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2763.png" }
+        ]},
+        { name: "Nature", stickers: [
+            { id:"cherry-blossom", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f338.png" },
+            { id:"hibiscus", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f33a.png" },
+            { id:"rose", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f339.png" },
+            { id:"butterfly", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f98b.png" },
+            { id:"bee", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f41d.png" },
+            { id:"paw", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f43e.png" },
+            { id:"strawberry", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f353.png" },
+            { id:"donut", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f369.png" },
+            { id:"cake", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f370.png" },
+            { id:"ice-cream", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f368.png" },
+            { id:"cactus", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f335.png" },
+            { id:"mushroom", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f344.png" }
+        ]},
+        { name: "Effects", stickers: [
+            { id:"sparkles", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2728.png" },
+            { id:"glowing-star", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f31f.png" },
+            { id:"star", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2b50.png" },
+            { id:"collision", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4a5.png" },
+            { id:"dizzy", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4ab.png" },
+            { id:"fire", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f525.png" },
+            { id:"hundred", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4af.png" },
+            { id:"rainbow", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f308.png" },
+            { id:"sun", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2600.png" },
+            { id:"moon", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f319.png" },
+            { id:"shooting-star", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f320.png" },
+            { id:"snowflake", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2744.png" }
+        ]},
+        { name: "Fun", stickers: [
+            { id:"crown", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f451.png" },
+            { id:"gem", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f48e.png" },
+            { id:"ribbon", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f380.png" },
+            { id:"gift", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f381.png" },
+            { id:"party", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f389.png" },
+            { id:"confetti", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f38a.png" },
+            { id:"ring", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f48d.png" },
+            { id:"kiss", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f48b.png" },
+            { id:"eyes", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f440.png" },
+            { id:"thumbs-up", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44d.png" },
+            { id:"wave", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f44b.png" },
+            { id:"peace", url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/270c.png" }
+        ]}
     ]
 };
 
@@ -623,7 +905,6 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
 function drawCropped(ctx,img,x,y,w,h){const ir=img.width/img.height,cr=w/h;let sx,sy,sw,sh;if(ir>cr){sh=img.height;sw=sh*cr;sx=(img.width-sw)/2;sy=0;}else{sw=img.width;sh=sw/cr;sx=0;sy=(img.height-sh)/2;}ctx.drawImage(img,sx,sy,sw,sh,x,y,w,h);}
 
-/* ═══ PERFECT HEART BEZIER (canvas) ═══ */
 function heartPath(ctx,x,y,w,h){
     ctx.moveTo(x+w*.5,y+h*.88);
     ctx.bezierCurveTo(x+w*.5,y+h*.88, x+w*.05,y+h*.6, x+w*.05,y+h*.32);
@@ -680,20 +961,27 @@ function mkGrad(ctx,css,w,h){try{const m=css.match(/linear-gradient\(([^,]+),(.+
 function watermark(canvas,ctx){const now=new Date(),cw=canvas.width,ch=canvas.height;const tc=contrast(S.color,S.isGrad);const ac=(isDark(S.color)||S.isGrad)?'#ff7aaa':'#c4224f';ctx.textAlign='center';const lw=cw*.22;ctx.save();ctx.strokeStyle=ac;ctx.globalAlpha=.26;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cw/2-lw,ch-188);ctx.lineTo(cw/2+lw,ch-188);ctx.stroke();ctx.restore();ctx.save();ctx.font=`italic bold ${Math.round(cw*.073)}px 'Playfair Display',serif`;ctx.fillStyle=ac;ctx.fillText('V-Photobooth',cw/2,ch-124);ctx.restore();ctx.save();ctx.strokeStyle=ac;ctx.globalAlpha=.16;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cw/2-lw,ch-99);ctx.lineTo(cw/2+lw,ch-99);ctx.stroke();ctx.restore();const day=now.getDate(),month=now.toLocaleDateString('en-US',{month:'long'}).toUpperCase(),year=now.getFullYear();const time=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}).replace(':','.');ctx.save();ctx.font=`600 ${Math.round(cw*.023)}px 'Space Mono',monospace`;ctx.fillStyle=tc;ctx.globalAlpha=.6;ctx.fillText(`${day} ${month} ${year}  \u2022  ${time}  \u2022  BY DENJI`,cw/2,ch-59);ctx.restore();$('fimg').src=canvas.toDataURL('image/jpeg',.95);goTo(5);confettiTime();}
 function confettiTime(){const colors=['#ff477e','#ff9abc','#ffffff','#ffd1dc','#ff1f61','#ffb3cb'],cfg={colors,shapes:['circle','square']};setTimeout(()=>confetti({...cfg,particleCount:88,spread:74,origin:{y:.55},scalar:1.1}),250);setTimeout(()=>{confetti({...cfg,particleCount:44,angle:60,spread:54,origin:{x:0,y:.6}});confetti({...cfg,particleCount:44,angle:120,spread:54,origin:{x:1,y:.6}});},500);setTimeout(()=>confetti({...cfg,particleCount:38,spread:98,origin:{y:.34},gravity:.5,scalar:.8}),900);}
 
-/* ═══════════════════════════════════════
-   STICKER SYSTEM
-   ═══════════════════════════════════════ */
+/* ===================== STICKER SYSTEM ===================== */
 let maxZIdx = 10;
 let activePack = 0;
+let placedStickers = [];
+
+const PACK_ICONS = {
+    "Faces": "fa-face-smile-hearts",
+    "Hearts": "fa-heart",
+    "Nature": "fa-leaf",
+    "Effects": "fa-wand-magic-sparkles",
+    "Fun": "fa-party-horn"
+};
 
 function buildStickerUI() {
     const tabsEl = $('sticker-tabs');
-    const gridEl = $('sticker-grid');
     tabsEl.innerHTML = '';
     STICKER_DATA.packs.forEach((pack, i) => {
         const tab = document.createElement('button');
         tab.className = 'sp-tab' + (i === 0 ? ' active' : '');
-        tab.textContent = pack.name;
+        const icon = PACK_ICONS[pack.name] || 'fa-icons';
+        tab.innerHTML = `<i class="fas ${icon}"></i>${pack.name}`;
         tab.onclick = () => switchStickerPack(i);
         tabsEl.appendChild(tab);
     });
@@ -705,7 +993,14 @@ function switchStickerPack(idx) {
     document.querySelectorAll('.sp-tab').forEach((t, i) => {
         t.classList.toggle('active', i === idx);
     });
-    renderStickerGrid(idx);
+    const gridEl = $('sticker-grid');
+    gridEl.style.opacity = '0';
+    gridEl.style.transform = 'translateY(6px)';
+    setTimeout(() => {
+        renderStickerGrid(idx);
+        gridEl.style.opacity = '1';
+        gridEl.style.transform = 'translateY(0)';
+    }, 150);
 }
 
 function renderStickerGrid(packIdx) {
@@ -715,214 +1010,153 @@ function renderStickerGrid(packIdx) {
     pack.stickers.forEach((sticker, i) => {
         const item = document.createElement('div');
         item.className = 'sp-item';
-        item.style.opacity = '0';
-        item.style.animation = `stickerPop .3s ${i * 0.03}s cubic-bezier(.34,1.56,.64,1) forwards`;
+        item.style.animation = `fadeUp .35s ${i * 0.03}s both ease`;
+        item.innerHTML = `<img src="${sticker.url}" alt="${sticker.id}" draggable="false">`;
         item.onclick = () => placeSticker(sticker.url);
-        const img = document.createElement('img');
-        img.src = sticker.url;
-        img.alt = sticker.id;
-        img.crossOrigin = 'anonymous';
-        img.loading = 'lazy';
-        item.appendChild(img);
         gridEl.appendChild(item);
     });
 }
 
 function openStickerPanel() {
-    $('sticker-backdrop').classList.add('show');
     $('sticker-panel').classList.add('open');
+    $('sticker-backdrop').classList.add('show');
 }
 
 function closeStickerPanel() {
-    $('sticker-backdrop').classList.remove('show');
     $('sticker-panel').classList.remove('open');
+    $('sticker-backdrop').classList.remove('show');
 }
 
 function placeSticker(url) {
     const overlay = $('sticker-overlay');
-    const wrapper = document.createElement('div');
-    wrapper.className = 'placed-sticker';
-    const size = 50;
-    wrapper.style.width = size + 'px';
-    wrapper.style.height = size + 'px';
-    wrapper.style.left = 'calc(50% - ' + (size / 2) + 'px)';
-    wrapper.style.top = 'calc(50% - ' + (size / 2) + 'px)';
-    wrapper.style.zIndex = ++maxZIdx;
+    const wrap = $('result-wrap');
+    const wrapW = wrap.offsetWidth;
+    const wrapH = wrap.offsetHeight;
 
-    wrapper.innerHTML = `<img class="sticker-img" src="${url}" alt="sticker" crossorigin="anonymous" draggable="false">
-        <button class="sticker-delete" title="Delete"><i class="fas fa-xmark"></i></button>
-        <div class="sticker-resize" title="Resize"></div>`;
+    const el = document.createElement('div');
+    el.className = 'placed-sticker';
+    const size = Math.round(wrapW * 0.22);
+    el.style.width = size + 'px';
+    el.style.height = size + 'px';
+    el.style.left = (wrapW / 2 - size / 2) + 'px';
+    el.style.top = (wrapH / 2 - size / 2) + 'px';
+    el.style.zIndex = ++maxZIdx;
 
-    overlay.appendChild(wrapper);
+    el.innerHTML = `
+        <img src="${url}" alt="sticker">
+        <button class="sticker-delete" onclick="removeSticker(this.parentElement)"><i class="fas fa-xmark"></i></button>
+        <div class="sticker-resize"></div>
+    `;
 
-    // Delete handler
-    wrapper.querySelector('.sticker-delete').addEventListener('click', (e) => {
-        e.stopPropagation();
-        deleteSticker(wrapper);
-    });
-
-    makeStickerInteractive(wrapper);
+    overlay.appendChild(el);
+    placedStickers.push(el);
     updateStickerCount();
-
-    // Close panel on mobile after placing
-    if (window.innerWidth < 560) closeStickerPanel();
+    enableDrag(el);
+    enableResize(el);
 }
 
-function deleteSticker(el) {
-    if (el._cleanup) el._cleanup();
-    el.style.transition = 'transform .2s ease, opacity .2s ease';
-    el.style.transform = 'scale(0)';
-    el.style.opacity = '0';
-    setTimeout(() => { el.remove(); updateStickerCount(); }, 200);
+function removeSticker(el) {
+    el.remove();
+    placedStickers = placedStickers.filter(s => s !== el);
+    updateStickerCount();
 }
 
 function clearAllStickers() {
     const overlay = $('sticker-overlay');
-    const stickers = overlay.querySelectorAll('.placed-sticker');
-    stickers.forEach(el => { if (el._cleanup) el._cleanup(); });
     overlay.innerHTML = '';
+    placedStickers = [];
     updateStickerCount();
 }
 
 function updateStickerCount() {
-    const count = document.querySelectorAll('#sticker-overlay .placed-sticker').length;
-    const badge = $('sticker-count');
-    badge.textContent = count;
-    badge.classList.toggle('show', count > 0);
+    const countEl = $('sticker-count');
+    const n = placedStickers.length;
+    countEl.textContent = n;
+    countEl.classList.toggle('show', n > 0);
 }
 
-function makeStickerInteractive(wrapper) {
-    let isDragging = false, isResizing = false;
-    let startX, startY, origLeft, origTop, origW;
-    const resizeHandle = wrapper.querySelector('.sticker-resize');
-
-    function getPos(e) {
-        if (e.touches && e.touches.length > 0) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        return { x: e.clientX, y: e.clientY };
-    }
-
-    function startDrag(e) {
-        if (e.target.closest('.sticker-delete') || e.target.closest('.sticker-resize')) return;
+function enableDrag(el) {
+    let startX, startY, origX, origY, dragging = false;
+    const onStart = (e) => {
+        if (e.target.classList.contains('sticker-delete') || e.target.classList.contains('sticker-resize')) return;
         e.preventDefault();
-        isDragging = true;
-        const p = getPos(e);
-        startX = p.x; startY = p.y;
-        origLeft = wrapper.offsetLeft;
-        origTop = wrapper.offsetTop;
-        wrapper.style.zIndex = ++maxZIdx;
-        wrapper.classList.add('dragging');
-    }
+        const ev = e.touches ? e.touches[0] : e;
+        const parent = el.parentElement;
+        const parentRect = parent.getBoundingClientRect();
+        startX = ev.clientX;
+        startY = ev.clientY;
+        origX = el.offsetLeft;
+        origY = el.offsetTop;
+        dragging = true;
+        el.classList.add('dragging');
+        el.style.zIndex = ++maxZIdx;
+        const onMove = (e2) => {
+            if (!dragging) return;
+            const ev2 = e2.touches ? e2.touches[0] : e2;
+            const dx = ev2.clientX - startX;
+            const dy = ev2.clientY - startY;
+            el.style.left = (origX + dx) + 'px';
+            el.style.top = (origY + dy) + 'px';
+        };
+        const onEnd = () => {
+            dragging = false;
+            el.classList.remove('dragging');
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onEnd);
+            document.removeEventListener('touchmove', onMove);
+            document.removeEventListener('touchend', onEnd);
+        };
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onEnd);
+        document.addEventListener('touchmove', onMove, { passive: false });
+        document.addEventListener('touchend', onEnd);
+    };
+    el.addEventListener('mousedown', onStart);
+    el.addEventListener('touchstart', onStart, { passive: false });
+}
 
-    function startResize(e) {
+function enableResize(el) {
+    const handle = el.querySelector('.sticker-resize');
+    if (!handle) return;
+    let startX, startY, startW, startH;
+    const onStart = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        isResizing = true;
-        startX = getPos(e).x;
-        origW = wrapper.offsetWidth;
-        wrapper.style.zIndex = ++maxZIdx;
-    }
-
-    function onMove(e) {
-        if (isDragging) {
-            e.preventDefault();
-            const p = getPos(e);
-            wrapper.style.left = (origLeft + p.x - startX) + 'px';
-            wrapper.style.top = (origTop + p.y - startY) + 'px';
-        } else if (isResizing) {
-            e.preventDefault();
-            const p = getPos(e);
-            const newW = Math.max(24, Math.min(260, origW + (p.x - startX)));
-            wrapper.style.width = newW + 'px';
-            wrapper.style.height = newW + 'px';
-        }
-    }
-
-    function onEnd() {
-        isDragging = false;
-        isResizing = false;
-        wrapper.classList.remove('dragging');
-    }
-
-    wrapper.addEventListener('mousedown', startDrag);
-    wrapper.addEventListener('touchstart', startDrag, { passive: false });
-    resizeHandle.addEventListener('mousedown', startResize);
-    resizeHandle.addEventListener('touchstart', startResize, { passive: false });
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('touchmove', onMove, { passive: false });
-    document.addEventListener('mouseup', onEnd);
-    document.addEventListener('touchend', onEnd);
-
-    wrapper._cleanup = () => {
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('touchmove', onMove);
-        document.removeEventListener('mouseup', onEnd);
-        document.removeEventListener('touchend', onEnd);
+        const ev = e.touches ? e.touches[0] : e;
+        startX = ev.clientX;
+        startY = ev.clientY;
+        startW = el.offsetWidth;
+        startH = el.offsetHeight;
+        const onMove = (e2) => {
+            const ev2 = e2.touches ? e2.touches[0] : e2;
+            const dx = ev2.clientX - startX;
+            const dy = ev2.clientY - startY;
+            const newW = Math.max(24, startW + dx);
+            const newH = Math.max(24, startH + dy);
+            el.style.width = newW + 'px';
+            el.style.height = newH + 'px';
+        };
+        const onEnd = () => {
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onEnd);
+            document.removeEventListener('touchmove', onMove);
+            document.removeEventListener('touchend', onEnd);
+        };
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onEnd);
+        document.addEventListener('touchmove', onMove, { passive: false });
+        document.addEventListener('touchend', onEnd);
     };
+    handle.addEventListener('mousedown', onStart);
+    handle.addEventListener('touchstart', onStart, { passive: false });
 }
 
-/* ═══ SAVE WITH STICKERS ═══ */
-async function dlImg() {
-    const srcCanvas = $('cf');
-    const stickers = document.querySelectorAll('#sticker-overlay .placed-sticker');
-
-    if (stickers.length === 0) {
-        const a = document.createElement('a');
-        a.download = 'v-photobooth-' + Date.now() + '.jpg';
-        a.href = srcCanvas.toDataURL('image/jpeg', .95);
-        a.click();
-        return;
-    }
-
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = srcCanvas.width;
-    tempCanvas.height = srcCanvas.height;
-    const ctx = tempCanvas.getContext('2d');
-    ctx.drawImage(srcCanvas, 0, 0);
-
-    const fimg = $('fimg');
-    const dispW = fimg.clientWidth;
-    const dispH = fimg.clientHeight;
-    if (!dispW || !dispH) {
-        const a = document.createElement('a');
-        a.download = 'v-photobooth-' + Date.now() + '.jpg';
-        a.href = srcCanvas.toDataURL('image/jpeg', .95);
-        a.click();
-        return;
-    }
-    const scaleX = srcCanvas.width / dispW;
-    const scaleY = srcCanvas.height / dispH;
-
-    const loadPromises = [];
-    stickers.forEach(el => {
-        const img = el.querySelector('.sticker-img');
-        const x = el.offsetLeft * scaleX;
-        const y = el.offsetTop * scaleY;
-        const w = el.offsetWidth * scaleX;
-        const h = el.offsetHeight * scaleY;
-
-        loadPromises.push(new Promise(resolve => {
-            if (img.complete && img.naturalWidth > 0) {
-                ctx.drawImage(img, x, y, w, h);
-                resolve();
-            } else {
-                img.onload = () => { ctx.drawImage(img, x, y, w, h); resolve(); };
-                img.onerror = resolve;
-            }
-        }));
-    });
-
-    await Promise.all(loadPromises);
-
-    try {
-        const dataUrl = tempCanvas.toDataURL('image/jpeg', .95);
-        const a = document.createElement('a');
-        a.download = 'v-photobooth-' + Date.now() + '.jpg';
-        a.href = dataUrl;
-        a.click();
-    } catch (e) {
-        console.error('Canvas tainted:', e);
-        alert('Could not save with stickers. Try removing stickers and saving again.');
-    }
+function dlImg() {
+    const img = $('fimg');
+    const a = document.createElement('a');
+    a.href = img.src;
+    a.download = 'V-Photobooth-' + Date.now() + '.jpg';
+    a.click();
 }
 
 buildUI();
