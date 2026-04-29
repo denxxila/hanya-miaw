@@ -28,7 +28,6 @@ const STICKER_PACKS = [
   // ──────────── KATEGORI: FACES ────────────
   {
     name: "Faces",
-    icon: "fa-face-smile-hearts",
     stickers: [
       { id: "heart-eyes",      url: "https://files.catbox.moe/ruhjs3.png" },
       { id: "star-struck",     url: "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f929.png" },
