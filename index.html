@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>V-Photobooth</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Space+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,7 +11,7 @@
         :root{--p:#ff477e;--p2:#ff1f61;--sp:#1DB954;--sp2:#1ed760;}
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;-webkit-tap-highlight-color:transparent;}
         button{outline:none;user-select:none;}
-        body{background:#080808;color:#fff;overflow-x:hidden;min-height:100dvh;}
+        body{background:#080808;color:#fff;overflow-x:hidden;min-height:100dvh;touch-action:pan-y;}
         body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.3;
             background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
         .blob{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:.22;}
@@ -226,44 +226,16 @@
         .shutter:active{transform:scale(.9);}
         .shutter:disabled{opacity:.34;cursor:not-allowed;transform:none;}
         .result-wrap{position:relative;display:inline-block;max-width:280px;width:100%;margin-bottom:20px;}
-        .result-wrap img{width:100%;object-fit:contain;border-radius:14px;box-shadow:0 26px 65px rgba(0,0,0,.74),0 0 0 1px rgba(255,71,126,.16);transition:transform .3s;display:block;}
-        .result-wrap:hover img{transform:scale(1.02) rotate(-.5deg);}
-
-        /* FIXED STICKER OVERLAY - matches image exactly */
-        .sticker-overlay{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;}
-        .placed-sticker{position:absolute;pointer-events:auto;cursor:grab;user-select:none;-webkit-user-select:none;transition:filter .2s;animation:stickerPop .4s cubic-bezier(.34,1.56,.64,1);}
-        .placed-sticker:active{cursor:grabbing;}
-        .placed-sticker:hover{filter:drop-shadow(0 0 10px rgba(255,71,126,.6));}
-        .placed-sticker.dragging{opacity:.85;filter:drop-shadow(0 0 14px rgba(255,71,126,.8));cursor:grabbing;}
-        .placed-sticker img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;}
-        .sticker-delete{position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;background:var(--p);color:#fff;font-size:.55rem;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:all .2s;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.5);}
-        .placed-sticker:hover .sticker-delete,.placed-sticker.active .sticker-delete{opacity:1;}
-        .sticker-delete:hover{background:#e0105a;transform:scale(1.15);}
-        .sticker-resize{position:absolute;bottom:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#fff;border:2.5px solid var(--p);cursor:nwse-resize;opacity:0;transition:all .2s;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.5);}
-        .placed-sticker:hover .sticker-resize,.placed-sticker.active .sticker-resize{opacity:1;}
-        .sticker-resize:hover{transform:scale(1.2);background:var(--p);}
-        /* ROTATE HANDLE */
-        .sticker-rotate{position:absolute;top:-6px;left:-6px;width:18px;height:18px;border-radius:50%;background:#fff;border:2.5px solid #6bb3ff;cursor:grab;opacity:0;transition:all .2s;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;}
-        .sticker-rotate i{font-size:8px;color:#6bb3ff;pointer-events:none;}
-        .placed-sticker:hover .sticker-rotate,.placed-sticker.active .sticker-rotate{opacity:1;}
-        .sticker-rotate:hover{transform:scale(1.2);background:#6bb3ff;}
-        .sticker-rotate:hover i{color:#fff;}
-        .sticker-rotate:active{cursor:grabbing;}
-        @keyframes stickerPop{0%{transform:scale(0) rotate(-15deg);opacity:0}70%{transform:scale(1.12) rotate(3deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
-        @keyframes fadeUp{from{opacity:0;transform:translateY(8px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
-
+        .result-wrap img{width:100%;object-fit:contain;border-radius:14px;box-shadow:0 26px 65px rgba(0,0,0,.74),0 0 0 1px rgba(255,71,126,.16);display:block;}
         .sticker-toggle{background:rgba(255,71,126,.1);border:1.5px solid rgba(255,71,126,.28);color:var(--p);padding:14px 28px;font-size:.78rem;font-weight:800;border-radius:100px;cursor:pointer;transition:all .3s;letter-spacing:1.5px;text-transform:uppercase;}
         .sticker-toggle:hover{background:rgba(255,71,126,.2);transform:translateY(-2px);box-shadow:0 8px 22px rgba(255,71,126,.22);}
         .sticker-toggle:active{transform:scale(.95);}
         .sticker-count{display:none;align-items:center;justify-content:center;background:#fff;color:var(--p);font-size:.55rem;font-weight:900;min-width:18px;height:18px;border-radius:100px;padding:0 5px;margin-left:6px;}
         .sticker-count.show{display:inline-flex;}
-
         .sticker-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99;opacity:0;pointer-events:none;transition:opacity .35s;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
         .sticker-backdrop.show{opacity:1;pointer-events:auto;}
-
         .sticker-panel{position:fixed;bottom:0;left:0;right:0;background:rgba(12,12,12,.99);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid rgba(255,255,255,.06);border-radius:24px 24px 0 0;z-index:100;max-height:62vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .45s cubic-bezier(.23,1,.32,1);overflow:hidden;}
         .sticker-panel.open{transform:translateY(0);}
-
         .sp-header{display:flex;align-items:center;justify-content:space-between;padding:16px 22px 12px;border-bottom:1px solid rgba(255,255,255,.05);flex-shrink:0;}
         .sp-header-left{display:flex;align-items:center;gap:10px;}
         .sp-header-left i{color:var(--p);font-size:.85rem;}
@@ -271,10 +243,8 @@
         .sp-header-right{display:flex;align-items:center;gap:6px;}
         .sp-hdr-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.3);width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem;transition:all .25s;}
         .sp-hdr-btn:hover{border-color:rgba(255,71,126,.4);color:var(--p);background:rgba(255,71,126,.08);}
-
         .sp-body{flex:1;overflow-y:auto;-ms-overflow-style:none;scrollbar-width:none;}
         .sp-body::-webkit-scrollbar{display:none;}
-
         .sp-pack{padding:0 0 2px;}
         .sp-pack-header{display:flex;align-items:center;gap:8px;padding:12px 22px 8px;}
         .sp-pack-icon{width:24px;height:24px;border-radius:7px;background:rgba(255,71,126,.1);border:1px solid rgba(255,71,126,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
@@ -283,7 +253,6 @@
         .sp-pack-count{font-size:.46rem;font-weight:700;color:rgba(255,255,255,.18);letter-spacing:.5px;background:rgba(255,255,255,.04);padding:2px 8px;border-radius:100px;white-space:nowrap;}
         .sp-pack-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.06),transparent);min-width:20px;}
         .sp-pack-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:2px 22px 10px;}
-
         .sp-item{aspect-ratio:1;border-radius:14px;background:rgba(255,255,255,.02);border:1.5px solid rgba(255,255,255,.035);cursor:pointer;transition:all .25s cubic-bezier(.23,1,.32,1);display:flex;align-items:center;justify-content:center;padding:12px;overflow:hidden;position:relative;}
         .sp-item::after{content:'';position:absolute;inset:0;border-radius:14px;background:radial-gradient(circle at 50% 50%,rgba(255,71,126,.06) 0%,transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none;}
         .sp-item:hover{border-color:rgba(255,71,126,.35);background:rgba(255,71,126,.05);transform:scale(1.08) translateY(-2px);box-shadow:0 6px 16px rgba(255,71,126,.1);}
@@ -291,10 +260,7 @@
         .sp-item:active{transform:scale(.88);transition-duration:.1s;}
         .sp-item img{width:100%;height:100%;object-fit:contain;pointer-events:none;transition:transform .2s;}
         .sp-item:hover img{transform:scale(1.04);}
-
         .sp-hint{font-size:.46rem;color:rgba(255,255,255,.16);letter-spacing:1.5px;text-align:center;padding:6px 22px 16px;flex-shrink:0;text-transform:uppercase;font-weight:600;}
-
-        .cambar{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:.65rem;letter-spacing:2px;color:rgba(255,255,255,.26);font-weight:700;}
         .rbtns{display:flex;gap:9px;margin-bottom:18px;flex-wrap:wrap;justify-content:center;}
         .about{margin-top:14px;padding:18px 24px 0;border-top:1px solid rgba(255,255,255,.07);width:100%;max-width:340px;}
         .about>p{font-size:.58rem;color:rgba(255,255,255,.26);margin-bottom:14px;letter-spacing:3px;font-weight:800;}
@@ -314,8 +280,24 @@
         .card.spotify-card.sel p{color:var(--sp);}
         .card.spotify-card:hover{border-color:rgba(29,185,84,.38);}
         canvas{display:none;}
-
         .dl-loading{pointer-events:none;opacity:.6;}
+
+        /* ====== STICKER OVERLAY ====== */
+        .sticker-overlay{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;touch-action:none;}
+        .placed-sticker{position:absolute;pointer-events:auto;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;animation:stickerPop .4s cubic-bezier(.34,1.56,.64,1);}
+        .placed-sticker:active{cursor:grabbing;}
+        .placed-sticker img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;}
+        .placed-sticker .sticker-delete{position:absolute;top:-10px;right:-10px;width:26px;height:26px;border-radius:50%;background:var(--p);color:#fff;font-size:.6rem;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:1;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.5);}
+        .placed-sticker .sticker-delete:hover{background:#e0105a;transform:scale(1.15);}
+        .placed-sticker .sticker-resize{position:absolute;bottom:-10px;right:-10px;width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--p);cursor:nwse-resize;opacity:1;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.5);touch-action:none;}
+        .placed-sticker .sticker-resize:hover{transform:scale(1.2);background:var(--p);}
+        .placed-sticker .sticker-rotate{position:absolute;top:-10px;left:-10px;width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid #6bb3ff;cursor:grab;opacity:1;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;touch-action:none;}
+        .placed-sticker .sticker-rotate i{font-size:10px;color:#6bb3ff;pointer-events:none;}
+        .placed-sticker .sticker-rotate:hover{transform:scale(1.2);background:#6bb3ff;}
+        .placed-sticker .sticker-rotate:hover i{color:#fff;}
+        .placed-sticker .sticker-rotate:active{cursor:grabbing;}
+        @keyframes stickerPop{0%{transform:scale(0) rotate(-15deg);opacity:0}70%{transform:scale(1.12) rotate(3deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(8px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
 
         @media(max-width:440px){
             .sgrid{grid-template-columns:repeat(5,1fr);}
@@ -327,9 +309,10 @@
             .sp-header{padding:12px 16px 10px;}
             .sp-hint{padding:4px 16px 12px;}
             .result-wrap{max-width:240px;}
-            .sticker-delete{width:26px;height:26px;top:-10px;right:-10px;opacity:1;}
-            .sticker-resize{width:22px;height:22px;bottom:-8px;right:-8px;opacity:1;}
-            .sticker-rotate{width:22px;height:22px;top:-8px;left:-8px;opacity:1;}
+            .placed-sticker .sticker-delete{width:30px;height:30px;top:-12px;right:-12px;opacity:1;font-size:.7rem;}
+            .placed-sticker .sticker-resize{width:28px;height:28px;bottom:-12px;right:-12px;opacity:1;}
+            .placed-sticker .sticker-rotate{width:28px;height:28px;top:-12px;left:-12px;opacity:1;}
+            .placed-sticker .sticker-rotate i{font-size:11px;}
             .sp-item{border-radius:12px;padding:10px;}
             .sticker-panel{max-height:56vh;}
         }
@@ -362,7 +345,7 @@
         <div class="card sel" onclick="selLayout('strip',this)"><div class="ck"><i class="fas fa-check"></i></div><img src="https://cdn.nekohime.site/file/Tm2-TSOP.png" alt="Strip"><p>CLASSIC STRIP (1&times;4)</p></div>
         <div class="card" onclick="selLayout('grid',this)"><div class="ck"><i class="fas fa-check"></i></div><img src="https://cdn.nekohime.site/file/vxijEdyv.png" alt="Grid"><p>MODERN GRID (2&times;2)</p></div>
         <div class="card" onclick="selLayout('film',this)"><div class="ck"><i class="fas fa-check"></i></div><div style="display:flex;justify-content:center;margin-bottom:9px;height:70px;align-items:center;"><div style="background:#0a0a0a;padding:4px 10px;display:flex;gap:4px;align-items:center;border-radius:4px;border:1px solid rgba(255,255,255,0.1);"><div style="display:flex;flex-direction:column;gap:3px;"><div style="width:5px;height:4px;background:#333;border-radius:1px;"></div><div style="width:5px;height:4px;background:#333;border-radius:1px;"></div></div><div style="width:32px;height:40px;background:#222;border-radius:1px;"></div><div style="display:flex;flex-direction:column;gap:3px;"><div style="width:5px;height:4px;background:#333;border-radius:1px;"></div><div style="width:5px;height:4px;background:#333;border-radius:1px;"></div></div></div></div><p>FILM STRIP</p></div>
-        <div class="card wide spotify-card" onclick="selLayout('spotify',this)"><div class="ck"><i class="fas fa-check"></i></div><div style="display:flex;justify-content:center;margin-bottom:9px;"><div style="width:100px;border-radius:10px;overflow:hidden;background:#121212;box-shadow:0 4px 16px rgba(0,0,0,.6);"><div style="display:grid;grid-template-columns:1fr 1fr;aspect-ratio:1/1;"><div style="background:#2a2a2a;overflow:hidden;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;" alt=""></div><div style="background:#1a1a1a;overflow:hidden;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:sepia(.4);" alt=""></div><div style="background:#222;overflow:hidden;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1);" alt=""></div><div style="background:#1c1c1c;overflow:hidden;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:contrast(1.3);" alt=""></div></div><div style="padding:6px 7px 7px;background:#121212;"><div style="font-size:.55rem;font-weight:800;color:#fff;margin-bottom:1px;">Song Title</div><div style="font-size:.45rem;color:rgba(255,255,255,.45);margin-bottom:5px;">Artist Name</div><div style="height:2.5px;background:rgba(255,255,255,.15);border-radius:2px;margin-bottom:3px;"><div style="width:38%;height:100%;background:#1DB954;border-radius:2px;"></div></div><div style="display:flex;justify-content:space-between;font-size:.36rem;color:rgba(255,255,255,.3);font-family:monospace;">1:23<span>3:45</span></div></div></div></div><p>SPOTIFY NOW PLAYING</p><div style="display:flex;justify-content:center;"><span class="layout-badge"><svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>SPOTIFY</span></div></div>
+        <div class="card wide spotify-card" onclick="selLayout('spotify',this)"><div class="ck"><i class="fas fa-check"></i></div><div style="display:flex;justify-content:center;margin-bottom:9px;"><div style="width:100px;border-radius:10px;overflow:hidden;background:#121212;box-shadow:0 4px 16px rgba(0,0,0,.6);"><div style="display:grid;grid-template-columns:1fr 1fr;aspect-ratio:1/1;"><div style="background:#2a2a2a;overflow:hidden;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;" alt=""></div><div style="background:#1a1a1a;overflow:hidden;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:sepia(.4);" alt=""></div><div style="background:#222;overflow:hidden;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1);" alt=""></div><div style="background:#1c1c1c;overflow:hidden;"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" style="width:100%;height:100%;object-fit:cover;filter:contrast(1.3);" alt=""></div></div><div style="padding:6px 7px 7px;background:#121212;"><div style="font-size:.55rem;font-weight:800;color:#fff;margin-bottom:1px;">Song Title</div><div style="font-size:.45rem;color:rgba(255,255,255,.45);margin-bottom:5px;">Artist Name</div><div style="height:2.5px;background:rgba(255,255,255,.15);border-radius:2px;margin-bottom:3px;"><div style="width:38%;height:100%;background:#1DB954;border-radius:2px;"></div></div><div style="display:flex;justify-content:space-between;font-size:.36rem;color:rgba(255,255,255,.3);font-family:monospace;">1:23<span>3:45</span></div></div></div></div><p>SPOTIFY NOW PLAYING</p></div></div>
     </div>
     <p class="slbl" style="margin-top:8px;">PHOTO SHAPE</p>
     <div class="shape-grid" id="shape-grid">
@@ -396,7 +379,7 @@
             <div id="lps" class="lpstrip" style="background:#ffffff;"><div class="spp" id="lp-s0"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div><div class="spp" id="lp-s1"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div><div class="spp" id="lp-s2"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div><div class="spp" id="lp-s3"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div><div class="spb" id="lpbs" style="color:#000;">V-Photobooth</div></div>
             <div id="lpg" class="lpgrid" style="background:#ffffff;display:none;"><div class="gpp" id="lp-g0"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div><div class="gpp" id="lp-g1"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div><div class="gpp" id="lp-g2"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div><div class="gpp" id="lp-g3"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3) saturate(1.3);"></div><div class="gpb" id="lpbg" style="color:#000;">V-Photobooth</div></div>
             <div id="lpf" class="lpfilm" style="display:none;"><div class="film-holes"><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div></div><div class="film-photos"><div class="fpp" id="lp-f0"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div><div class="fpp" id="lp-f1"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div><div class="fpp" id="lp-f2"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div><div class="fpp" id="lp-f3"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3);"></div></div><div class="film-holes"><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div><div class="film-hole"></div></div></div>
-            <div id="lp-spotify" class="lp-spotify" style="display:none;"><div class="sp-cover"><div class="sp-photo-grid" id="sp-prev-grid"><div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div><div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div><div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div><div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3);"></div></div></div><div class="sp-info"><div class="sp-song" id="sp-prev-song">Cruel Summer</div><div class="sp-artist" id="sp-prev-artist">Taylor Swift</div><div class="sp-bar-wrap"><div class="sp-bar" id="sp-prev-bar" style="width:38%;"></div></div><div class="sp-time"><span id="sp-prev-cur">1:18</span><span id="sp-prev-tot">3:27</span></div><div class="sp-controls"><span class="sp-ctrl"><i class="fas fa-shuffle"></i></span><span class="sp-ctrl"><i class="fas fa-backward-step"></i></span><span class="sp-ctrl play"><i class="fas fa-circle-pause"></i></span><span class="sp-ctrl"><i class="fas fa-forward-step"></i></span><span class="sp-ctrl"><i class="fas fa-repeat"></i></span></div><div class="sp-logo"><svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg><span class="sp-logo-txt">SPOTIFY</span></div></div></div>
+            <div id="lp-spotify" class="lp-spotify" style="display:none;"><div class="sp-cover"><div class="sp-photo-grid" id="sp-prev-grid"><div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt=""></div><div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:sepia(.4);"></div><div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:grayscale(1);"></div><div class="sp-photo-cell"><img src="https://i.pinimg.com/736x/60/5a/e2/605ae28f6ebcf8179fb4cf6b445fcacd.jpg" alt="" style="filter:contrast(1.3);"></div></div></div><div class="sp-info"><div class="sp-song" id="sp-prev-song">Cruel Summer</div><div class="sp-artist" id="sp-prev-artist">Taylor Swift</div><div class="sp-bar-wrap"><div class="sp-bar" id="sp-prev-bar" style="width:38%;"></div></div><div class="sp-time"><span id="sp-prev-cur">1:18</span><span id="sp-prev-tot">3:27</span></div><div class="sp-controls"><span class="sp-ctrl"><i class="fas fa-shuffle"></i></span><span class="sp-ctrl"><i class="fas fa-backward-step"></i></span><span class="sp-ctrl play"><i class="fas fa-circle-pause"></i></span><span class="sp-ctrl"><i class="fas fa-forward-step"></i></span><span class="sp-ctrl"><i class="fas fa-repeat"></i></span></div><div class="sp-logo"><svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg><span class="sp-logo-txt">SPOTIFY</span></div></div></div>
         </div>
     </div>
     <div class="nav"><button class="btnb" onclick="goTo(1)"><i class="fas fa-arrow-left" style="margin-right:5px;"></i>BACK</button><button class="btn" onclick="goTo(3)">NEXT<i class="fas fa-arrow-right" style="margin-left:7px;"></i></button></div>
@@ -443,9 +426,8 @@
             </div>
         </div>
         <div class="sp-body" id="sticker-body"></div>
-        <p class="sp-hint">Tap to place &middot; Drag to move &middot; Corner to resize &middot; Top-left to rotate</p>
+        <p class="sp-hint">Tap to place &middot; Drag to move &middot; Bottom-right to resize &middot; Top-left to rotate</p>
     </div>
-
     <div class="dots"><div class="dot d"></div><div class="dot d"></div><div class="dot d"></div><div class="dot d"></div><div class="dot a"></div></div>
     <div class="badge"><span class="bdot"></span>YOUR PHOTOS ARE READY</div>
     <h1>Look at<em> You!</em></h1>
@@ -471,29 +453,9 @@ const S={layout:'strip',spLayout:'grid',color:'#ffffff',isGrad:false,gradCSS:'',
 const $=id=>document.getElementById(id);
 const video=$('video'),shutter=$('shutter'),cdownEl=$('cdown'),flashEl=$('flash');
 
-const HEART_POLYGON=(()=>{
-    const N=150,pts=[],raw=[];
-    let yMin=1e9,yMax=-1e9;
-    for(let i=0;i<N;i++){
-        const t=(i/N)*2*Math.PI;
-        const x=16*Math.pow(Math.sin(t),3);
-        const y=13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);
-        raw.push({x,y});
-        if(y<yMin)yMin=y;if(y>yMax)yMax=y;
-    }
-    const PAD=3,xS=(100-2*PAD)/32,yS=(100-2*PAD)/(yMax-yMin);
-    for(const{x,y}of raw){
-        pts.push(`${(PAD+(x+16)*xS).toFixed(1)}% ${(PAD+(yMax-y)*yS).toFixed(1)}%`);
-    }
-    return`polygon(${pts.join(',')})`;
-})();
+const HEART_POLYGON=(()=>{const N=150,pts=[],raw=[];let yMin=1e9,yMax=-1e9;for(let i=0;i<N;i++){const t=(i/N)*2*Math.PI;const x=16*Math.pow(Math.sin(t),3);const y=13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);raw.push({x,y});if(y<yMin)yMin=y;if(y>yMax)yMax=y;}const PAD=3,xS=(100-2*PAD)/32,yS=(100-2*PAD)/(yMax-yMin);for(const{x,y}of raw){pts.push(`${(PAD+(x+16)*xS).toFixed(1)}% ${(PAD+(yMax-y)*yS).toFixed(1)}%`);}return`polygon(${pts.join(',')})`;})();
 
-const STICKER_DATA={packs:[
-    {name:"Faces",stickers:[
-        {id:"heart-eyes",url:"https://files.catbox.moe/ruhjs3.png"},
-        {id:"star-struck",url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f929.png"}
-    ]}
-]};
+const STICKER_DATA={packs:[{name:"Faces",stickers:[{id:"heart-eyes",url:"https://files.catbox.moe/ruhjs3.png"},{id:"star-struck",url:"https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f929.png"}]}]};
 
 const SW_C=[{hex:'#ffffff',n:'WHITE'},{hex:'#f5f5f5',n:'SNOW'},{hex:'#e0e0e0',n:'SILVER'},{hex:'#9e9e9e',n:'GRAY'},{hex:'#121212',n:'BLACK'},{hex:'#2d2d2d',n:'CHARCOAL'},{hex:'#ff477e',n:'PINK'},{hex:'#ff1f61',n:'ROSE'},{hex:'#e91e8c',n:'FUCHSIA'},{hex:'#c4224f',n:'RUBY'},{hex:'#ff9800',n:'AMBER'},{hex:'#ffc107',n:'YELLOW'}];
 const SW_P=[{hex:'#ffd1dc',n:'BLUSH'},{hex:'#ffb3cb',n:'SAKURA'},{hex:'#ffc8dd',n:'COTTON'},{hex:'#fff0f3',n:'PETAL'},{hex:'#d4f1f4',n:'MINT'},{hex:'#b5ead7',n:'SAGE'},{hex:'#c7f2a4',n:'LIME'},{hex:'#fff8dc',n:'CREAM'},{hex:'#fce4ec',n:'LACE'},{hex:'#e1bee7',n:'LAVND'},{hex:'#d1c4e9',n:'LILAC'},{hex:'#bbdefb',n:'SKY'}];
@@ -507,7 +469,6 @@ function isSquareShape(){return S.shape==='circle'||S.shape==='heart';}
 function secToMMSS(s){const m=Math.floor(s/60);return m+':'+(s%60<10?'0':'')+(s%60);}
 function setSpLayout(t,b){S.spLayout=t;document.querySelectorAll('.sp-lo-btn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const pg=$('sp-prev-grid');if(t==='strip'){pg.classList.add('strip-mode');$('lp-spotify').style.maxWidth='100px';}else{pg.classList.remove('strip-mode');$('lp-spotify').style.maxWidth='140px';}}
 function updSpotifyPreview(){S.spTitle=$('sp-title').value||'Song Title';S.spArtist=$('sp-artist').value||'Artist';S.spDur=+$('sp-dur').value;S.spProg=+$('sp-prog').value;$('sp-dur-val').textContent=secToMMSS(S.spDur);$('sp-prog-val').textContent=S.spProg+'%';const c=Math.round(S.spDur*S.spProg/100);$('sp-prev-song').textContent=S.spTitle;$('sp-prev-artist').textContent=S.spArtist;$('sp-prev-bar').style.width=S.spProg+'%';$('sp-prev-cur').textContent=secToMMSS(c);$('sp-prev-tot').textContent=secToMMSS(S.spDur);}
-
 function buildUI(){buildSW('sg-c',SW_C);buildSW('sg-p',SW_P);buildSW('sg-d',SW_D);buildGrads();buildQC();buildGStops();onGradChange();updPreview();updSpotifyPreview();buildStickerUI();}
 function buildSW(id,list){const g=$(id);list.forEach(sw=>{const w=document.createElement('div');w.className='swi';w.innerHTML=`<div class="swc${sw.hex==='#ffffff'?' sel':''}" style="background:${sw.hex};${isDark(sw.hex)?'border-color:#555;':''}" data-hex="${sw.hex}"><span class="swck"><i class="fas fa-check"></i></span></div><span class="swn">${sw.n}</span>`;w.querySelector('.swc').addEventListener('click',()=>applyColor(sw.hex,false,''));g.appendChild(w);});}
 function buildGrads(){const g=$('ggrid');GRADS.forEach(gr=>{const d=document.createElement('div');d.className='gi';d.style.background=gr.css;d.dataset.css=gr.css;d.innerHTML=`<div class="gick"><i class="fas fa-check"></i></div>`;d.addEventListener('click',()=>applyColor(gr.css,true,gr.css));g.appendChild(d);});}
@@ -534,10 +495,8 @@ function isDark(hex){const r=h2r(hex);if(!r)return false;return(0.299*r[0]+0.587
 function contrast(hex,ig){if(ig)return'rgba(255,255,255,.88)';return isDark(hex)?'rgba(255,255,255,.88)':'rgba(0,0,0,.72)';}
 function r2hsl(r,g,b){r/=255;g/=255;b/=255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b);let h,s,l=(mx+mn)/2;if(mx===mn){h=s=0;}else{const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);switch(mx){case r:h=((g-b)/d+(g<b?6:0))/6;break;case g:h=((b-r)/d+2)/6;break;default:h=((r-g)/d+4)/6;}}return[h*360,s*100,l*100];}
 function hsl2r(h,s,l){h/=360;s/=100;l/=100;if(s===0){const v=Math.round(l*255);return[v,v,v];}const q=l<.5?l*(1+s):l+s-l*s,p=2*l-q;const hu=(p,q,t)=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<.5)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p;};return[Math.round(hu(p,q,h+1/3)*255),Math.round(hu(p,q,h)*255),Math.round(hu(p,q,h-1/3)*255)];}
-
 function applyPreviewShape(){['lp-s0','lp-s1','lp-s2','lp-s3','lp-g0','lp-g1','lp-g2','lp-g3','lp-f0','lp-f1','lp-f2','lp-f3'].forEach(id=>{const el=$(id);if(!el)return;el.style.borderRadius='';el.style.clipPath='';el.style.aspectRatio='3/4';el.style.padding='';el.style.background='';el.style.boxShadow='';if(S.shape==='circle'){el.style.borderRadius='50%';el.style.aspectRatio='1/1';}else if(S.shape==='heart'){el.style.clipPath=HEART_POLYGON;el.style.aspectRatio='1/1';}else if(S.shape==='rounded'){el.style.borderRadius='24%';}else if(S.shape==='polaroid'){el.style.padding='3px 3px 14px';el.style.background='#fff';el.style.borderRadius='4px';el.style.boxShadow='0 2px 8px rgba(0,0,0,0.2)';}else{el.style.borderRadius='4px';}});}
 function updPreview(){const bg=S.isGrad?S.gradCSS:S.color;const tc=contrast(S.color,S.isGrad);$('lps').style.display=S.layout==='strip'?'flex':'none';$('lpg').style.display=S.layout==='grid'?'grid':'none';$('lpf').style.display=S.layout==='film'?'flex':'none';$('lp-spotify').style.display=S.layout==='spotify'?'block':'none';$('lps').style.background=bg;$('lpg').style.background=bg;$('lpbs').style.color=tc;$('lpbg').style.color=tc;$('cpbox').style.display=S.layout==='spotify'?'none':'block';$('selpill').style.display=S.layout==='spotify'?'none':'inline-flex';$('sp-config').style.display=S.layout==='spotify'?'block':'none';$('shape-grid').style.display=S.layout==='spotify'?'none':'';applyPreviewShape();}
-
 function goTo(s){document.querySelectorAll('.step').forEach(e=>e.classList.remove('active'));$('step-'+s).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});if(s===4){const[rw,rh]=S.ratio.split(':');$('camwrap').style.aspectRatio=rw+' / '+rh;$('cam-r').textContent=S.ratio;$('cam-f').textContent=FNAMES[S.filter]||'NATURAL';initCam();}}
 function backCam(){stopCam();S.shooting=false;shutter.disabled=false;goTo(3);}
 function reshoot(){S.photos=[];S.shooting=false;shutter.disabled=false;resetPips();clearAllStickers();$('caminfo').textContent='PRESS THE BUTTON TO START';goTo(4);}
@@ -557,8 +516,8 @@ function drawCropped(ctx,img,x,y,w,h){const ir=img.width/img.height,cr=w/h;let s
 function heartPath(ctx,x,y,w,h){ctx.moveTo(x+w*.5,y+h*.88);ctx.bezierCurveTo(x+w*.5,y+h*.88,x+w*.05,y+h*.6,x+w*.05,y+h*.32);ctx.bezierCurveTo(x+w*.05,y+h*.05,x+w*.5,y+h*.05,x+w*.5,y+h*.30);ctx.bezierCurveTo(x+w*.5,y+h*.05,x+w*.95,y+h*.05,x+w*.95,y+h*.32);ctx.bezierCurveTo(x+w*.95,y+h*.6,x+w*.5,y+h*.88,x+w*.5,y+h*.88);}
 function clipShape(ctx,x,y,w,h,shape){ctx.beginPath();if(shape==='circle'){const r=Math.min(w,h)/2;ctx.arc(x+w/2,y+h/2,r,0,Math.PI*2);ctx.closePath();ctx.clip();}else if(shape==='heart'){heartPath(ctx,x,y,w,h);ctx.closePath();ctx.clip();}else if(shape==='rounded'){rrect(ctx,x,y,w,h,Math.min(w,h)*0.22);ctx.clip();}else if(shape==='polaroid'){rrect(ctx,x,y,w,h,4);ctx.clip();}else{rrect(ctx,x,y,w,h,15);ctx.clip();}}
 function renderFinal(pw,ph){if(S.layout==='spotify')renderSpotify(pw,ph);else if(S.layout==='film')renderFilm(pw,ph);else renderClassic(pw,ph);}
-function renderClassic(pw,ph){const canvas=$('cf'),ctx=canvas.getContext('2d');const pad=50;let cellW=pw,cellH=ph;if(isSquareShape())cellH=cellW;let bot=S.shape==='polaroid'?180:240;if(S.layout==='strip'){canvas.width=cellW+pad*2;canvas.height=cellH*4+pad*5+bot;}else{canvas.width=cellW*2+pad*3;canvas.height=cellH*2+pad*3+bot;}if(S.isGrad)ctx.fillStyle=mkGrad(ctx,S.gradCSS,canvas.width,canvas.height)||'#fff';else ctx.fillStyle=S.color;ctx.fillRect(0,0,canvas.width,canvas.height);let done=0;S.photos.forEach((src,i)=>{const img=new Image();img.src=src;let x,y,iw=cellW,ih=cellH;if(S.layout==='strip'){x=pad;y=pad+i*(cellH+pad);}else{x=pad+(i%2)*(cellW+pad);y=pad+Math.floor(i/2)*(cellH+pad);}if(S.shape==='polaroid'){const pb=28,pbot=70;ctx.fillStyle='#fff';roundRect(ctx,x-pb,y-pb,cellW+pb*2,cellH+pb+pbot,6);ctx.fill();}img.onload=()=>{ctx.save();if(S.shape==='polaroid')clipShape(ctx,x,y,iw,ih,'square');else clipShape(ctx,x,y,iw,ih,S.shape);drawCropped(ctx,img,x,y,iw,ih);ctx.restore();if(S.shape==='circle'||S.shape==='heart'){ctx.save();ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.lineWidth=4;if(S.shape==='circle'){ctx.beginPath();ctx.arc(x+iw/2,y+ih/2,Math.min(iw,ih)/2,0,Math.PI*2);ctx.stroke();}else{heartPath(ctx,x,y,iw,ih);ctx.stroke();}ctx.restore();}done++;if(done===4)watermark(canvas,ctx);};img.onerror=()=>{done++;if(done===4)watermark(canvas,ctx);};});}
-function renderFilm(pw,ph){const canvas=$('cf'),ctx=canvas.getContext('2d');const picW=640;let picH=Math.round(picW*ph/pw);if(isSquareShape())picH=picW;const side=55,gap=24,holeW=28,holeH=22,holeGap=32;canvas.width=picW+side*2+gap*2;canvas.height=picH*4+gap*5;ctx.fillStyle='#080808';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#1a1a1a';for(let i=0;i<4;i++){const y=gap+i*(picH+gap);for(let h=0;h<3;h++){const hy=y+h*(holeH+holeGap);roundRect(ctx,(side-holeW)/2+gap/2,hy,holeW,holeH,4);ctx.fill();roundRect(ctx,canvas.width-side+gap/2-(side-holeW)/2,hy,holeW,holeH,4);ctx.fill();}}let done=0;S.photos.forEach((src,i)=>{const img=new Image();img.src=src;const x=side+gap,y=gap+i*(picH+gap);img.onload=()=>{ctx.save();clipShape(ctx,x,y,picW,picH,S.shape==='polaroid'?'square':S.shape);drawCropped(ctx,img,x,y,picW,picH);ctx.restore();ctx.strokeStyle='rgba(255,255,255,0.08)';ctx.lineWidth=2;ctx.strokeRect(x,y,picW,picH);done++;if(done===4)filmWatermark(canvas,ctx);};img.onerror=()=>{done++;if(done===4)filmWatermark(canvas,ctx);};});}
+function renderClassic(pw,ph){const canvas=$('cf'),ctx=canvas.getContext('2d');const pad=50;let cellW=pw,cellH=ph;if(isSquareShape())cellH=cellW;let bot=S.shape==='polaroid'?180:240;if(S.layout==='strip'){canvas.width=cellW+pad*2;canvas.height=cellH*4+pad*5+bot;}else{canvas.width=cellW*2+pad*3;canvas.height=cellH*2+pad*3+bot;}if(S.isGrad)ctx.fillStyle=mkGrad(ctx,S.gradCSS,canvas.width,canvas.height)||'#fff';else ctx.fillStyle=S.color;ctx.fillRect(0,0,canvas.width,canvas.height);let done=0;S.photos.forEach((src,i)=>{const img=new Image();img.src=src;let x,y,iw=cellW,ih=cellH;if(S.layout==='strip'){x=pad;y=pad+i*(cellH+pad);}else{x=pad+(i%2)*(cellW+pad);y=pad+Math.floor(i/2)*(cellH+pad);}if(S.shape==='polaroid'){const pb=28,pbot=70;ctx.fillStyle='#fff';roundRect(ctx,x-pb,y-pb,cellW+pb*2,cellH+pb+pbot,6);ctx.fill();}img.onload=()=>{ctx.save();if(S.shape==='polaroid')clipShape(ctx,x,y,iw,ih,'square');else clipShape(ctx,x,y,iw,ih,S.shape);drawCropped(ctx,img,x,y,iw,ih);ctx.restore();done++;if(done===4)watermark(canvas,ctx);};img.onerror=()=>{done++;if(done===4)watermark(canvas,ctx);};});}
+function renderFilm(pw,ph){const canvas=$('cf'),ctx=canvas.getContext('2d');const picW=640;let picH=Math.round(picW*ph/pw);if(isSquareShape())picH=picW;const side=55,gap=24,holeW=28,holeH=22,holeGap=32;canvas.width=picW+side*2+gap*2;canvas.height=picH*4+gap*5;ctx.fillStyle='#080808';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#1a1a1a';for(let i=0;i<4;i++){const y=gap+i*(picH+gap);for(let h=0;h<3;h++){const hy=y+h*(holeH+holeGap);roundRect(ctx,(side-holeW)/2+gap/2,hy,holeW,holeH,4);ctx.fill();roundRect(ctx,canvas.width-side+gap/2-(side-holeW)/2,hy,holeW,holeH,4);ctx.fill();}}let done=0;S.photos.forEach((src,i)=>{const img=new Image();img.src=src;const x=side+gap,y=gap+i*(picH+gap);img.onload=()=>{ctx.save();clipShape(ctx,x,y,picW,picH,S.shape==='polaroid'?'square':S.shape);drawCropped(ctx,img,x,y,picW,picH);ctx.restore();done++;if(done===4)filmWatermark(canvas,ctx);};img.onerror=()=>{done++;if(done===4)filmWatermark(canvas,ctx);};});}
 function filmWatermark(canvas,ctx){ctx.font=`bold 22px 'Space Mono',monospace`;ctx.fillStyle='rgba(255,255,255,0.35)';ctx.textAlign='center';ctx.fillText('V-PHOTOBOOTH  //  '+new Date().getFullYear(),canvas.width/2,canvas.height-14);$('fimg').src=canvas.toDataURL('image/jpeg',.95);goTo(5);confettiTime();}
 function drawSpIcon(ctx,icon,x,y,size,color){ctx.save();ctx.translate(x,y);ctx.fillStyle=color;ctx.strokeStyle=color;ctx.lineWidth=size*.1;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();if(icon==='pause'){const w=size*.14,h=size*.45,g=size*.1;ctx.rect(-g-w,-h,w,h*2);ctx.rect(g,-h,w,h*2);ctx.fill();}else if(icon==='prev'){const tw=size*.35,th=size*.4,bw=size*.12;ctx.rect(-tw-bw,-th,bw,th*2);ctx.moveTo(-tw,0);ctx.lineTo(tw,-th);ctx.lineTo(tw,th);ctx.fill();}else if(icon==='next'){const tw=size*.35,th=size*.4,bw=size*.12;ctx.rect(tw,-th,bw,th*2);ctx.moveTo(tw,0);ctx.lineTo(-tw,-th);ctx.lineTo(-tw,th);ctx.fill();}else if(icon==='shuffle'){const w=size*.4,h=size*.2,aw=size*.15;ctx.moveTo(-w,-h);ctx.bezierCurveTo(-w*.5,-h,w*.5,h,w,h);ctx.stroke();ctx.beginPath();ctx.moveTo(w-aw,h-aw);ctx.lineTo(w,h);ctx.lineTo(w-aw,h+aw);ctx.stroke();ctx.beginPath();ctx.moveTo(-w,h);ctx.bezierCurveTo(-w*.5,h,w*.5,-h,w,-h);ctx.stroke();ctx.beginPath();ctx.moveTo(w-aw,-h-aw);ctx.lineTo(w,-h);ctx.lineTo(w-aw,-h+aw);ctx.stroke();}else if(icon==='repeat'){const w=size*.35,h=size*.2,aw=size*.12;ctx.moveTo(-w,-h);ctx.lineTo(w,-h);ctx.lineTo(w,h*.5);ctx.stroke();ctx.beginPath();ctx.moveTo(w-aw,-h-aw);ctx.lineTo(w+aw,-h);ctx.lineTo(w-aw,-h+aw);ctx.stroke();ctx.beginPath();ctx.moveTo(w,h);ctx.lineTo(-w,h);ctx.lineTo(-w,-h*.5);ctx.stroke();ctx.beginPath();ctx.moveTo(-w+aw,h-aw);ctx.lineTo(-w-aw,h);ctx.lineTo(-w+aw,h+aw);ctx.stroke();}else if(icon==='heart'){const w=size*.35;ctx.translate(0,-size*.05);ctx.moveTo(0,w);ctx.bezierCurveTo(-w*1.5,w*.1,-w*1.5,-w,0,-w*.5);ctx.bezierCurveTo(w*1.5,-w,w*1.5,w*.1,0,w);ctx.fill();}ctx.restore();}
 function drawSpotifyLogo(ctx,x,y,size){ctx.save();ctx.translate(x,y);ctx.fillStyle='#1DB954';ctx.beginPath();ctx.arc(0,0,size/2,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#121212';ctx.lineWidth=size*.12;ctx.lineCap='round';ctx.beginPath();ctx.arc(0,size*.15,size*.35,-Math.PI*.8,-Math.PI*.2);ctx.stroke();ctx.beginPath();ctx.arc(0,size*.05,size*.25,-Math.PI*.8,-Math.PI*.2);ctx.stroke();ctx.beginPath();ctx.arc(0,-size*.05,size*.15,-Math.PI*.75,-Math.PI*.25);ctx.stroke();ctx.restore();}
@@ -571,41 +530,26 @@ function mkGrad(ctx,css,w,h){try{const m=css.match(/linear-gradient\(([^,]+),(.+
 function watermark(canvas,ctx){const now=new Date(),cw=canvas.width,ch=canvas.height;const tc=contrast(S.color,S.isGrad);const ac=(isDark(S.color)||S.isGrad)?'#ff7aaa':'#c4224f';ctx.textAlign='center';const lw=cw*.22;ctx.save();ctx.strokeStyle=ac;ctx.globalAlpha=.26;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cw/2-lw,ch-188);ctx.lineTo(cw/2+lw,ch-188);ctx.stroke();ctx.restore();ctx.save();ctx.font=`italic bold ${Math.round(cw*.073)}px 'Playfair Display',serif`;ctx.fillStyle=ac;ctx.fillText('V-Photobooth',cw/2,ch-124);ctx.restore();ctx.save();ctx.strokeStyle=ac;ctx.globalAlpha=.16;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cw/2-lw,ch-99);ctx.lineTo(cw/2+lw,ch-99);ctx.stroke();ctx.restore();const day=now.getDate(),month=now.toLocaleDateString('en-US',{month:'long'}).toUpperCase(),year=now.getFullYear();const time=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true}).replace(':','.');ctx.save();ctx.font=`600 ${Math.round(cw*.023)}px 'Space Mono',monospace`;ctx.fillStyle=tc;ctx.globalAlpha=.6;ctx.fillText(`${day} ${month} ${year}  \u2022  ${time}  \u2022  BY DENJI`,cw/2,ch-59);ctx.restore();$('fimg').src=canvas.toDataURL('image/jpeg',.95);goTo(5);confettiTime();}
 function confettiTime(){const colors=['#ff477e','#ff9abc','#ffffff','#ffd1dc','#ff1f61','#ffb3cb'],cfg={colors,shapes:['circle','square']};setTimeout(()=>confetti({...cfg,particleCount:88,spread:74,origin:{y:.55},scalar:1.1}),250);setTimeout(()=>{confetti({...cfg,particleCount:44,angle:60,spread:54,origin:{x:0,y:.6}});confetti({...cfg,particleCount:44,angle:120,spread:54,origin:{x:1,y:.6}});},500);setTimeout(()=>confetti({...cfg,particleCount:38,spread:98,origin:{y:.34},gravity:.5,scalar:.8}),900);}
 
-/* ===================== STICKER SYSTEM (IMPROVED) ===================== */
+/* ====== STICKER SYSTEM ====== */
 let maxZIdx=10;
 let placedStickers=[];
-
-const PACK_ICONS={
-    "Faces":"fa-face-smile-hearts",
-    "Hearts":"fa-heart",
-    "Nature":"fa-leaf",
-    "Effects":"fa-wand-magic-sparkles",
-    "Fun":"fa-party-horn"
-};
+const PACK_ICONS={"Faces":"fa-face-smile-hearts","Hearts":"fa-heart","Nature":"fa-leaf","Effects":"fa-wand-magic-sparkles","Fun":"fa-party-horn"};
 
 function buildStickerUI(){
-    const body=$('sticker-body');
-    body.innerHTML='';
-    STICKER_DATA.packs.forEach((pack,packIdx)=>{
-        const section=document.createElement('div');
-        section.className='sp-pack';
+    const body=$('sticker-body');body.innerHTML='';
+    STICKER_DATA.packs.forEach((pack,pi)=>{
+        const sec=document.createElement('div');sec.className='sp-pack';
         const icon=PACK_ICONS[pack.name]||'fa-icons';
-        const header=document.createElement('div');
-        header.className='sp-pack-header';
-        header.innerHTML=`<div class="sp-pack-icon"><i class="fas ${icon}"></i></div><span class="sp-pack-name">${pack.name}</span><span class="sp-pack-count">${pack.stickers.length}</span><div class="sp-pack-line"></div>`;
-        section.appendChild(header);
-        const grid=document.createElement('div');
-        grid.className='sp-pack-grid';
-        pack.stickers.forEach((sticker,i)=>{
-            const item=document.createElement('div');
-            item.className='sp-item';
-            item.style.animation=`fadeUp .35s ${(packIdx*12+i)*0.012}s both ease`;
-            item.innerHTML=`<img src="${sticker.url}" alt="${sticker.id}" draggable="false">`;
-            item.onclick=()=>placeSticker(sticker.url);
+        sec.innerHTML=`<div class="sp-pack-header"><div class="sp-pack-icon"><i class="fas ${icon}"></i></div><span class="sp-pack-name">${pack.name}</span><span class="sp-pack-count">${pack.stickers.length}</span><div class="sp-pack-line"></div></div>`;
+        const grid=document.createElement('div');grid.className='sp-pack-grid';
+        pack.stickers.forEach((st,si)=>{
+            const item=document.createElement('div');item.className='sp-item';
+            item.style.animation=`fadeUp .35s ${(pi*12+si)*0.012}s both ease`;
+            item.innerHTML=`<img src="${st.url}" alt="${st.id}" draggable="false">`;
+            item.onclick=()=>placeSticker(st.url);
             grid.appendChild(item);
         });
-        section.appendChild(grid);
-        body.appendChild(section);
+        sec.appendChild(grid);body.appendChild(sec);
     });
 }
 
@@ -619,21 +563,21 @@ function placeSticker(url){
     const wrapH=wrap.offsetHeight;
     const el=document.createElement('div');
     el.className='placed-sticker';
-    /* Use percentage-based sizing so it scales proportionally with the image */
     const sizePct=22;
     el.style.width=sizePct+'%';
-    el.style.height='auto';
-    el.style.aspectRatio='1/1';
     el.style.left=((100-sizePct)/2)+'%';
-    el.style.top=((100-sizePct)/2)+'%';
+    el.style.top='40%';
     el.style.zIndex=++maxZIdx;
     el.dataset.stickerUrl=url;
     el.dataset.rotation='0';
-    el.dataset.sizePct=sizePct;
-    el.innerHTML=`<img src="${url}" alt="sticker" crossorigin="anonymous"><button class="sticker-delete" onclick="event.stopPropagation();removeSticker(this.parentElement)"><i class="fas fa-xmark"></i></button><div class="sticker-resize"></div><div class="sticker-rotate"><i class="fas fa-rotate"></i></div>`;
+    el.innerHTML=`<img src="${url}" alt="sticker" crossorigin="anonymous"><button class="sticker-delete"><i class="fas fa-xmark"></i></button><div class="sticker-resize"></div><div class="sticker-rotate"><i class="fas fa-rotate"></i></div>`;
     overlay.appendChild(el);
     placedStickers.push(el);
     updateStickerCount();
+
+    /* Delete button */
+    el.querySelector('.sticker-delete').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();removeSticker(el);});
+
     enableDrag(el);
     enableResize(el);
     enableRotate(el);
@@ -643,79 +587,83 @@ function removeSticker(el){el.remove();placedStickers=placedStickers.filter(s=>s
 function clearAllStickers(){const overlay=$('sticker-overlay');overlay.innerHTML='';placedStickers=[];updateStickerCount();}
 function updateStickerCount(){const countEl=$('sticker-count');const n=placedStickers.length;countEl.textContent=n;countEl.classList.toggle('show',n>0);}
 
+/* ====== DRAG (pointer events for cross-device) ====== */
 function enableDrag(el){
-    let startX,startY,origX,origY,dragging=false;
+    let startX,startY,origLeftPct,origTopPct,dragging=false;
     const onStart=(e)=>{
-        if(e.target.classList.contains('sticker-delete')||e.target.classList.contains('sticker-resize')||e.target.classList.contains('sticker-rotate'))return;
+        const t=e.target;
+        if(t.classList.contains('sticker-delete')||t.classList.contains('sticker-resize')||t.classList.contains('sticker-rotate'))return;
         e.preventDefault();
-        const ev=e.touches?e.touches[0]:e;
-        startX=ev.clientX;startY=ev.clientY;
-        /* Use percentage positions for consistency */
-        origX=parseFloat(el.style.left)||0;
-        origY=parseFloat(el.style.top)||0;
         const wrap=el.closest('.result-wrap');
-        const wrapW=wrap.offsetWidth;
-        const wrapH=wrap.offsetHeight;
-        dragging=true;el.classList.add('dragging');el.style.zIndex=++maxZIdx;
+        const rect=wrap.getBoundingClientRect();
+        startX=e.clientX;startY=e.clientY;
+        origLeftPct=parseFloat(el.style.left)||0;
+        origTopPct=parseFloat(el.style.top)||0;
+        dragging=true;el.style.zIndex=++maxZIdx;el.style.cursor='grabbing';
         const onMove=(e2)=>{
             if(!dragging)return;
-            const ev2=e2.touches?e2.touches[0]:e2;
-            const dx=((ev2.clientX-startX)/wrapW)*100;
-            const dy=((ev2.clientY-startY)/wrapH)*100;
-            el.style.left=(origX+dx)+'%';
-            el.style.top=(origY+dy)+'%';
+            e2.preventDefault();
+            const dx=((e2.clientX-startX)/rect.width)*100;
+            const dy=((e2.clientY-startY)/rect.height)*100;
+            el.style.left=Math.max(-20,Math.min(80,origLeftPct+dx))+'%';
+            el.style.top=Math.max(-20,Math.min(80,origTopPct+dy))+'%';
         };
-        const onEnd=()=>{dragging=false;el.classList.remove('dragging');document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onEnd);document.removeEventListener('touchmove',onMove);document.removeEventListener('touchend',onEnd);};
-        document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onEnd);
-        document.addEventListener('touchmove',onMove,{passive:false});document.addEventListener('touchend',onEnd);
+        const onEnd=()=>{dragging=false;el.style.cursor='grab';document.removeEventListener('pointermove',onMove);document.removeEventListener('pointerup',onEnd);};
+        document.addEventListener('pointermove',onMove);
+        document.addEventListener('pointerup',onEnd);
     };
-    el.addEventListener('mousedown',onStart);el.addEventListener('touchstart',onStart,{passive:false});
+    el.addEventListener('pointerdown',onStart);
 }
 
+/* ====== RESIZE ====== */
 function enableResize(el){
     const handle=el.querySelector('.sticker-resize');
     if(!handle)return;
-    let startX,startY,startW;
-    const onStart=(e)=>{e.preventDefault();e.stopPropagation();const ev=e.touches?e.touches[0]:e;startX=ev.clientX;startY=ev.clientY;startW=el.offsetWidth;
+    let startX,startW;
+    const onStart=(e)=>{
+        e.preventDefault();e.stopPropagation();
         const wrap=el.closest('.result-wrap');
         const wrapW=wrap.offsetWidth;
+        startX=e.clientX;
+        startW=el.offsetWidth;
         const onMove=(e2)=>{
-            const ev2=e2.touches?e2.touches[0]:e2;
-            const newPx=Math.max(20,startW+ev2.clientX-startX);
+            e2.preventDefault();
+            const newPx=Math.max(20,startW+e2.clientX-startX);
             const newPct=(newPx/wrapW)*100;
             el.style.width=Math.max(5,Math.min(80,newPct))+'%';
-            el.style.height='auto';
         };
-        const onEnd=()=>{document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onEnd);document.removeEventListener('touchmove',onMove);document.removeEventListener('touchend',onEnd);};
-        document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onEnd);
-        document.addEventListener('touchmove',onMove,{passive:false});document.addEventListener('touchend',onEnd);
+        const onEnd=()=>{document.removeEventListener('pointermove',onMove);document.removeEventListener('pointerup',onEnd);};
+        document.addEventListener('pointermove',onMove);
+        document.addEventListener('pointerup',onEnd);
     };
-    handle.addEventListener('mousedown',onStart);handle.addEventListener('touchstart',onStart,{passive:false});
+    handle.addEventListener('pointerdown',onStart);
 }
 
+/* ====== ROTATE (works on all devices) ====== */
 function enableRotate(el){
     const handle=el.querySelector('.sticker-rotate');
     if(!handle)return;
-    let rotating=false;
-    let startAngle=0;
-    let origRotation=0;
-    const getAngle=(e,el)=>{
+    let rotating=false,startAngle=0,origRotation=0;
+
+    const getAngle=(clientX,clientY)=>{
         const rect=el.getBoundingClientRect();
         const cx=rect.left+rect.width/2;
         const cy=rect.top+rect.height/2;
-        const ev=e.touches?e.touches[0]:e;
-        return Math.atan2(ev.clientY-cy,ev.clientX-cx)*(180/Math.PI);
+        return Math.atan2(clientY-cy,clientX-cx)*(180/Math.PI);
     };
+
     const onStart=(e)=>{
         e.preventDefault();e.stopPropagation();
         rotating=true;
-        startAngle=getAngle(e,el);
+        startAngle=getAngle(e.clientX,e.clientY);
         origRotation=parseFloat(el.dataset.rotation)||0;
-        el.classList.add('active');
+        handle.style.cursor='grabbing';
+        el.style.zIndex=++maxZIdx;
+
         const onMove=(e2)=>{
             if(!rotating)return;
             e2.preventDefault();
-            const currentAngle=getAngle(e2,el);
+            const currentAngle=getAngle(e2.clientX,e2.clientY);
             const delta=currentAngle-startAngle;
             const newRot=origRotation+delta;
             el.dataset.rotation=newRot;
@@ -723,87 +671,54 @@ function enableRotate(el){
         };
         const onEnd=()=>{
             rotating=false;
-            el.classList.remove('active');
-            document.removeEventListener('mousemove',onMove);
-            document.removeEventListener('mouseup',onEnd);
-            document.removeEventListener('touchmove',onMove);
-            document.removeEventListener('touchend',onEnd);
+            handle.style.cursor='grab';
+            document.removeEventListener('pointermove',onMove);
+            document.removeEventListener('pointerup',onEnd);
         };
-        document.addEventListener('mousemove',onMove);
-        document.addEventListener('mouseup',onEnd);
-        document.addEventListener('touchmove',onMove,{passive:false});
-        document.addEventListener('touchend',onEnd);
+        document.addEventListener('pointermove',onMove);
+        document.addEventListener('pointerup',onEnd);
     };
-    handle.addEventListener('mousedown',onStart);
-    handle.addEventListener('touchstart',onStart,{passive:false});
+    handle.addEventListener('pointerdown',onStart);
 }
 
-/* ===================== DOWNLOAD WITH STICKERS (FIXED) ===================== */
+/* ====== DOWNLOAD WITH STICKERS ====== */
 function dlImg(){
     const btn=$('dl-btn');
     btn.classList.add('dl-loading');
     btn.innerHTML='<i class="fas fa-spinner fa-spin" style="margin-right:7px;"></i>SAVING...';
-
-    const img=$('fimg');
-    const resultWrap=$('result-wrap');
-    const overlay=$('sticker-overlay');
-
+    const img=$('fimg'),resultWrap=$('result-wrap'),overlay=$('sticker-overlay');
     const stickerEls=Array.from(overlay.querySelectorAll('.placed-sticker'));
     stickerEls.sort((a,b)=>(parseInt(a.style.zIndex)||0)-(parseInt(b.style.zIndex)||0));
-
-    const baseImg=new Image();
-    baseImg.crossOrigin='anonymous';
+    const baseImg=new Image();baseImg.crossOrigin='anonymous';
     baseImg.onload=function(){
-        const canvas=document.createElement('canvas');
-        const ctx=canvas.getContext('2d');
-        canvas.width=baseImg.naturalWidth;
-        canvas.height=baseImg.naturalHeight;
+        const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');
+        canvas.width=baseImg.naturalWidth;canvas.height=baseImg.naturalHeight;
         ctx.drawImage(baseImg,0,0);
-
-        if(stickerEls.length===0){
-            finishDownload(canvas,btn);
-            return;
-        }
-
-        let loaded=0;
-        const total=stickerEls.length;
-
+        if(stickerEls.length===0){finishDownload(canvas,btn);return;}
+        let loaded=0;const total=stickerEls.length;
         stickerEls.forEach(stickerEl=>{
-            const sImg=new Image();
-            sImg.crossOrigin='anonymous';
+            const sImg=new Image();sImg.crossOrigin='anonymous';
             sImg.onload=function(){
-                /* Convert percentage positions to pixel positions on the canvas */
                 const leftPct=parseFloat(stickerEl.style.left)||0;
                 const topPct=parseFloat(stickerEl.style.top)||0;
                 const widthPct=parseFloat(stickerEl.style.width)||22;
                 const rotation=parseFloat(stickerEl.dataset.rotation)||0;
-
                 const drawX=(leftPct/100)*canvas.width;
                 const drawY=(topPct/100)*canvas.height;
                 const drawW=(widthPct/100)*canvas.width;
                 const drawH=drawW*(sImg.naturalHeight/sImg.naturalWidth);
-
                 ctx.save();
                 ctx.translate(drawX+drawW/2,drawY+drawH/2);
                 ctx.rotate(rotation*Math.PI/180);
                 ctx.drawImage(sImg,-drawW/2,-drawH/2,drawW,drawH);
                 ctx.restore();
-
-                loaded++;
-                if(loaded===total)finishDownload(canvas,btn);
+                loaded++;if(loaded===total)finishDownload(canvas,btn);
             };
-            sImg.onerror=function(){
-                loaded++;
-                if(loaded===total)finishDownload(canvas,btn);
-            };
+            sImg.onerror=function(){loaded++;if(loaded===total)finishDownload(canvas,btn);};
             sImg.src=stickerEl.dataset.stickerUrl||stickerEl.querySelector('img').src;
         });
     };
-    baseImg.onerror=function(){
-        btn.classList.remove('dl-loading');
-        btn.innerHTML='<i class="fas fa-download" style="margin-right:7px;"></i>SAVE';
-        alert('Failed to load image for download.');
-    };
+    baseImg.onerror=function(){btn.classList.remove('dl-loading');btn.innerHTML='<i class="fas fa-download" style="margin-right:7px;"></i>SAVE';alert('Failed to load image.');};
     baseImg.src=img.src;
 }
 
@@ -811,13 +726,8 @@ function finishDownload(canvas,btn){
     const a=document.createElement('a');
     a.href=canvas.toDataURL('image/jpeg',0.95);
     a.download='V-Photobooth-'+Date.now()+'.jpg';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(()=>{
-        btn.classList.remove('dl-loading');
-        btn.innerHTML='<i class="fas fa-download" style="margin-right:7px;"></i>SAVE';
-    },600);
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    setTimeout(()=>{btn.classList.remove('dl-loading');btn.innerHTML='<i class="fas fa-download" style="margin-right:7px;"></i>SAVE';},600);
 }
 
 buildUI();
